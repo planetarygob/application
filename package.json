@@ -1,0 +1,23 @@
+{
+  "name": "poc-starter",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@types/dat-gui": "^0.6.3",
+    "core-js": "^3.9.1",
+    "dat.gui": "^0.7.7",
+    "nuxt": "^2.15.3",
+    "three": "^0.127.0"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.15.3",
+    "@nuxt/typescript-build": "^2.1.0",
+    "@types/three": "^0.127.0"
+  }
+}
