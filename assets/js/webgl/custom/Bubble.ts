@@ -1,11 +1,15 @@
-import { IcosahedronGeometry, Mesh, Object3D, ShaderMaterial } from 'three'
+import { 
+    IcosahedronGeometry, 
+    Mesh, 
+    Object3D, 
+    ShaderMaterial 
+} from 'three'
 import bubbleVertexShader from '../shaders/Bubble/vertex'
 import bubbleFragmentShader from '../shaders/Bubble/fragment'
-import { GUI } from 'dat.gui'
-import EventBusManager from '../../managers/EventBusManager'
+import GUI from '../../utils/GUI'
+import EventBus from '../../utils/EventBus'
 
 class Bubble extends Object3D {
-    gui: GUI
     vertexShader: string
     fragmentShader: string
     geometry: IcosahedronGeometry
@@ -18,22 +22,17 @@ class Bubble extends Object3D {
     ) {
         super()
 
-        EventBusManager.getInstance().emitter.on('foo', (e: any) => console.log('foo', e))
-
         this.userData = {
             speed: 0.2,
-            density: 1.5,
-            strength: 0.2
+            density: 0.75,
+            strength: 0.1
         }
 
-        this.gui = new GUI()
-        this.initGui()
+        this.GUI()
 
         this.vertexShader = bubbleVertexShader 
         this.fragmentShader = bubbleFragmentShader
-
         this.geometry = new IcosahedronGeometry(radius, detail)
-
         this.material = new ShaderMaterial({
             vertexShader: bubbleVertexShader,
             fragmentShader: bubbleFragmentShader,
@@ -43,30 +42,23 @@ class Bubble extends Object3D {
                 uNoiseDensity: { value: this.userData.density },
                 uNoiseStrength: { value: this.userData.strength }
             },
-            wireframe: true,
+            wireframe: true
         })
-
         this.mesh = new Mesh(this.geometry, this.material)
-
+              
+        EventBus.on('gl:update', (e: any) => this.update(e.elapsedTime))
     }
 
-    // ---------------- INITIATION
+    // ---------------- INITIALIZATION
 
-    initGui() {
-        const bubbleFolder = this.gui.addFolder('Bubble')
-        bubbleFolder.add(this.userData, 'speed', 0, 2.5, 0.1);
-        bubbleFolder.add(this.userData, 'density', 0, 2.5, 0.1);
-        bubbleFolder.add(this.userData, 'strength', 0, 2.5, 0.1);
+    GUI() {
+        const bubbleFolder = GUI.addFolder('Bubble')
+        bubbleFolder.add(this.userData, 'speed', 0, 2.5, 0.1)
+        bubbleFolder.add(this.userData, 'density', 0, 2.5, 0.1)
+        bubbleFolder.add(this.userData, 'strength', 0, 2.5, 0.1)
     }
 
     // ---------------- METHODS
-
-    explode() {
-    }
-
-    onMouseMove() {
-
-    }
 
     // ---------------- LIFECYCLE
 

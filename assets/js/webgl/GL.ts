@@ -1,12 +1,13 @@
-import Scene from './core/Scene'
-import Renderer from './core/Renderer'
 import { 
     PerspectiveCamera,
     Clock
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import Scene from './core/Scene'
+import Renderer from './core/Renderer'
 import Bubble from './custom/Bubble'
-import Stats from 'stats.js'
+import Stats from '../utils/Stats'
+import EventBus from '../utils/EventBus'
 
 
 interface Size {
@@ -17,7 +18,6 @@ interface Size {
 
 class GL {
     private static instance: GL
-    stats: Stats
     canvas: HTMLCanvasElement
     scene: Scene 
     renderer: Renderer 
@@ -28,9 +28,8 @@ class GL {
     bubble: Bubble
 
     constructor() {
-        this.stats = new Stats()
-        this.stats.showPanel(0)
-        document.body.appendChild(this.stats.dom)
+        Stats.showPanel(0)
+        document.body.appendChild(Stats.dom)
 
         this.size = {
             width: window.innerWidth,
@@ -42,13 +41,11 @@ class GL {
         if (this.canvas) {
             this.canvas.width = this.size.width
             this.canvas.height = this.size.height
-        } else {
-            console.log("No canvas")
         }
 
         this.scene = new Scene()
 
-        this.camera = new PerspectiveCamera(75, this.size.width / this.size.height, 0.1, 1000)
+        this.camera = new PerspectiveCamera(45, this.size.width / this.size.height, 0.1, 1000)
         this.camera.position.z = 5
 
         this.controls = new OrbitControls(this.camera, this.canvas)
@@ -63,20 +60,20 @@ class GL {
         )
         this.renderer.render(this.scene, this.camera)
 
-        this.bubble = new Bubble(1, 64)
+        this.bubble = new Bubble(1, 32)
         
         this.addElements()
         this.addEvents()
 
-        this.animate();    
+        this.animate()
     }
 
     public static getInstance(): GL {
         if (!GL.instance) {
-            GL.instance = new GL();
+            GL.instance = new GL()
         }
  
-        return GL.instance;
+        return GL.instance
     }
 
     // ---------------- METHODS
@@ -88,12 +85,11 @@ class GL {
 
     addEvents() {
         window.addEventListener('resize', this.resize.bind(this))
-        window.addEventListener('click', this.scene.trigger)
     }  
     
     resize() {
-        this.size.width = window.innerWidth;
-        this.size.height = window.innerHeight;
+        this.size.width = window.innerWidth
+        this.size.height = window.innerHeight
 
         this.camera.aspect = this.size.width / this.size.height
         this.renderer.setSize(this.size.width, this.size.height)
@@ -104,18 +100,20 @@ class GL {
     // ---------------- LIFECYCLE
 
     animate() {
-        this.stats.begin()
+        Stats.update()
 
         window.requestAnimationFrame(this.animate.bind(this))
         this.render()
-
-        this.stats.end()
     }
 
     render() {
+        const elapsedTime = this.clock.getElapsedTime()
         this.controls.update()
+        
+        // TODO : Print dans un élément d'UI
+        // console.log( this.renderer.info )
 
-        this.bubble.update(this.clock.getElapsedTime())
+        EventBus.emit('gl:update', { elapsedTime: elapsedTime })
 
         this.renderer.render(this.scene, this.camera)
     }
