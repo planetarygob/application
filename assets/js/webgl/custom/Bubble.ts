@@ -2,7 +2,7 @@ import { IcosahedronGeometry, Mesh, Object3D, ShaderMaterial } from 'three'
 import bubbleVertexShader from '../shaders/Bubble/vertex'
 import bubbleFragmentShader from '../shaders/Bubble/fragment'
 import { GUI } from 'dat.gui'
-import mitt from 'mitt'
+import EventBusManager from '../../managers/EventBusManager'
 
 class Bubble extends Object3D {
     gui: GUI
@@ -11,15 +11,14 @@ class Bubble extends Object3D {
     geometry: IcosahedronGeometry
     material: ShaderMaterial
     mesh: Mesh
-    emitter: any
 
     constructor(
         radius?: number, 
         detail?: number
     ) {
         super()
-        this.emitter = mitt()
-        this.emitter.on('foo', (e: any) => console.log('foo', e) )
+
+        EventBusManager.getInstance().emitter.on('foo', (e: any) => console.log('foo', e))
 
         this.userData = {
             speed: 0.2,
