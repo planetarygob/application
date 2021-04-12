@@ -56,13 +56,18 @@ class GL {
 
         this.clock = new Clock()
 
-        this.renderer = new Renderer({ canvas: this.canvas })
-        this.renderer.setSize(this.size.width, this.size.height)
+        this.renderer = new Renderer(
+            { canvas: this.canvas }, 
+            this.size.width, 
+            this.size.height
+        )
         this.renderer.render(this.scene, this.camera)
 
         this.bubble = new Bubble(1, 64)
         
-        this.init();
+        this.addElements()
+        this.addEvents()
+
         this.animate();    
     }
 
@@ -76,11 +81,6 @@ class GL {
 
     // ---------------- METHODS
 
-    init() {
-        this.addElements()
-        this.addEvents()
-    }
-
     addElements() {
         this.scene.add(this.camera)
         this.scene.add(this.bubble.mesh)
@@ -88,6 +88,7 @@ class GL {
 
     addEvents() {
         window.addEventListener('resize', this.resize.bind(this))
+        window.addEventListener('click', this.scene.trigger)
     }  
     
     resize() {

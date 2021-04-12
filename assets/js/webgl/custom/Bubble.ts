@@ -2,25 +2,32 @@ import { IcosahedronGeometry, Mesh, Object3D, ShaderMaterial } from 'three'
 import bubbleVertexShader from '../shaders/Bubble/vertex'
 import bubbleFragmentShader from '../shaders/Bubble/fragment'
 import { GUI } from 'dat.gui'
+import mitt from 'mitt'
 
 class Bubble extends Object3D {
-    gui: any
+    gui: GUI
     vertexShader: string
     fragmentShader: string
     geometry: IcosahedronGeometry
     material: ShaderMaterial
-    mesh: any
-    settings: any
+    mesh: Mesh
+    emitter: any
 
-    constructor(radius?: number, detail?: number) {
+    constructor(
+        radius?: number, 
+        detail?: number
+    ) {
         super()
-        
-        this.settings = {
+        this.emitter = mitt()
+        this.emitter.on('foo', (e: any) => console.log('foo', e) )
+
+        this.userData = {
             speed: 0.2,
             density: 1.5,
             strength: 0.2
         }
 
+        this.gui = new GUI()
         this.initGui()
 
         this.vertexShader = bubbleVertexShader 
@@ -33,25 +40,24 @@ class Bubble extends Object3D {
             fragmentShader: bubbleFragmentShader,
             uniforms: {
                 uTime: { value: 0 },
-                uSpeed: { value: this.settings.speed },
-                uNoiseDensity: { value: this.settings.density },
-                uNoiseStrength: { value: this.settings.strength }
+                uSpeed: { value: this.userData.speed },
+                uNoiseDensity: { value: this.userData.density },
+                uNoiseStrength: { value: this.userData.strength }
             },
             wireframe: true,
         })
 
         this.mesh = new Mesh(this.geometry, this.material)
+
     }
 
     // ---------------- INITIATION
 
     initGui() {
-        this.gui = new GUI()
-        
         const bubbleFolder = this.gui.addFolder('Bubble')
-        bubbleFolder.add(this.settings, 'speed', 0, 2.5, 0.1);
-        bubbleFolder.add(this.settings, 'density', 0, 2.5, 0.1);
-        bubbleFolder.add(this.settings, 'strength', 0, 2.5, 0.1);
+        bubbleFolder.add(this.userData, 'speed', 0, 2.5, 0.1);
+        bubbleFolder.add(this.userData, 'density', 0, 2.5, 0.1);
+        bubbleFolder.add(this.userData, 'strength', 0, 2.5, 0.1);
     }
 
     // ---------------- METHODS
@@ -59,14 +65,19 @@ class Bubble extends Object3D {
     explode() {
     }
 
+    onMouseMove() {
+
+    }
+
     // ---------------- LIFECYCLE
 
     update(elapsedTime: number) {
-        this.mesh.material.uniforms.uTime.value = elapsedTime
-        this.mesh.material.uniforms.uSpeed.value = this.settings.speed
-        this.mesh.material.uniforms.uNoiseDensity.value = this.settings.density
-        this.mesh.material.uniforms.uNoiseStrength.value = this.settings.strength
+        this.material.uniforms.uTime.value = elapsedTime
+        this.material.uniforms.uSpeed.value = this.userData.speed
+        this.material.uniforms.uNoiseDensity.value = this.userData.density
+        this.material.uniforms.uNoiseStrength.value = this.userData.strength
     }
+
 }
 
 export default Bubble
