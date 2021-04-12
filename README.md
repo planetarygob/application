@@ -1,4 +1,4 @@
-# poc-starter
+# starter
 
 ## Build Setup
 

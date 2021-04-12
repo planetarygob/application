@@ -6,6 +6,7 @@ import {
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Bubble from './custom/Bubble'
+import Stats from 'stats.js'
 
 
 interface Size {
@@ -16,6 +17,7 @@ interface Size {
 
 class GL {
     private static instance: GL
+    stats: Stats
     canvas: HTMLCanvasElement
     scene: Scene 
     renderer: Renderer 
@@ -26,6 +28,10 @@ class GL {
     bubble: Bubble
 
     constructor() {
+        this.stats = new Stats()
+        this.stats.showPanel(0)
+        document.body.appendChild(this.stats.dom)
+
         this.size = {
             width: window.innerWidth,
             height: window.innerHeight,
@@ -33,6 +39,12 @@ class GL {
         }
 
         this.canvas = document.querySelector('.webgl') as HTMLCanvasElement
+        if (this.canvas) {
+            this.canvas.width = this.size.width
+            this.canvas.height = this.size.height
+        } else {
+            console.log("No canvas")
+        }
 
         this.scene = new Scene()
 
@@ -40,8 +52,13 @@ class GL {
         this.camera.position.z = 5
 
         this.controls = new OrbitControls(this.camera, this.canvas)
+        this.controls.enableDamping = true
+
         this.clock = new Clock()
+
         this.renderer = new Renderer({ canvas: this.canvas })
+        this.renderer.setSize(this.size.width, this.size.height)
+        this.renderer.render(this.scene, this.camera)
 
         this.bubble = new Bubble(1, 64)
         
@@ -57,26 +74,15 @@ class GL {
         return GL.instance;
     }
 
-    init() {
-        if (this.canvas) {
-            this.canvas.width = this.size.width
-            this.canvas.height = this.size.height
-        } else {
-            console.log("No canvas")
-        }
+    // ---------------- METHODS
 
+    init() {
         this.addElements()
         this.addEvents()
-
-        this.scene.add(this.camera)
-
-        this.controls.enableDamping = true
-
-        this.renderer.setSize(this.size.width, this.size.height)
-        this.renderer.render(this.scene, this.camera)
     }
 
     addElements() {
+        this.scene.add(this.camera)
         this.scene.add(this.bubble.mesh)
     }
 
@@ -94,15 +100,21 @@ class GL {
         this.camera.updateProjectionMatrix()
     }
 
+    // ---------------- LIFECYCLE
+
     animate() {
+        this.stats.begin()
+
         window.requestAnimationFrame(this.animate.bind(this))
         this.render()
+
+        this.stats.end()
     }
 
     render() {
         this.controls.update()
 
-        this.bubble.render(this.clock.getElapsedTime())
+        this.bubble.update(this.clock.getElapsedTime())
 
         this.renderer.render(this.scene, this.camera)
     }
