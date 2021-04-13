@@ -12,7 +12,6 @@ import EventBus from '../../utils/EventBus'
 class Bubble extends Object3D {
     vertexShader: string
     fragmentShader: string
-    geometry: IcosahedronGeometry
     material: ShaderMaterial
     mesh: Mesh
 
@@ -30,9 +29,11 @@ class Bubble extends Object3D {
 
         this.GUI()
 
+        // TODO : remove geometry & material from globals and fix mesh.material.uniforms call in update
+
         this.vertexShader = bubbleVertexShader 
         this.fragmentShader = bubbleFragmentShader
-        this.geometry = new IcosahedronGeometry(radius, detail)
+        const geometry = new IcosahedronGeometry(radius, detail)
         this.material = new ShaderMaterial({
             vertexShader: bubbleVertexShader,
             fragmentShader: bubbleFragmentShader,
@@ -44,7 +45,7 @@ class Bubble extends Object3D {
             },
             wireframe: true
         })
-        this.mesh = new Mesh(this.geometry, this.material)
+        this.mesh = new Mesh(geometry, this.material)
               
         EventBus.on('gl:update', (e: any) => this.update(e.elapsedTime))
     }

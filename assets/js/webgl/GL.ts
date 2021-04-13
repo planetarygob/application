@@ -1,6 +1,11 @@
 import { 
     PerspectiveCamera,
-    Clock
+    Clock,
+    CanvasTexture,
+    SphereGeometry,
+    MeshBasicMaterial,
+    BackSide,
+    Mesh
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Scene from './core/Scene'
@@ -9,6 +14,7 @@ import Bubble from './custom/Bubble'
 import Stats from '../utils/Stats'
 import EventBus from '../utils/EventBus'
 import Sky from './custom/Sky'
+import SkyTexture from './textures/SkyTexture'
 
 
 interface Size {
@@ -26,8 +32,6 @@ class GL {
     controls: OrbitControls
     clock: Clock
     size: Size
-    bubble: Bubble
-    context: any
 
     constructor() {
         Stats.showPanel(0)
@@ -38,8 +42,6 @@ class GL {
             height: window.innerHeight,
             ratio: window.innerWidth / window.innerHeight
         }
-
-        
 
         this.canvas = document.querySelector('.webgl') as HTMLCanvasElement
         if (this.canvas) {
@@ -57,18 +59,14 @@ class GL {
 
         this.clock = new Clock()
 
-        this.renderer = new Renderer(
-            { canvas: this.canvas }, 
+        this.renderer = new Renderer({ 
+                canvas: this.canvas,
+                alpha: false
+            }, 
             this.size.width, 
             this.size.height
         )
         this.renderer.render(this.scene, this.camera)
-
-        this.bubble = new Bubble(1, 32)
-
-        // TODO : WIP Skybox
-        // const sky = new Sky(this.canvas.width, this.canvas.height)
-        // sky.render()
 
         this.addElements()
         this.addEvents()
@@ -88,7 +86,12 @@ class GL {
 
     addElements() {
         this.scene.add(this.camera)
-        this.scene.add(this.bubble.mesh)
+
+        const bubble = new Bubble(1, 32)
+        const sky = new Sky(this.canvas.width, this.canvas.height)
+
+        this.scene.add(sky.mesh)
+        this.scene.add(bubble.mesh)
     }
 
     addEvents() {
