@@ -8,6 +8,7 @@ import Renderer from './core/Renderer'
 import Bubble from './custom/Bubble'
 import Stats from '../utils/Stats'
 import EventBus from '../utils/EventBus'
+import Sky from './custom/Sky'
 
 
 interface Size {
@@ -26,6 +27,7 @@ class GL {
     clock: Clock
     size: Size
     bubble: Bubble
+    context: any
 
     constructor() {
         Stats.showPanel(0)
@@ -36,6 +38,8 @@ class GL {
             height: window.innerHeight,
             ratio: window.innerWidth / window.innerHeight
         }
+
+        
 
         this.canvas = document.querySelector('.webgl') as HTMLCanvasElement
         if (this.canvas) {
@@ -61,7 +65,11 @@ class GL {
         this.renderer.render(this.scene, this.camera)
 
         this.bubble = new Bubble(1, 32)
-        
+
+        // TODO : WIP Skybox
+        // const sky = new Sky(this.canvas.width, this.canvas.height)
+        // sky.render()
+
         this.addElements()
         this.addEvents()
 
