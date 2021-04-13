@@ -8,6 +8,7 @@ import bubbleVertexShader from '../shaders/Bubble/vertex'
 import bubbleFragmentShader from '../shaders/Bubble/fragment'
 import GUI from '../../utils/GUI'
 import EventBus from '../../utils/EventBus'
+import { GLEvents } from '../../utils/GLEvents'
 
 class Bubble extends Object3D {
     vertexShader: string
@@ -22,9 +23,9 @@ class Bubble extends Object3D {
         super()
 
         this.userData = {
-            speed: 0.2,
-            density: 0.75,
-            strength: 0.1
+            speed: 0.3,
+            density: 0.3,
+            strength: 0.2
         }
 
         this.GUI()
@@ -47,7 +48,7 @@ class Bubble extends Object3D {
         })
         this.mesh = new Mesh(geometry, this.material)
               
-        EventBus.on('gl:update', (e: any) => this.update(e.elapsedTime))
+        EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
     }
 
     // ---------------- INITIALIZATION

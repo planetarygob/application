@@ -15,6 +15,7 @@ import Stats from '../utils/Stats'
 import EventBus from '../utils/EventBus'
 import Sky from './custom/Sky'
 import SkyTexture from './textures/SkyTexture'
+import { GLEvents } from '../utils/GLEvents'
 
 
 interface Size {
@@ -68,6 +69,7 @@ class GL {
         )
         this.renderer.render(this.scene, this.camera)
 
+        // TODO : 
         this.addElements()
         this.addEvents()
 
@@ -87,6 +89,7 @@ class GL {
     addElements() {
         this.scene.add(this.camera)
 
+        // TODO : Should not be here at the end, shoudl rather be in Scene.ts
         const bubble = new Bubble(1, 32)
         const sky = new Sky(this.canvas.width, this.canvas.height)
 
@@ -124,7 +127,7 @@ class GL {
         // TODO : Print dans un élément d'UI
         // console.log( this.renderer.info )
 
-        EventBus.emit('gl:update', { elapsedTime: elapsedTime })
+        EventBus.emit(GLEvents.UPDATE, { elapsedTime: elapsedTime })
 
         this.renderer.render(this.scene, this.camera)
     }

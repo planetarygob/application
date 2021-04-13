@@ -126,5 +126,5 @@ export default `
     vNormal = normal;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);
-  }  
+  }
 `
