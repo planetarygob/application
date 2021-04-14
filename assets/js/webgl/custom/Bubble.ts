@@ -43,8 +43,7 @@ class Bubble extends Object3D {
                 uSpeed: { value: this.userData.speed },
                 uNoiseDensity: { value: this.userData.density },
                 uNoiseStrength: { value: this.userData.strength }
-            },
-            wireframe: true
+            }
         })
         this.mesh = new Mesh(geometry, this.material)
               

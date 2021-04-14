@@ -62,7 +62,8 @@ class GL {
 
         this.renderer = new Renderer({ 
                 canvas: this.canvas,
-                alpha: false
+                alpha: false,
+                antialiasing: true
             }, 
             this.size.width, 
             this.size.height
@@ -87,18 +88,18 @@ class GL {
     // ---------------- METHODS
 
     addElements() {
-        this.scene.add(this.camera)
+        this.scene.add( this.camera )
 
         // TODO : Should not be here at the end, shoudl rather be in Scene.ts
-        const bubble = new Bubble(1, 32)
-        const sky = new Sky(this.canvas.width, this.canvas.height)
+        const bubble = new Bubble( 1, 32 )
+        const sky = new Sky( this.canvas.width, this.canvas.height )
 
-        this.scene.add(sky.mesh)
-        this.scene.add(bubble.mesh)
+        this.scene.add( sky.mesh )
+        this.scene.add( bubble.mesh )
     }
 
     addEvents() {
-        window.addEventListener('resize', this.resize.bind(this))
+        window.addEventListener( 'resize', this.resize.bind(this) )
     }  
     
     resize() {
@@ -106,7 +107,8 @@ class GL {
         this.size.height = window.innerHeight
 
         this.camera.aspect = this.size.width / this.size.height
-        this.renderer.setSize(this.size.width, this.size.height)
+        this.renderer.setPixelRatio( window.devicePixelRatio )
+        this.renderer.setSize( this.size.width, this.size.height )
 
         this.camera.updateProjectionMatrix()
     }
@@ -116,7 +118,7 @@ class GL {
     animate() {
         Stats.update()
 
-        window.requestAnimationFrame(this.animate.bind(this))
+        window.requestAnimationFrame( this.animate.bind(this) )
         this.render()
     }
 
