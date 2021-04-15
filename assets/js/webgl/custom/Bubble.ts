@@ -46,7 +46,6 @@ class Bubble extends Object3D {
             }
         })
         this.mesh = new Mesh(geometry, this.material)
-              
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
     }
 
