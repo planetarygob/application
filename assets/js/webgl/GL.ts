@@ -5,7 +5,8 @@ import {
     SphereGeometry,
     MeshBasicMaterial,
     BackSide,
-    Mesh
+    Mesh,
+    Color
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Scene from './core/Scene'
@@ -76,6 +77,12 @@ class GL {
         this.addEvents()
 
         this.animate()
+
+        const i = new SkyTexture(this.size.width, this.size.height)
+        const t = new CanvasTexture(i.context.canvas)
+        this.scene.background = t
+        
+        console.log( this.scene.background )
     }
 
     public static getInstance(): GL {
@@ -95,7 +102,7 @@ class GL {
         const bubble = new Bubble( 1, 32 )
         const sky = new Sky( this.canvas.width, this.canvas.height )
 
-        this.scene.add( sky.mesh )
+        // this.scene.add( sky.mesh )
         this.scene.add( bubble.mesh )
     }
 
@@ -120,15 +127,16 @@ class GL {
         Stats.update()
 
         window.requestAnimationFrame( this.animate.bind(this) )
+
         this.render()
     }
 
     render() {
         const elapsedTime = this.clock.getElapsedTime()
-        this.controls.update()
-        
-        Tracker.update( this.renderer.info.render )
 
+        this.controls.update()
+
+        Tracker.update( this.renderer.info.render )
         EventBus.emit(GLEvents.UPDATE, { elapsedTime: elapsedTime })
 
         this.renderer.render(this.scene, this.camera)

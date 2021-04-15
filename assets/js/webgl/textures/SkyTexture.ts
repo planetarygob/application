@@ -1,4 +1,6 @@
-class SkyTexture {
+import { Texture } from "three"
+
+class SkyTexture extends Texture {
     canvas: HTMLCanvasElement
     context: any
     width: number
@@ -9,6 +11,7 @@ class SkyTexture {
     bColor: string
 
     constructor(width: number, height: number) {
+        super()
         this.width = width
         this.height = height
 
