@@ -16,6 +16,7 @@ import EventBus from '../utils/EventBus'
 import Sky from './custom/Sky'
 import SkyTexture from './textures/SkyTexture'
 import { GLEvents } from '../utils/GLEvents'
+import Tracker from '../utils/Tracker'
 
 
 interface Size {
@@ -126,8 +127,7 @@ class GL {
         const elapsedTime = this.clock.getElapsedTime()
         this.controls.update()
         
-        // TODO : Print dans un élément d'UI
-        // console.log( this.renderer.info )
+        Tracker.update( this.renderer.info.render )
 
         EventBus.emit(GLEvents.UPDATE, { elapsedTime: elapsedTime })
 

@@ -1,5 +1,3 @@
-import { CanvasTexture } from "three";
-
 class SkyTexture {
     canvas: HTMLCanvasElement
     context: any
