@@ -5,7 +5,14 @@ import {
     SphereGeometry,
     MeshBasicMaterial,
     BackSide,
-    Mesh
+    Mesh,
+    WebGLCubeRenderTarget,
+    RGBFormat,
+    LinearMipmapLinearFilter,
+    CubeCamera,
+    MeshLambertMaterial,
+    Color,
+    CubeTextureLoader
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Scene from './core/Scene'
@@ -33,6 +40,8 @@ class GL {
     controls: OrbitControls
     clock: Clock
     size: Size
+
+    sphereCamera: any
 
     constructor() {
         Stats.showPanel(0)
@@ -89,13 +98,29 @@ class GL {
 
     addElements() {
         this.scene.add( this.camera )
+        
 
-        // TODO : Should not be here at the end, shoudl rather be in Scene.ts
-        const bubble = new Bubble( 1, 32 )
+        const loader = new CubeTextureLoader()
+
+        // this.scene.background = cubeTexture
+        // TODO : Should not be here at the end, should rather be in Scene.ts
+
+        // const bubble = new Bubble( 1, 32 )
+        // this.scene.add( bubble.mesh )
+
         const sky = new Sky( this.canvas.width, this.canvas.height )
-
         this.scene.add( sky.mesh )
-        this.scene.add( bubble.mesh )
+
+        const cubeRenderTarget = new WebGLCubeRenderTarget( 5, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter } )
+        // TODO : 30 is worldSize
+        this.sphereCamera = new CubeCamera( 1, 30, cubeRenderTarget )
+        this.scene.add( this.sphereCamera )
+
+
+        const sphereGeometry = new SphereGeometry(1, 32)
+        const chromeMaterial = new MeshBasicMaterial( { envMap: cubeRenderTarget.texture } )
+        const sphere = new Mesh( sphereGeometry, chromeMaterial )
+        this.scene.add( sphere )
     }
 
     addEvents() {
@@ -129,9 +154,10 @@ class GL {
         // TODO : Print dans un élément d'UI
         // console.log( this.renderer.info )
 
-        EventBus.emit(GLEvents.UPDATE, { elapsedTime: elapsedTime })
+        EventBus.emit( GLEvents.UPDATE, { elapsedTime: elapsedTime } )
 
-        this.renderer.render(this.scene, this.camera)
+        this.renderer.render( this.scene, this.camera )
+        this.sphereCamera.update( this.renderer, this.scene )
     }
 }
 
