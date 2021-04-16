@@ -23,8 +23,8 @@ class SkyTexture extends Texture {
         this.context = this.canvas.getContext('2d')
 
         // = new Color(0x000000)
-        this.tColor = 'rgb(135,196,196)'
-        this.bColor = 'rgb(255,152,158)'
+        this.tColor = 'rgba(9,9,121,1)'
+        this.bColor = 'rgba(190,0,255,1)'
 
         this.gradient = this.context.createLinearGradient(0, 0, 0, this.canvas.height);
         // this.tColor.getHexString()

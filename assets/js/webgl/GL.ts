@@ -12,9 +12,17 @@ import {
     CubeCamera,
     MeshLambertMaterial,
     Color,
-    CubeTextureLoader
+    CubeTextureLoader,
+    BoxBufferGeometry,
+    MeshPhysicalMaterial,
+    PMREMGenerator,
+    UnsignedByteType,
+    SphereBufferGeometry,
+    DirectionalLight,
+    AmbientLight
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
 import Scene from './core/Scene'
 import Renderer from './core/Renderer'
 import Bubble from './custom/Bubble'
@@ -43,6 +51,8 @@ class GL {
     size: Size
 
     sphereCamera: any
+    hdrCubeRenderTarget: any
+    hdrEquirect: any
 
     constructor() {
         Stats.showPanel(0)
@@ -80,17 +90,10 @@ class GL {
         )
         this.renderer.render(this.scene, this.camera)
 
-        // TODO : 
         this.addElements()
         this.addEvents()
 
         this.animate()
-
-        const i = new SkyTexture(this.size.width, this.size.height)
-        const t = new CanvasTexture(i.context.canvas)
-        this.scene.background = t
-        
-        console.log( this.scene.background )
     }
 
     public static getInstance(): GL {
@@ -105,29 +108,59 @@ class GL {
 
     addElements() {
         this.scene.add( this.camera )
-        
 
-        const loader = new CubeTextureLoader()
-
-        // this.scene.background = cubeTexture
         // TODO : Should not be here at the end, should rather be in Scene.ts
 
-        // const bubble = new Bubble( 1, 32 )
+        const bubble = new Bubble( 1, 12 )
         // this.scene.add( bubble.mesh )
 
         const sky = new Sky( this.canvas.width, this.canvas.height )
         this.scene.add( sky.mesh )
 
         const cubeRenderTarget = new WebGLCubeRenderTarget( 5, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter } )
+
         // TODO : 30 is worldSize
         this.sphereCamera = new CubeCamera( 1, 30, cubeRenderTarget )
         this.scene.add( this.sphereCamera )
 
+        const boxGeometry = new BoxBufferGeometry(1, 1, 1)
+        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000 } )
+        const box = new Mesh( boxGeometry, boxMaterial )
+        this.scene.add( box )
 
-        const sphereGeometry = new SphereGeometry(1, 32)
-        const chromeMaterial = new MeshBasicMaterial( { envMap: cubeRenderTarget.texture } )
-        const sphere = new Mesh( sphereGeometry, chromeMaterial )
+        const pmremGenerator = new PMREMGenerator( this.renderer )
+        // this.hdrCubeRenderTarget = pmremGenerator.fromEquirectangular(this.hdrEquirect)
+        this.hdrCubeRenderTarget = pmremGenerator.fromScene(this.scene)
+
+        // Raw texture of scene used as gradient
+        // const sphereMaterial = new MeshBasicMaterial( { envMap: cubeRenderTarget.texture } )
+
+        const bubbleTexture = new CanvasTexture(this.generateTexture());
+        bubbleTexture.repeat.set(1, 0);
+        
+        const bubbleMaterial = new MeshPhysicalMaterial ({
+            color: 0xffffff,
+            metalness: 0,
+            roughness: 0,
+            alphaMap: bubbleTexture,
+            alphaTest: 0.5,
+            envMap: this.hdrCubeRenderTarget.texture,
+            envMapIntensity: 8,
+            depthWrite: false,
+            transmission: 0.9,
+            opacity: 1,
+            transparent: true
+        })
+
+        const bubbleMaterial1b = bubbleMaterial.clone()
+        bubbleMaterial1b.side = BackSide
+
+        const bubbleGeometry1 = new SphereBufferGeometry(3, 64, 32);
+
+        const sphere = new Mesh( bubbleGeometry1, bubbleMaterial1b )
         this.scene.add( sphere )
+
+        this.createLights()
     }
 
     addEvents() {
@@ -144,6 +177,31 @@ class GL {
 
         this.camera.updateProjectionMatrix()
     }
+
+    generateTexture() {
+        const canvas = document.createElement("canvas") as HTMLCanvasElement
+        canvas.width = 2;
+        canvas.height = 2;
+      
+        const context = canvas.getContext("2d") as CanvasRenderingContext2D
+        context.fillStyle = "white";
+        context.fillRect(0, 1, 2, 1);
+      
+        return canvas;
+    };
+
+    createLights() {
+        const ambientLight = new AmbientLight(0xaa54f0, 1);
+      
+        const directionalLight1 = new DirectionalLight(0xffffff, 1);
+        directionalLight1.position.set(-2, 2, 5);
+      
+        const directionalLight2 = new DirectionalLight(0xfff000, 1);
+        directionalLight2.position.set(-2, 4, 4);
+        directionalLight2.castShadow = true;
+      
+        this.scene.add(ambientLight, directionalLight1, directionalLight2);
+    };
 
     // ---------------- LIFECYCLE
 
