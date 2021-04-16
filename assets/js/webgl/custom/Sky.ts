@@ -5,7 +5,6 @@ import SkyTexture from '../textures/SkyTexture'
 class Sky extends Object3D {
     width: number
     height: number
-    texture: CanvasTexture
     mesh: Mesh
 
     constructor(width: number, height: number) {
@@ -17,14 +16,15 @@ class Sky extends Object3D {
 
         this.width = width
         this.height = height
+        
         const i = new SkyTexture(this.width, this.height)
-        this.texture = new CanvasTexture(i.context.canvas);
+        const t = new CanvasTexture(i.context.canvas);
 
         // TODO : 30 is worldSize
         const geometry = new SphereGeometry(30, 32);
         const material = new MeshBasicMaterial({
             side: BackSide,
-            map: this.texture,
+            map: t,
             fog: false
         });
 

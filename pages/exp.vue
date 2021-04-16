@@ -1,5 +1,8 @@
 <template>
-    <WebGL />
+    <div>
+        <WebGL />
+        <Tracker />
+    </div>
 </template>
 
 <script lang="ts">
@@ -9,4 +12,7 @@ export default Vue.extend({})
 </script>
 
 <style>
+    body {
+        overflow: hidden;
+    }
 </style>

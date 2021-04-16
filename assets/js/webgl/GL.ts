@@ -23,6 +23,7 @@ import EventBus from '../utils/EventBus'
 import Sky from './custom/Sky'
 import SkyTexture from './textures/SkyTexture'
 import { GLEvents } from '../utils/GLEvents'
+import Tracker from '../utils/Tracker'
 
 
 interface Size {
@@ -84,6 +85,12 @@ class GL {
         this.addEvents()
 
         this.animate()
+
+        const i = new SkyTexture(this.size.width, this.size.height)
+        const t = new CanvasTexture(i.context.canvas)
+        this.scene.background = t
+        
+        console.log( this.scene.background )
     }
 
     public static getInstance(): GL {
@@ -144,17 +151,17 @@ class GL {
         Stats.update()
 
         window.requestAnimationFrame( this.animate.bind(this) )
+
         this.render()
     }
 
     render() {
         const elapsedTime = this.clock.getElapsedTime()
-        this.controls.update()
-        
-        // TODO : Print dans un élément d'UI
-        // console.log( this.renderer.info )
 
-        EventBus.emit( GLEvents.UPDATE, { elapsedTime: elapsedTime } )
+        this.controls.update()
+
+        Tracker.update( this.renderer.info.render )
+        EventBus.emit(GLEvents.UPDATE, { elapsedTime: elapsedTime })
 
         this.renderer.render( this.scene, this.camera )
         this.sphereCamera.update( this.renderer, this.scene )
