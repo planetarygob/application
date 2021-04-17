@@ -19,7 +19,8 @@ import {
     UnsignedByteType,
     SphereBufferGeometry,
     DirectionalLight,
-    AmbientLight
+    AmbientLight,
+    TorusKnotGeometry
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
@@ -123,17 +124,22 @@ class GL {
         this.sphereCamera = new CubeCamera( 1, 30, cubeRenderTarget )
         this.scene.add( this.sphereCamera )
 
-        const boxGeometry = new BoxBufferGeometry(1, 1, 1)
-        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000 } )
+        const boxGeometry = new TorusKnotGeometry( 1, 1, 5, 32 );
+        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
         const box = new Mesh( boxGeometry, boxMaterial )
         this.scene.add( box )
+        const box2 = new Mesh( boxGeometry, boxMaterial )
+        this.scene.add( box2 )
+        box2.position.x = 10
+        const box3 = new Mesh( boxGeometry, boxMaterial )
+        this.scene.add( box3 )
+        box3.position.x = -10
 
         const pmremGenerator = new PMREMGenerator( this.renderer )
-        // this.hdrCubeRenderTarget = pmremGenerator.fromEquirectangular(this.hdrEquirect)
         this.hdrCubeRenderTarget = pmremGenerator.fromScene(this.scene)
 
         // Raw texture of scene used as gradient
-        // const sphereMaterial = new MeshBasicMaterial( { envMap: cubeRenderTarget.texture } )
+        const sphereMaterial = new MeshBasicMaterial( { envMap: cubeRenderTarget.texture } )
 
         const bubbleTexture = new CanvasTexture(this.generateTexture());
         bubbleTexture.repeat.set(1, 0);
@@ -157,6 +163,7 @@ class GL {
 
         const bubbleGeometry1 = new SphereBufferGeometry(3, 64, 32);
 
+        // const sphere = new Mesh( bubbleGeometry1, bubbleMaterial1b )
         const sphere = new Mesh( bubbleGeometry1, bubbleMaterial1b )
         this.scene.add( sphere )
 
