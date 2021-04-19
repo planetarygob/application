@@ -3,14 +3,9 @@ import Renderer from './core/Renderer'
 import { 
     PerspectiveCamera,
     Clock,
-    MeshBasicMaterial,
-    Mesh,
     DirectionalLight,
-    PointsMaterial,
-    BufferGeometry,
-    BufferAttribute,
-    Points,
     AnimationMixer,
+    AmbientLight
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Stats from 'stats.js'
@@ -19,7 +14,11 @@ import CustomInteractionManager from '../utils/managers/CustomInteractionManager
 import HighlightManager from '../utils/managers/HighlightManager'
 import { CustomLoadingManager } from '../utils/managers/CustomLoadingManager'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-import Tracker from '../utils/Tracker'
+import Tracker from '../utils/dev/Tracker'
+import Bubble from './custom/Bubble'
+import Sky from './custom/Sky'
+import EventBus from '../utils/EventBus'
+import { GLEvents } from '../utils/GLEvents'
 
 let previousTime = 0
 let elapsedTime = 0
@@ -46,17 +45,12 @@ class GL {
     loadingManager: CustomLoadingManager
     proton: Proton
     mixer: AnimationMixer
-    model: Object3D
-    model2: Object3D
     sphereCamera: any
     hdrCubeRenderTarget: any
     hdrEquirect: any
     cubeRenderTarget: any
 
     constructor() {
-
-        let self = this 
-
         this.stats = new Stats()
         this.stats.showPanel(0)
         document.body.appendChild(this.stats.dom)
@@ -127,25 +121,25 @@ class GL {
     addElements() {
         this.scene.add(this.camera)
 
-        const ambientLight = new AmbientLight(0xffffff, 0.8)
-        this.scene.add(ambientLight)
+        // const ambientLight = new AmbientLight(0xffffff, 0.8)
+        // this.scene.add(ambientLight)
 
-        const boxGeometry = new TorusKnotGeometry( 1, 1, 5, 32 );
-        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
-        const box2 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box2 )
-        box2.position.x = 10
-        const box3 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box3 )
-        box3.position.x = -10
+        // const boxGeometry = new TorusKnotBufferGeometry( 1, 1, 5, 32 );
+        // const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
+        // const box2 = new Mesh( boxGeometry, boxMaterial )
+        // this.scene.add( box2 )
+        // box2.position.x = 10
+        // const box3 = new Mesh( boxGeometry, boxMaterial )
+        // this.scene.add( box3 )
+        // box3.position.x = -10
 
-        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
-        this.scene.add( bubble.mesh )
+        // const bubble = new Bubble( 1, 12, this.scene, this.renderer )
+        // this.scene.add( bubble.mesh )
 
-        const sky = new Sky( this.canvas.width, this.canvas.height )
-        this.scene.add( sky.mesh )
+        // const sky = new Sky( this.canvas.width, this.canvas.height )
+        // this.scene.add( sky.mesh )
 
-        this.createLights()
+        // this.createLights()
     }
 
     addEvents() {
@@ -205,14 +199,6 @@ class GL {
 
         if (this.clock) {
             elapsedTime = this.clock.getElapsedTime()
-        }
-
-        if (this.model && this.model2) {
-            const modelAngle = elapsedTime * 2
-            this.model.position.y = Math.sin(modelAngle) / 6
-    
-            const modelAngle2 = elapsedTime * 4
-            this.model2.position.y = Math.sin(modelAngle2) / 6
         }
 
         if (this.mixer) {
