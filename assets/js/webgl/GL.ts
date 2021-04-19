@@ -3,7 +3,8 @@ import Renderer from './core/Renderer'
 import { 
     PerspectiveCamera,
     Clock,
-    AmbientLight,
+    MeshBasicMaterial,
+    Mesh,
     DirectionalLight,
     PointsMaterial,
     BufferGeometry,
@@ -12,13 +13,14 @@ import {
     AnimationMixer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import Stats from 'stats.js'
-import Proton from 'three.proton.js';
-import EventBusManager from '../utils/EventBus'
-import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
-import HighlightManager from '../utils/managers/HighlightManager'
-import { CustomLoadingManager } from '../utils/managers/CustomLoadingManager'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import Scene from './core/Scene'
+import Renderer from './core/Renderer'
+import Bubble from './custom/Bubble'
+import Stats from '../utils/dev/Stats'
+import EventBus from '../utils/EventBus'
+import Sky from './custom/Sky'
+import { GLEvents } from '../utils/GLEvents'
+import Tracker from '../utils/dev/Tracker'
 
 let previousTime = 0
 let elapsedTime = 0
@@ -129,36 +131,30 @@ class GL {
         const ambientLight = new AmbientLight(0xffffff, 0.8)
         this.scene.add(ambientLight)
 
-        const directionalLight = new DirectionalLight(0xffffff, 1)
-        directionalLight.position.set(0, 5, -5)
-        this.scene.add(directionalLight)
+        const boxGeometry = new TorusKnotGeometry( 1, 1, 5, 32 );
+        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
+        const box2 = new Mesh( boxGeometry, boxMaterial )
+        this.scene.add( box2 )
+        box2.position.x = 10
+        const box3 = new Mesh( boxGeometry, boxMaterial )
+        this.scene.add( box3 )
+        box3.position.x = -10
 
-        this.addBackgroundParticles()
+        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
+        this.scene.add( bubble.mesh )
+
+        const sky = new Sky( this.canvas.width, this.canvas.height )
+        this.scene.add( sky.mesh )
+
+        this.createLights()
     }
 
     addEvents() {
-        window.addEventListener('resize', this.resize.bind(this))
-        // window.addEventListener('click', this.scene.trigger)
-    }  
-
-    addBackgroundParticles () {
-        const particlesMaterial = new PointsMaterial({
-            size: 0.02,
-            sizeAttenuation: true
+        window.addEventListener( 'resize', this.resize.bind(this) )
+        this.controls.addEventListener('change', () => {
+            EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         })
-        const particlesGeometry = new BufferGeometry()
-        const count = 2000
-
-        const positions = new Float32Array(count * 3) // Multiply by 3 because each position is composed of 3 values (x, y, z)
-
-        for(let i = 0; i < count * 3; i++) {
-            positions[i] = (Math.random() - 0.5) * 100 // Math.random() - 0.5 to have a random value between -0.5 and +0.5
-        }
-
-        particlesGeometry.setAttribute('position', new BufferAttribute(positions, 3))
-        const particles = new Points(particlesGeometry, particlesMaterial)
-        this.scene.add(particles)
-    }
+    }  
     
     resize() {
         this.size.width = window.innerWidth;
@@ -168,18 +164,6 @@ class GL {
         this.renderer.setSize(this.size.width, this.size.height)
 
         this.camera.updateProjectionMatrix()
-    }
-
-    generateTexture() {
-        const canvas = document.createElement("canvas") as HTMLCanvasElement
-        canvas.width = 2
-        canvas.height = 2
-      
-        const context = canvas.getContext("2d") as CanvasRenderingContext2D
-        context.fillStyle = "white"
-        context.fillRect(0, 1, 2, 1)
-      
-        return canvas
     }
 
     createLights() {
@@ -224,32 +208,7 @@ class GL {
             elapsedTime = this.clock.getElapsedTime()
         }
 
-        if (this.model && this.model2) {
-            const modelAngle = elapsedTime * 2
-            this.model.position.y = Math.sin(modelAngle) / 6
-    
-            const modelAngle2 = elapsedTime * 4
-            this.model2.position.y = Math.sin(modelAngle2) / 6
-        }
-
-        if (this.mixer) {
-            let deltaTime = 0
-            deltaTime = elapsedTime - previousTime
-            previousTime = elapsedTime
-
-            this.mixer.update(deltaTime)
-        }
-
-        this.renderer.render(this.scene, this.camera)
-
-        if (this.highlightManager) {
-            this.highlightManager.render();
-        }
-        
-        if (this.sphereCamera) {
-            this.sphereCamera.update(this.renderer, this.scene)
-        }
-
+        this.renderer.render( this.scene, this.camera )
     }
 }
 
