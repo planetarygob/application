@@ -1,38 +1,27 @@
+import Scene from './core/Scene'
+import Renderer from './core/Renderer'
 import { 
     PerspectiveCamera,
     Clock,
-    CanvasTexture,
-    SphereGeometry,
-    MeshBasicMaterial,
-    BackSide,
-    Mesh,
-    WebGLCubeRenderTarget,
-    RGBFormat,
-    LinearMipmapLinearFilter,
-    CubeCamera,
-    MeshLambertMaterial,
-    Color,
-    CubeTextureLoader,
-    BoxBufferGeometry,
-    MeshPhysicalMaterial,
-    PMREMGenerator,
-    UnsignedByteType,
-    SphereBufferGeometry,
-    DirectionalLight,
     AmbientLight,
-    TorusKnotGeometry
+    DirectionalLight,
+    PointsMaterial,
+    BufferGeometry,
+    BufferAttribute,
+    Points,
+    AnimationMixer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
-import Scene from './core/Scene'
-import Renderer from './core/Renderer'
-import Bubble from './custom/Bubble'
-import Stats from '../utils/Stats'
-import EventBus from '../utils/EventBus'
-import Sky from './custom/Sky'
-import SkyTexture from './textures/SkyTexture'
-import { GLEvents } from '../utils/GLEvents'
-import Tracker from '../utils/Tracker'
+import Stats from 'stats.js'
+import Proton from 'three.proton.js';
+import EventBusManager from '../utils/EventBus'
+import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
+import HighlightManager from '../utils/managers/HighlightManager'
+import { CustomLoadingManager } from '../utils/managers/CustomLoadingManager'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+
+let previousTime = 0
+let elapsedTime = 0
 
 
 interface Size {
@@ -43,6 +32,7 @@ interface Size {
 
 class GL {
     private static instance: GL
+    stats: Stats
     canvas: HTMLCanvasElement
     scene: Scene 
     renderer: Renderer 
@@ -50,14 +40,25 @@ class GL {
     controls: OrbitControls
     clock: Clock
     size: Size
-
+    interactionManager: CustomInteractionManager
+    highlightManager: HighlightManager
+    loadingManager: CustomLoadingManager
+    proton: Proton
+    mixer: AnimationMixer
+    model: Object3D
+    model2: Object3D
     sphereCamera: any
     hdrCubeRenderTarget: any
     hdrEquirect: any
+    cubeRenderTarget: any
 
     constructor() {
-        Stats.showPanel(0)
-        document.body.appendChild(Stats.dom)
+
+        let self = this 
+
+        this.stats = new Stats()
+        this.stats.showPanel(0)
+        document.body.appendChild(this.stats.dom)
 
         this.size = {
             width: window.innerWidth,
@@ -69,167 +70,186 @@ class GL {
         if (this.canvas) {
             this.canvas.width = this.size.width
             this.canvas.height = this.size.height
+        } else {
+            console.log("No canvas")
         }
 
         this.scene = new Scene()
 
-        this.camera = new PerspectiveCamera(45, this.size.width / this.size.height, 0.1, 1000)
-        this.camera.position.z = 5
+        this.camera = new PerspectiveCamera(75, this.size.width / this.size.height, 0.1, 1000)
+        this.camera.position.set(0, 10, -15)
 
         this.controls = new OrbitControls(this.camera, this.canvas)
-        this.controls.enableDamping = true
 
         this.clock = new Clock()
 
-        this.renderer = new Renderer({ 
-                canvas: this.canvas,
-                alpha: false,
-                antialiasing: true
-            }, 
-            this.size.width, 
-            this.size.height
-        )
+        // EventBusManager.getInstance().emitter.on('gl:needClock', function needClock (e: any) {
+        //     self.clock = new Clock()
+        //     EventBusManager.getInstance().emitter.off('gl:needClock', needClock)
+        // })
+
+        this.renderer = new Renderer({ canvas: this.canvas }, this.size.width, this.size.height)
         this.renderer.render(this.scene, this.camera)
+
+        this.loadingManager = new CustomLoadingManager(this.renderer, this.scene)
+
+        this.interactionManager = new CustomInteractionManager(this.renderer, this.camera)
+
+        this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
+
+        // EventBusManager.getInstance().emitter.on('gl:needProton', (e: any) => {
+        //     this.proton = new Proton()
+        // })
+
+        // EventBusManager.getInstance().emitter.on('gl:needSphereCamera', (e: any) => {
+        //     this.cubeRenderTarget = new WebGLCubeRenderTarget(5, {format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter})
+        //     this.sphereCamera = new CubeCamera(1, 30, this.cubeRenderTarget)
+        //     this.scene.add(this.sphereCamera)
+        // })
 
         this.addElements()
         this.addEvents()
 
-        this.animate()
+        this.animate();    
     }
 
     public static getInstance(): GL {
         if (!GL.instance) {
-            GL.instance = new GL()
+            GL.instance = new GL();
         }
  
-        return GL.instance
+        return GL.instance;
     }
 
     // ---------------- METHODS
 
     addElements() {
-        this.scene.add( this.camera )
+        this.scene.add(this.camera)
 
-        // TODO : Should not be here at the end, should rather be in Scene.ts
+        const ambientLight = new AmbientLight(0xffffff, 0.8)
+        this.scene.add(ambientLight)
 
-        const bubble = new Bubble( 1, 12 )
-        // this.scene.add( bubble.mesh )
+        const directionalLight = new DirectionalLight(0xffffff, 1)
+        directionalLight.position.set(0, 5, -5)
+        this.scene.add(directionalLight)
 
-        const sky = new Sky( this.canvas.width, this.canvas.height )
-        this.scene.add( sky.mesh )
-
-        const cubeRenderTarget = new WebGLCubeRenderTarget( 5, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter } )
-
-        // TODO : 30 is worldSize
-        this.sphereCamera = new CubeCamera( 1, 30, cubeRenderTarget )
-        this.scene.add( this.sphereCamera )
-
-        const boxGeometry = new TorusKnotGeometry( 1, 1, 5, 32 );
-        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
-        const box = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box )
-        const box2 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box2 )
-        box2.position.x = 10
-        const box3 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box3 )
-        box3.position.x = -10
-
-        const pmremGenerator = new PMREMGenerator( this.renderer )
-        this.hdrCubeRenderTarget = pmremGenerator.fromScene(this.scene)
-
-        // Raw texture of scene used as gradient
-        const sphereMaterial = new MeshBasicMaterial( { envMap: cubeRenderTarget.texture } )
-
-        const bubbleTexture = new CanvasTexture(this.generateTexture());
-        bubbleTexture.repeat.set(1, 0);
-        
-        const bubbleMaterial = new MeshPhysicalMaterial ({
-            color: 0xffffff,
-            metalness: 0,
-            roughness: 0,
-            alphaMap: bubbleTexture,
-            alphaTest: 0.5,
-            envMap: this.hdrCubeRenderTarget.texture,
-            envMapIntensity: 8,
-            depthWrite: false,
-            transmission: 0.9,
-            opacity: 1,
-            transparent: true
-        })
-
-        const bubbleMaterial1b = bubbleMaterial.clone()
-        bubbleMaterial1b.side = BackSide
-
-        const bubbleGeometry1 = new SphereBufferGeometry(3, 64, 32);
-
-        // const sphere = new Mesh( bubbleGeometry1, bubbleMaterial1b )
-        const sphere = new Mesh( bubbleGeometry1, bubbleMaterial1b )
-        this.scene.add( sphere )
-
-        this.createLights()
+        this.addBackgroundParticles()
     }
 
     addEvents() {
-        window.addEventListener( 'resize', this.resize.bind(this) )
+        window.addEventListener('resize', this.resize.bind(this))
+        // window.addEventListener('click', this.scene.trigger)
     }  
+
+    addBackgroundParticles () {
+        const particlesMaterial = new PointsMaterial({
+            size: 0.02,
+            sizeAttenuation: true
+        })
+        const particlesGeometry = new BufferGeometry()
+        const count = 2000
+
+        const positions = new Float32Array(count * 3) // Multiply by 3 because each position is composed of 3 values (x, y, z)
+
+        for(let i = 0; i < count * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 100 // Math.random() - 0.5 to have a random value between -0.5 and +0.5
+        }
+
+        particlesGeometry.setAttribute('position', new BufferAttribute(positions, 3))
+        const particles = new Points(particlesGeometry, particlesMaterial)
+        this.scene.add(particles)
+    }
     
     resize() {
-        this.size.width = window.innerWidth
-        this.size.height = window.innerHeight
+        this.size.width = window.innerWidth;
+        this.size.height = window.innerHeight;
 
         this.camera.aspect = this.size.width / this.size.height
-        this.renderer.setPixelRatio( window.devicePixelRatio )
-        this.renderer.setSize( this.size.width, this.size.height )
+        this.renderer.setSize(this.size.width, this.size.height)
 
         this.camera.updateProjectionMatrix()
     }
 
     generateTexture() {
         const canvas = document.createElement("canvas") as HTMLCanvasElement
-        canvas.width = 2;
-        canvas.height = 2;
+        canvas.width = 2
+        canvas.height = 2
       
         const context = canvas.getContext("2d") as CanvasRenderingContext2D
-        context.fillStyle = "white";
-        context.fillRect(0, 1, 2, 1);
+        context.fillStyle = "white"
+        context.fillRect(0, 1, 2, 1)
       
-        return canvas;
-    };
+        return canvas
+    }
 
     createLights() {
-        const ambientLight = new AmbientLight(0xaa54f0, 1);
+        const ambientLight = new AmbientLight(0xaa54f0, 1)
       
-        const directionalLight1 = new DirectionalLight(0xffffff, 1);
-        directionalLight1.position.set(-2, 2, 5);
+        const directionalLight1 = new DirectionalLight(0xffffff, 1)
+        directionalLight1.position.set(-2, 2, 5)
       
-        const directionalLight2 = new DirectionalLight(0xfff000, 1);
-        directionalLight2.position.set(-2, 4, 4);
-        directionalLight2.castShadow = true;
+        const directionalLight2 = new DirectionalLight(0xfff000, 1)
+        directionalLight2.position.set(-2, 4, 4)
+        directionalLight2.castShadow = true
       
-        this.scene.add(ambientLight, directionalLight1, directionalLight2);
-    };
+        this.scene.add(ambientLight, directionalLight1, directionalLight2)
+    }
 
     // ---------------- LIFECYCLE
 
     animate() {
-        Stats.update()
+        this.stats.begin()
 
-        window.requestAnimationFrame( this.animate.bind(this) )
-
+        window.requestAnimationFrame(this.animate.bind(this))
         this.render()
+
+        this.stats.end()
     }
 
     render() {
-        const elapsedTime = this.clock.getElapsedTime()
+        // controls update useless?
+        // this.controls.update()
 
-        this.controls.update()
+        // interactionManager couteux
+        if (this.interactionManager) {
+            this.interactionManager.update()
+        }
+        
+        if (this.proton) {
+            // console.log('proton update');
+            this.proton.update()
+        }
 
-        Tracker.update( this.renderer.info.render )
-        EventBus.emit(GLEvents.UPDATE, { elapsedTime: elapsedTime })
+        if (this.clock) {
+            elapsedTime = this.clock.getElapsedTime()
+        }
 
-        this.renderer.render( this.scene, this.camera )
-        this.sphereCamera.update( this.renderer, this.scene )
+        if (this.model && this.model2) {
+            const modelAngle = elapsedTime * 2
+            this.model.position.y = Math.sin(modelAngle) / 6
+    
+            const modelAngle2 = elapsedTime * 4
+            this.model2.position.y = Math.sin(modelAngle2) / 6
+        }
+
+        if (this.mixer) {
+            let deltaTime = 0
+            deltaTime = elapsedTime - previousTime
+            previousTime = elapsedTime
+
+            this.mixer.update(deltaTime)
+        }
+
+        this.renderer.render(this.scene, this.camera)
+
+        if (this.highlightManager) {
+            this.highlightManager.render();
+        }
+        
+        if (this.sphereCamera) {
+            this.sphereCamera.update(this.renderer, this.scene)
+        }
+
     }
 }
 

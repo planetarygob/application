@@ -1,0 +1,155 @@
+[
+    {
+      "name":"mode",
+      "type": "sun",
+      "url": "sun_mode_v2.gltf",
+      "model":null,
+      "light":null,
+      "position":{
+        "x":25,
+        "y":1,
+        "z":10
+      },
+      "bubbles":[
+        {
+          "name":"mode_bubble1",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "light":null,
+          "position":{
+            "x":20,
+            "y":1,
+            "z":10
+          }
+        },
+        {
+          "name":"mode_bubble2",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":25,
+            "y":1,
+            "z":5
+          }
+        },
+        {
+          "name":"mode_bubble3",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":30,
+            "y":1,
+            "z":10
+          }
+        }
+      ]
+    },
+    {
+      "name":"work",
+      "type": "sun",
+      "url": "sun_mode_v2--animation.gltf",
+      "model":null,
+      "light":null,
+      "position":{
+        "x":25,
+        "y":1,
+        "z":-10
+      },
+      "bubbles":[
+        {
+          "name":"work_bubble1",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":25,
+            "y":1,
+            "z":-16
+          }
+        },
+        {
+          "name":"work_bubble2",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":20,
+            "y":1,
+            "z":-5
+          }
+        },
+        {
+          "name":"work_bubble3",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":30,
+            "y":1,
+            "z":-5
+          }
+        }
+      ]
+    },
+    {
+      "name":"song",
+      "type": "sun",
+      "url": "sun_mode_v2--animation.gltf",
+      "model":null,
+      "light":null,
+      "position":{
+        "x":-25,
+        "y":1,
+        "z":-10
+      },
+      "bubbles":[
+        {
+          "name":"song_bubble1",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":-25,
+            "y":1,
+            "z":-15
+          }
+        },
+        {
+          "name":"song_bubble2",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":-20,
+            "y":1,
+            "z":-5
+          }
+        },
+        {
+          "name":"song_bubble3",
+          "type": "bubble",
+          "url": "bubble_skirt_v1.gltf",
+          "model":null,
+          "position":{
+            "x":-30,
+            "y":1,
+            "z":-5
+          }
+        }
+      ]
+    },
+    {
+      "name":"quiz",
+      "type": "sun-quiz",
+      "url": "sun_mode_v2--animation.gltf",
+      "model":null,
+      "position":{
+        "x":-30,
+        "y":1,
+        "z":10
+      }
+    }
+  ]
