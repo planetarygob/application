@@ -19,7 +19,7 @@ import {
     Object3D,
     PointLight
 } from 'three'
-import { gsap } from 'gsap'
+import { gsap, TweenLite } from 'gsap'
 
 export default {
     components: {
@@ -39,7 +39,8 @@ export default {
         bubbleSelected: Object3D,
         sunLight: PointLight,
         canClick: true,
-        canMouseOver: true
+        canMouseOver: true,
+        firstZoomIsAlreadyLaunched: false
     }),
 
     async mounted() {
@@ -51,31 +52,6 @@ export default {
         this.gl.camera.position.set(0, 15, -35)
 
         this.gl.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded, this.onModelLoaded)
-
-        // loader.load('bubble_skirt_v1.gltf', (gltf) => {
-        //     this.bubbleModel = gltf.scene.children[0]
-        // })
-
-        // loader.load('sun_mode_v2--animation.gltf', (gltf) => {
-        //    for (let theme of this.themes) {
-        //         theme.model = gltf.scene.children[0].clone()
-        //         theme.model.position.set(0, 0, 0)
-        //         theme.model.scale.set(0.04, 0.04, 0.04)
-        //         theme.light = this.themeLight
-        //         theme.model.visible = false
-
-        //         this.launchBigBangAnimation(theme)
-
-        //         theme.model.addEventListener('click', this.themeClicked.bind(event, theme))
-        //         theme.model.addEventListener('mouseover', this.themeHovered.bind(event, theme));
-        //         theme.model.addEventListener('mouseout', this.themeMouseOut.bind(event, theme));
-
-        //         this.gl.scene.add(theme.model)
-        //         this.gl.interactionManager.add(theme.model);
-        //     }
-        // })
-
-        // this.listenBackEvents()
     },
 
     methods: {
@@ -87,6 +63,7 @@ export default {
                 let sunInfos = this.gl.loadingManager.getGLTFInfos(sunKey)
 
                 sunInfos.model = sun.scene.children[0].clone()
+                sunInfos.model.rotation.y = Math.PI
                 sunInfos.model.position.set(0, 0, 0)
                 sunInfos.model.scale.set(0.04, 0.04, 0.04)
                 sunInfos.light = this.sunLight
@@ -107,7 +84,11 @@ export default {
 
         launchBigBangAnimation (sun) {
             let self = this
-            let bingBangTimeline = gsap.timeline()
+            
+            let bingBangTimeline = gsap.timeline({onComplete: () => {
+                TweenLite.delayedCall(5, this.firstZoom())
+            }})
+
             bingBangTimeline.set(sun.model, {
                 visible: true,
                 delay: 0.5
@@ -120,7 +101,15 @@ export default {
                 onUpdate: function () {
                     self.gl.camera.updateProjectionMatrix();
                 }
-            }).call(this.hideSun, null, "+1")
+            })
+        },
+
+        firstZoom () {
+            if (!this.firstZoomIsAlreadyLaunched) {
+                this.firstZoomIsAlreadyLaunched = true
+                let sunInfos = this.gl.loadingManager.getGLTFInfos('mode')
+                this.sunClicked(sunInfos, null)
+            }
         },
 
         hideSun () {
@@ -149,8 +138,8 @@ export default {
             gsap.to(this.gl.camera.position, {
                 duration: 2,
                 x: sun.position.x,
-                y: sun.position.y + 3,
-                z: sun.position.z - 10,
+                y: sun.position.y + 5,
+                z: sun.position.z - 15,
                 onUpdate: function () {
                     self.gl.camera.updateProjectionMatrix();
                 }
@@ -160,7 +149,7 @@ export default {
 
             timeline.to(this.gl.controls.target, {
                 duration: 2,
-                x: sun.position.x,
+                x: sun.position.x - 8,
                 y: sun.position.y,
                 z: sun.position.z,
                 onUpdate: function () {
@@ -224,7 +213,7 @@ export default {
         addSunBubblesOnScene (sun) {
             this.bubbles = this.gl.loadingManager.getGLTFsByType('bubble')
 
-            console.log('this.sunSelected', this.sunSelected);
+            console.log('(this.sunSelected)', this.sunSelected);
 
             for (let bubble of this.sunSelected.bubbles) {
                 let bubbleModel = this.bubbles.get(bubble.name)
@@ -383,7 +372,7 @@ export default {
         },
         
         onModelLoaded (gltf) {
-            // console.log('gltf', gltf);
+            //
         }
     }
 }

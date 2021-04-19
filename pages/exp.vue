@@ -1,7 +1,6 @@
 <template>
     <div>
         <WebGL />
-        <Tracker />
     </div>
 </template>
 

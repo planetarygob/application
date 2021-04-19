@@ -64,6 +64,7 @@ export class CustomLoadingManager {
             (gltf) => {
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
+                // todo: get the right number
                 if (this.modelsLoaded.size === 13) {
                     onAllLoaded()
                 }

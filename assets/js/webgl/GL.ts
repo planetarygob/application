@@ -13,14 +13,13 @@ import {
     AnimationMixer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import Scene from './core/Scene'
-import Renderer from './core/Renderer'
-import Bubble from './custom/Bubble'
-import Stats from '../utils/dev/Stats'
-import EventBus from '../utils/EventBus'
-import Sky from './custom/Sky'
-import { GLEvents } from '../utils/GLEvents'
-import Tracker from '../utils/dev/Tracker'
+import Stats from 'stats.js'
+import Proton from 'three.proton.js';
+import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
+import HighlightManager from '../utils/managers/HighlightManager'
+import { CustomLoadingManager } from '../utils/managers/CustomLoadingManager'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import Tracker from '../utils/Tracker'
 
 let previousTime = 0
 let elapsedTime = 0
@@ -208,7 +207,35 @@ class GL {
             elapsedTime = this.clock.getElapsedTime()
         }
 
-        this.renderer.render( this.scene, this.camera )
+        if (this.model && this.model2) {
+            const modelAngle = elapsedTime * 2
+            this.model.position.y = Math.sin(modelAngle) / 6
+    
+            const modelAngle2 = elapsedTime * 4
+            this.model2.position.y = Math.sin(modelAngle2) / 6
+        }
+
+        if (this.mixer) {
+            let deltaTime = 0
+            deltaTime = elapsedTime - previousTime
+            previousTime = elapsedTime
+
+            this.mixer.update(deltaTime)
+        }
+
+        Tracker.update(this.renderer.render)
+
+        this.renderer.render(this.scene, this.camera)
+
+
+        if (this.highlightManager) {
+            this.highlightManager.render();
+        }
+        
+        if (this.sphereCamera) {
+            this.sphereCamera.update(this.renderer, this.scene)
+        }
+
     }
 }
 

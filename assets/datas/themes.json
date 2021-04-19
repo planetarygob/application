@@ -1,6 +1,6 @@
 [
     {
-      "name":"mode",
+      "name":"work",
       "type": "sun",
       "url": "sun_mode_v2.gltf",
       "model":null,
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "name":"work",
+      "name":"mode",
       "type": "sun",
       "url": "sun_mode_v2--animation.gltf",
       "model":null,
