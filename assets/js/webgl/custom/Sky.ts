@@ -1,5 +1,5 @@
 import { BackSide, CanvasTexture, Mesh, MeshBasicMaterial, Object3D, SphereGeometry } from 'three'
-import GUI from '../../utils/GUI'
+import GUI from '../../utils/dev/GUI'
 import SkyTexture from '../textures/SkyTexture'
 
 class Sky extends Object3D {
