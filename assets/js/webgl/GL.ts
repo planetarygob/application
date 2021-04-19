@@ -3,24 +3,22 @@ import Renderer from './core/Renderer'
 import { 
     PerspectiveCamera,
     Clock,
-    MeshBasicMaterial,
-    Mesh,
     DirectionalLight,
-    PointsMaterial,
-    BufferGeometry,
-    BufferAttribute,
-    Points,
     AnimationMixer,
+    AmbientLight
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import Scene from './core/Scene'
-import Renderer from './core/Renderer'
-import Bubble from './custom/Bubble'
-import Stats from '../utils/dev/Stats'
-import EventBus from '../utils/EventBus'
-import Sky from './custom/Sky'
-import { GLEvents } from '../utils/GLEvents'
+import Stats from 'stats.js'
+import Proton from 'three.proton.js';
+import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
+import HighlightManager from '../utils/managers/HighlightManager'
+import { CustomLoadingManager } from '../utils/managers/CustomLoadingManager'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import Tracker from '../utils/dev/Tracker'
+import Bubble from './custom/Bubble'
+import Sky from './custom/Sky'
+import EventBus from '../utils/EventBus'
+import { GLEvents } from '../utils/GLEvents'
 
 let previousTime = 0
 let elapsedTime = 0
@@ -47,17 +45,12 @@ class GL {
     loadingManager: CustomLoadingManager
     proton: Proton
     mixer: AnimationMixer
-    model: Object3D
-    model2: Object3D
     sphereCamera: any
     hdrCubeRenderTarget: any
     hdrEquirect: any
     cubeRenderTarget: any
 
     constructor() {
-
-        let self = this 
-
         this.stats = new Stats()
         this.stats.showPanel(0)
         document.body.appendChild(this.stats.dom)
@@ -128,25 +121,25 @@ class GL {
     addElements() {
         this.scene.add(this.camera)
 
-        const ambientLight = new AmbientLight(0xffffff, 0.8)
-        this.scene.add(ambientLight)
+        // const ambientLight = new AmbientLight(0xffffff, 0.8)
+        // this.scene.add(ambientLight)
 
-        const boxGeometry = new TorusKnotGeometry( 1, 1, 5, 32 );
-        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
-        const box2 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box2 )
-        box2.position.x = 10
-        const box3 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box3 )
-        box3.position.x = -10
+        // const boxGeometry = new TorusKnotBufferGeometry( 1, 1, 5, 32 );
+        // const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
+        // const box2 = new Mesh( boxGeometry, boxMaterial )
+        // this.scene.add( box2 )
+        // box2.position.x = 10
+        // const box3 = new Mesh( boxGeometry, boxMaterial )
+        // this.scene.add( box3 )
+        // box3.position.x = -10
 
-        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
-        this.scene.add( bubble.mesh )
+        // const bubble = new Bubble( 1, 12, this.scene, this.renderer )
+        // this.scene.add( bubble.mesh )
 
-        const sky = new Sky( this.canvas.width, this.canvas.height )
-        this.scene.add( sky.mesh )
+        // const sky = new Sky( this.canvas.width, this.canvas.height )
+        // this.scene.add( sky.mesh )
 
-        this.createLights()
+        // this.createLights()
     }
 
     addEvents() {
@@ -208,7 +201,27 @@ class GL {
             elapsedTime = this.clock.getElapsedTime()
         }
 
-        this.renderer.render( this.scene, this.camera )
+        if (this.mixer) {
+            let deltaTime = 0
+            deltaTime = elapsedTime - previousTime
+            previousTime = elapsedTime
+
+            this.mixer.update(deltaTime)
+        }
+
+        Tracker.update(this.renderer.render)
+
+        this.renderer.render(this.scene, this.camera)
+
+
+        if (this.highlightManager) {
+            this.highlightManager.render();
+        }
+        
+        if (this.sphereCamera) {
+            this.sphereCamera.update(this.renderer, this.scene)
+        }
+
     }
 }
 
