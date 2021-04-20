@@ -104,8 +104,16 @@ class GL {
         this.scene.add( box3 )
         box3.position.x = -10
 
-        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
-        this.scene.add( bubble.mesh )
+        const b = new Bubble( 1, 12, this.scene, this.renderer )
+        this.scene.add( b.mesh )
+        box2.position.x = 10
+
+        const b2 = new Bubble( 1, 12, this.scene, this.renderer )
+        this.scene.add( b2.mesh )
+        box2.position.x = -10
+
+        const b3 = new Bubble( 1, 12, this.scene, this.renderer )
+        this.scene.add( b3.mesh )
 
         const sky = new Sky( this.canvas.width, this.canvas.height )
         this.scene.add( sky.mesh )
