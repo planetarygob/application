@@ -49,7 +49,7 @@ class Bubble extends Object3D {
             strength: 0.2
         }
 
-        this.GUI()
+        // this.GUI()
 
         this.addCubeCamera()
         const geometry = new IcosahedronGeometry( radius, detail )
