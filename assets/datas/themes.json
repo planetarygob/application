@@ -1,95 +1,52 @@
 [
     {
-      "name":"work",
+      "name": "mode",
       "type": "sun",
-      "url": "sun_mode_v2.gltf",
+      "url": "sun_mode--animation.gltf",
+      "teasing": {
+        "title": "MODE",
+        "description": "Principe d'affirmation, appartenance à un groupe social, reflet des valeurs et idées... Découvre à travers 3 planètes comment la mode a le pouvoir de déplacer les normes et les idéologies dans la société des années 60 à 80."
+      },
       "model":null,
       "light":null,
+      "currentPosition": 0,
       "position":{
-        "x":25,
-        "y":1,
-        "z":10
+        "x":0,
+        "y":0,
+        "z":0
       },
       "bubbles":[
         {
           "name":"mode_bubble1",
           "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
+          "url": "bubble_skirt.gltf",
           "model":null,
-          "light":null,
           "position":{
-            "x":20,
-            "y":1,
-            "z":10
+            "x": 200,
+            "y": 1,
+            "z": -16
           }
         },
         {
           "name":"mode_bubble2",
           "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
+          "url": "bubble_skirt.gltf",
           "model":null,
           "position":{
-            "x":25,
-            "y":1,
-            "z":5
+            "x": 20,
+            "y": 1,
+            "z": -5
           }
         },
         {
           "name":"mode_bubble3",
           "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
+          "url": "bubble_skirt.gltf",
           "model":null,
           "position":{
-            "x":30,
-            "y":1,
-            "z":10
-          }
-        }
-      ]
-    },
-    {
-      "name":"mode",
-      "type": "sun",
-      "url": "sun_mode_v2--animation.gltf",
-      "model":null,
-      "light":null,
-      "position":{
-        "x":25,
-        "y":1,
-        "z":-10
-      },
-      "bubbles":[
-        {
-          "name":"work_bubble1",
-          "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
-          "model":null,
-          "position":{
-            "x":25,
-            "y":1,
-            "z":-16
-          }
-        },
-        {
-          "name":"work_bubble2",
-          "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
-          "model":null,
-          "position":{
-            "x":20,
-            "y":1,
-            "z":-5
-          }
-        },
-        {
-          "name":"work_bubble3",
-          "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
-          "model":null,
-          "position":{
-            "x":30,
-            "y":1,
-            "z":-5
+            "x": 30,
+            "y": 1,
+            "z": -5
           }
         }
       ]
@@ -97,19 +54,24 @@
     {
       "name":"song",
       "type": "sun",
-      "url": "sun_mode_v2--animation.gltf",
+      "url": "sun_mode--animation.gltf",
+      "teasing": {
+        "title": "SEXUALITÉ",
+        "description": "Le droit au plaisir ! c'est ce que revendiquent les jeunes de l'époque qui formulent alors leur propres revendications et médiatisent les luttes pour la sexualité. Découvre à travers 3 planètes comment cette révolution sexuelle a-t-elle fait avancer la société."
+      },
       "model":null,
       "light":null,
+      "currentPosition": 1,
       "position":{
-        "x":-25,
-        "y":1,
-        "z":-10
+        "x": -75,
+        "y": 8,
+        "z": 35
       },
       "bubbles":[
         {
           "name":"song_bubble1",
           "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
+          "url": "bubble_skirt.gltf",
           "model":null,
           "position":{
             "x":-25,
@@ -120,7 +82,7 @@
         {
           "name":"song_bubble2",
           "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
+          "url": "bubble_skirt.gltf",
           "model":null,
           "position":{
             "x":-20,
@@ -131,7 +93,7 @@
         {
           "name":"song_bubble3",
           "type": "bubble",
-          "url": "bubble_skirt_v1.gltf",
+          "url": "bubble_skirt.gltf",
           "model":null,
           "position":{
             "x":-30,
@@ -143,13 +105,71 @@
     },
     {
       "name":"quiz",
-      "type": "sun-quiz",
-      "url": "sun_mode_v2--animation.gltf",
+      "type": "sun",
+      "url": "sun_mode--animation.gltf",
+      "teasing": {
+        "title": "QUIZ",
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia voluptate eveniet, ipsa eius velit reprehenderit minus deserunt quos exercitationem a qui est, dolores atque labore quod vel cum dicta."
+      },
       "model":null,
+      "currentPosition": 2,
       "position":{
-        "x":-30,
-        "y":1,
-        "z":10
+        "x": 0,
+        "y": 0,
+        "z": 75
       }
+    },
+    {
+      "name":"work",
+      "type": "sun",
+      "url": "sun_mode.gltf",
+      "teasing": {
+        "title": "LOISIR",
+        "description": "Partir en vacances, faire du sport, regarder la télé... Tous ces loisirs n'existaient pas avant les années 60 ! A travers 4 planètes, découvre comment les loisirs se sont développés et ce qui a profondément changé dans la société de l'époque."
+      },
+      "model":null,
+      "light":null,
+      "currentPosition": 3,
+      "position":{
+        "x": 75,
+        "y": 8,
+        "z": 35
+      },
+      "bubbles":[
+        {
+          "name":"work_bubble1",
+          "type": "bubble",
+          "url": "bubble_skirt.gltf",
+          "model":null,
+          "light":null,
+          "position":{
+            "x":20,
+            "y":1,
+            "z":10
+          }
+        },
+        {
+          "name":"work_bubble2",
+          "type": "bubble",
+          "url": "bubble_skirt.gltf",
+          "model":null,
+          "position":{
+            "x":25,
+            "y":1,
+            "z":5
+          }
+        },
+        {
+          "name":"work_bubble3",
+          "type": "bubble",
+          "url": "bubble_skirt.gltf",
+          "model":null,
+          "position":{
+            "x":30,
+            "y":1,
+            "z":10
+          }
+        }
+      ]
     }
   ]
