@@ -1,5 +1,6 @@
 import Scene from './core/Scene'
 import Renderer from './core/Renderer'
+import Controls from './core/Controls'
 import { 
     PerspectiveCamera,
     Clock,
@@ -7,7 +8,6 @@ import {
     AnimationMixer,
     AmbientLight
 } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Stats from 'stats.js'
 import Proton from 'three.proton.js';
 import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
@@ -19,6 +19,7 @@ import Bubble from './custom/Bubble'
 import Sky from './custom/Sky'
 import EventBus from '../utils/EventBus'
 import { GLEvents } from '../utils/GLEvents'
+import Camera from './core/Camera'
 
 let previousTime = 0
 let elapsedTime = 0
@@ -37,7 +38,7 @@ class GL {
     scene: Scene 
     renderer: Renderer 
     camera: PerspectiveCamera
-    controls: OrbitControls
+    controls: Controls
     clock: Clock
     size: Size
     interactionManager: CustomInteractionManager
@@ -71,10 +72,10 @@ class GL {
 
         this.scene = new Scene()
 
-        this.camera = new PerspectiveCamera(75, this.size.width / this.size.height, 0.1, 1000)
-        this.camera.position.set(0, 10, -15)
+        this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
 
-        this.controls = new OrbitControls(this.camera, this.canvas)
+        this.controls = new Controls(this.camera, this.canvas)
+        
 
         this.clock = new Clock()
 
@@ -197,19 +198,12 @@ class GL {
             this.proton.update()
         }
 
-        if (this.clock) {
-            elapsedTime = this.clock.getElapsedTime()
+        if (this.mixer && this.clock) {
+            // console.log('mixer update', );       
+            this.mixer.update(this.clock.getDelta())
         }
 
-        if (this.mixer) {
-            let deltaTime = 0
-            deltaTime = elapsedTime - previousTime
-            previousTime = elapsedTime
-
-            this.mixer.update(deltaTime)
-        }
-
-        Tracker.update(this.renderer.render)
+        // Tracker.update(this.renderer.render)
 
         this.renderer.render(this.scene, this.camera)
 

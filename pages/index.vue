@@ -1,10 +1,40 @@
 <template>
   <div class="relative">
-      <div class="container justify-center text-center p-4 min-w-full absolute text-white bg-black-500 mx-auto">
-          <h1 class="font-extrabold text-md">PRESS ESCAPE TO RETURN</h1>
-      </div>
-      <web-gl />
-      <tracker />
+      <template v-if="sunSelected && shouldShowTeasingTexts">
+            <div
+                class="container flex flex-col justify-center p-8 w-3/12 absolute text-white mx-auto"
+                style="left: 52.5%; top: 35%">
+                <h1 class="font-extrabold text-3xl">{{ sunSelected.teasing.title }}</h1>
+                <span class="text-gray-400 text-sm mt-3">{{ sunSelected.teasing.description }}</span>
+                <button
+                    class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border hover:bg-white hover:text-purple-500 font-bold py-2 px-4 rounded-full"
+                    @click="discoverSun()">
+                    DECOUVRIR
+                </button>
+            </div>
+            <div 
+                class="absolute left-0 ml-6 cursor-pointer"
+                style="top: 50%"
+                @click="previous">
+                <svg-icon
+                    svg-name="arrow_left"
+                    :width="24"
+                    :height="24"
+                    color="#FFFFFF" />
+            </div>
+            <div 
+                class="absolute right-0 mr-6 cursor-pointer"
+                style="top: 50%"
+                @click="next">
+                <svg-icon 
+                    svg-name="arrow_right"
+                    :width="24"
+                    :height="24"
+                    color="#FFFFFF" />
+            </div>
+        </template>
+    <web-gl />
+    <tracker />
   </div>
 </template>
 
@@ -13,18 +43,23 @@
 import WebGl from '../components/WebGL.vue'
 import Tracker from '../components/Tracker.vue'
 import GL from '../assets/js/webgl/GL'
+import SvgIcon from '../components/SvgIcon.vue'
+
 import {
     PerspectiveCamera,
     Clock,
     Object3D,
-    PointLight
+    PointLight,
+    CatmullRomCurve3,
+    Vector3
 } from 'three'
 import { gsap, TweenLite } from 'gsap'
 
 export default {
     components: {
         WebGl,
-        Tracker
+        Tracker,
+        SvgIcon
     },
     
     data: () => ({
@@ -34,13 +69,37 @@ export default {
         bubbles: Map,
         selectedObjects: [],
         emitter: null,
-        bubbleModel: Object3D,
-        sunSelected: Object3D,
-        bubbleSelected: Object3D,
+        bubbleModel: null,
+        sunSelected: null,
+        bubbleSelected: null,
         sunLight: PointLight,
         canClick: true,
         canMouseOver: true,
-        firstZoomIsAlreadyLaunched: false
+        firstZoomIsAlreadyLaunched: false,
+        shouldShowTeasingTexts: false,
+        currentStep: 0,
+        positions: [
+            {
+                x: 10,
+                y: -3, 
+                z: 0
+            },
+            {
+                x: -75,
+                y: 8, 
+                z: 35
+            },
+            {
+                x: 0,
+                y: 0, 
+                z: 75
+            },
+            {
+                x: 75,
+                y: 8, 
+                z: 35
+            },
+        ]
     }),
 
     async mounted() {
@@ -48,8 +107,6 @@ export default {
 
         this.sunLight = new PointLight('#ffffff', 3, 8)
         this.gl.scene.add(this.sunLight)
-
-        this.gl.camera.position.set(0, 15, -35)
 
         this.gl.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded, this.onModelLoaded)
     },
@@ -65,18 +122,13 @@ export default {
                 sunInfos.model = sun.scene.children[0].clone()
                 sunInfos.model.rotation.y = Math.PI
                 sunInfos.model.position.set(0, 0, 0)
-                sunInfos.model.scale.set(0.04, 0.04, 0.04)
+                sunInfos.model.scale.set(0.05, 0.05, 0.05)
                 sunInfos.light = this.sunLight
                 sunInfos.model.visible = false
 
                 this.launchBigBangAnimation(sunInfos)
 
-                sunInfos.model.addEventListener('click', this.sunClicked.bind(event, sunInfos))
-                // sunInfos.model.addEventListener('mouseover', this.sunHovered.bind(event, sunInfos));
-                // sunInfos.model.addEventListener('mouseout', this.sunMouseOut.bind(event, sunInfos));
-
                 this.gl.scene.add(sunInfos.model)
-                this.gl.interactionManager.add(sunInfos.model);
             }
 
             this.listenBackEvents()
@@ -112,6 +164,42 @@ export default {
             }
         },
 
+        zoomCameraOnSun (sun) {
+            let self = this
+
+            gsap.to(this.gl.camera.position, {
+                duration: 3,
+                x: sun.position.x,
+                y: sun.position.y + 4,
+                z: sun.position.z - 20,
+                onUpdate: function () {
+                    self.gl.camera.updateProjectionMatrix();
+                }
+            })
+            
+            gsap.to(sun.model.position, {
+                duration: 2,
+                x: sun.position.x + 10,
+                y: sun.position.y - 3
+            })
+            
+            var timeline = gsap.timeline({onComplete: () => {
+                TweenLite.delayedCall(0.2, () => {
+                    this.shouldShowTeasingTexts = true
+                })
+            }})
+
+            timeline.to(this.gl.controls.target, {
+                duration: 3,
+                x: sun.position.x,
+                y: sun.position.y,
+                z: sun.position.z,
+                onUpdate: function () {
+                    self.gl.controls.update()
+                }
+            })
+        },
+
         hideSun () {
             if (this.emitter) {
                 this.emitter.destroy()
@@ -120,42 +208,14 @@ export default {
         },
 
         sunClicked (sun, event) {
-            if (this.canClick) {
-                this.sunSelected = sun
+            this.sunSelected = sun
 
-                this.triggerSuns(false, true)
-                this.zoomCameraOnSun(sun)
-                this.canMouseOver = false
+            // this.triggerSuns(false, true)
+            this.zoomCameraOnSun(sun)
+            this.canMouseOver = false
 
-                this.gl.controls.target.set(sun.position.x, sun.position.y, sun.position.z)
-                this.canClick = false
-            }
-        },
-
-        zoomCameraOnSun (sun) {
-            let self = this
-
-            gsap.to(this.gl.camera.position, {
-                duration: 2,
-                x: sun.position.x,
-                y: sun.position.y + 5,
-                z: sun.position.z - 15,
-                onUpdate: function () {
-                    self.gl.camera.updateProjectionMatrix();
-                }
-            })
-            
-            var timeline = gsap.timeline();
-
-            timeline.to(this.gl.controls.target, {
-                duration: 2,
-                x: sun.position.x - 8,
-                y: sun.position.y,
-                z: sun.position.z,
-                onUpdate: function () {
-                    self.gl.controls.update()
-                }
-            }).call(this.addSunBubblesOnScene)
+            this.gl.controls.target.set(sun.position.x, sun.position.y, sun.position.z)
+            this.canClick = false
         },
 
         sunHovered (sun, event) {
@@ -213,19 +273,15 @@ export default {
         addSunBubblesOnScene (sun) {
             this.bubbles = this.gl.loadingManager.getGLTFsByType('bubble')
 
-            console.log('(this.sunSelected)', this.sunSelected);
-
             for (let bubble of this.sunSelected.bubbles) {
                 let bubbleModel = this.bubbles.get(bubble.name)
 
                 bubble.model = bubbleModel.scene.clone()
                 bubble.model.scale.set(0.5, 0.5, 0.5)
                 bubble.light = this.sunLight
-                bubble.model.position.set(bubble.position.x, bubble.position.y, bubble.position.z)
+                bubble.model.position.set(this.sunSelected.position.x + bubble.position.x, this.sunSelected.position.y + bubble.position.y, this.sunSelected.position.z + bubble.position.z)
 
                 bubble.model.addEventListener('click', this.bubbleClicked.bind(event, bubble))
-                // bubble.model.addEventListener('mouseover', this.bubbleHovered.bind(event, bubble));
-                // bubble.model.addEventListener('mouseout', this.bubbleMouseOut.bind(event, bubble));
 
                 this.sunSelected.model.add(bubble.model)
                 // this.gl.scene.add(bubble.model)
@@ -373,7 +429,65 @@ export default {
         
         onModelLoaded (gltf) {
             //
-        }
+        },
+
+        discoverSun () {
+            console.log('discover sun')
+        },
+
+        previous () {
+            console.log('previous');
+            for (const [sunKey, value] of this.suns.entries()) {
+                let currentSun = this.gl.loadingManager.getGLTFInfos(sunKey)
+                currentSun.currentPosition = this.getNextPosition(currentSun.currentPosition)
+
+                if (currentSun.currentPosition === 0) {
+                    this.sunSelected = currentSun
+                }
+
+                gsap.to(currentSun.model.position, {
+                    duration: 2,
+                    x: this.positions[currentSun.currentPosition].x,
+                    y: this.positions[currentSun.currentPosition].y,
+                    z: this.positions[currentSun.currentPosition].z,
+                })
+            }
+        },
+
+        getNextPosition (currentPosition) {
+            if (currentPosition === this.suns.size - 1) {
+                return 0
+            }
+
+            return currentPosition + 1
+        },
+
+        next () {
+            console.log('next');
+            for (const [sunKey, value] of this.suns.entries()) {
+                let currentSun = this.gl.loadingManager.getGLTFInfos(sunKey)
+                currentSun.currentPosition = this.getPreviousPosition(currentSun.currentPosition)
+
+                if (currentSun.currentPosition === 0) {
+                    this.sunSelected = currentSun
+                }
+
+                gsap.to(currentSun.model.position, {
+                    duration: 2,
+                    x: this.positions[currentSun.currentPosition].x,
+                    y: this.positions[currentSun.currentPosition].y,
+                    z: this.positions[currentSun.currentPosition].z,
+                })
+            }
+        },
+
+        getPreviousPosition (currentPosition) {
+            if (currentPosition === 0) {
+                return this.suns.size - 1
+            }
+
+            return currentPosition - 1
+        },
     }
 }
 </script>
