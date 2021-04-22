@@ -19,6 +19,7 @@ import { GLEvents } from '../utils/GLEvents'
 import Tracker from '../utils/dev/Tracker'
 import GUI from '../utils/dev/GUI'
 import { initGUI } from '../utils/dev/GUIFolders'
+import Planet from './custom/Planet'
 
 
 interface Size {
@@ -99,24 +100,20 @@ class GL {
         // NOTE : Update camera layer range if needed, atm 0 - 1
         this.camera.layers.enable( 1 )
         this.scene.add( this.camera )
+        this.camera.position.z = 30
 
         // TODO : Should not be here at the end, should rather be in Scene.ts
-        
-        const g = new BoxGeometry( 1, 1, 1) 
-        const m = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
-        const box = new Mesh(g, m)
-        this.scene.add( box )
-        box.position.y = -2
 
         const bubble = new Bubble( 1, 12, this.scene, this.renderer )
-        this.scene.add( bubble.mesh )
+        // this.scene.add( bubble.mesh )
+        bubble.mesh.position.z = -3
 
-        const bubble2 = new Bubble( 1, 12, this.scene, this.renderer )
-        this.scene.add( bubble2.mesh )
-        bubble2.mesh.position.x = 5
+        const planet = new Planet( this.scene, this.renderer )
+        this.scene.add(planet)
         
+        // TODO : createSky()
         const sky = new Sky( this.canvas.width, this.canvas.height )
-        this.scene.add( sky.mesh )
+        // this.scene.add( sky.mesh )
 
         this.createLights()
     }
@@ -125,6 +122,9 @@ class GL {
         window.addEventListener( 'resize', this.resize.bind(this) )
         this.controls.addEventListener('change', () => {
             EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
+        })
+        this.canvas.addEventListener( 'click', () => {
+            EventBus.emit(GLEvents.CLICK)
         })
     }  
     

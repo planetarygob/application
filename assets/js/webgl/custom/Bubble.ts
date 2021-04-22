@@ -50,6 +50,7 @@ class Bubble extends Object3D {
 
         this.generateCubeCamera()
         this.mesh = new Mesh(this.generateGeometry(), this.generateMaterial())
+        // We set bubbles on a different layer, only visible to main PerspectiveCamera to avoid infinite light reflection on envMap from CubeCameras
         this.mesh.layers.set( 1 )
 
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
@@ -123,7 +124,6 @@ class Bubble extends Object3D {
 
         // TODO : 30 is worldSize
         this.bubbleCamera = new BubbleCamera( 1, 30, cubeRenderTarget, this.renderer, this.scene )
-        this.bubbleCamera.layers.set( 0 )
         this.add( this.bubbleCamera )
     }
 
