@@ -6,7 +6,13 @@ import {
     DirectionalLight,
     AmbientLight,
     TorusKnotGeometry,
-    BoxGeometry
+    BoxGeometry,
+    SphereGeometry,
+    PointsMaterial,
+    Points,
+    BufferGeometry,
+    BufferAttribute,
+    sRGBEncoding
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Scene from './core/Scene'
@@ -20,6 +26,7 @@ import Tracker from '../utils/dev/Tracker'
 import GUI from '../utils/dev/GUI'
 import { initGUI } from '../utils/dev/GUIFolders'
 import Planet from './custom/Planet'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 
 interface Size {
@@ -104,17 +111,66 @@ class GL {
 
         // TODO : Should not be here at the end, should rather be in Scene.ts
 
+        const loader = new GLTFLoader();
+
+        loader.load( 'https://florianblandin.fr/assets/sun_mode.gltf', ( gltf ) => {
+            gltf.scene.scale.set(0.007, 0.007, 0.007)
+            gltf.scene.position.y = -0.25
+            this.scene.add( gltf.scene )
+        }, undefined, function ( error ) {
+            console.error( error )
+        })
+
         const bubble = new Bubble( 1, 12, this.scene, this.renderer )
         // this.scene.add( bubble.mesh )
         bubble.mesh.position.z = -3
 
         const planet = new Planet( this.scene, this.renderer )
         this.scene.add(planet)
-        
+        planet.position.x = -5
+        planet.position.y = 1
+        planet.position.z = -5
+
+        const planet2 = new Planet( this.scene, this.renderer )
+        this.scene.add(planet2)
+        planet2.position.x = -5
+        planet2.position.y = -1
+        planet2.position.z = 5
+
+        const planet3 = new Planet( this.scene, this.renderer )
+        this.scene.add(planet3)
+        planet3.position.x = 6
+        planet3.position.y = 1
+        planet3.position.z = 0
+
         // TODO : createSky()
         const sky = new Sky( this.canvas.width, this.canvas.height )
-        // this.scene.add( sky.mesh )
+        this.scene.add( sky.mesh )
 
+        // ___________________________
+
+        const particlesMaterial = new PointsMaterial({
+            size: 0.02,
+            sizeAttenuation: true
+        })
+
+        // Geometry
+        const particlesGeometry = new BufferGeometry()
+        const count = 500
+
+        const positions = new Float32Array(count * 3) // Multiply by 3 because each position is composed of 3 values (x, y, z)
+
+        for(let i = 0; i < count * 3; i++) // Multiply by 3 for same reason
+        {
+            positions[i] = (Math.random() - 0.5) * 60 // Math.random() - 0.5 to have a random value between -0.5 and +0.5
+        }
+
+        particlesGeometry.setAttribute('position', new BufferAttribute(positions, 3)) // Create the Three.js BufferAttribute and specify that each information is composed of 3 values
+
+        const particles = new Points(particlesGeometry, particlesMaterial)
+        this.scene.add(particles)
+
+        this.renderer.outputEncoding = sRGBEncoding
         this.createLights()
     }
 

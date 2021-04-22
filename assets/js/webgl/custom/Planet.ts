@@ -27,12 +27,12 @@ class Planet extends Group {
         loader.load( 'https://florianblandin.fr/assets/object_planet_hippie.gltf', ( gltf ) => {
             gltf.scene.scale.set(0.007, 0.007, 0.007)
             gltf.scene.position.y = -0.25
-            this.add( gltf.scene );
+            this.add( gltf.scene )
         }, undefined, function ( error ) {
-            console.error( error );
-        });
+            console.error( error )
+        })
 
-        EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
+        // EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
         EventBus.on(GLEvents.CLICK, () => { this.isComplete ? this.isComplete = false : this.isComplete = true })
     }
 
