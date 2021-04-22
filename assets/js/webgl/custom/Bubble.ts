@@ -15,13 +15,11 @@ import {
 } from 'three'
 import vertexShader from '../shaders/Bubble/vertex'
 import fragmentShader from '../shaders/Bubble/fragment'
-import GUI from '../../utils/dev/GUI'
 import EventBus from '../../utils/EventBus'
 import { GLEvents } from '../../utils/GLEvents'
 import Renderer from '../core/Renderer'
 import BubbleCamera from './BubbleCamera'
 import { BubbleData } from '../data/BubbleData'
-import { handleColorChange } from '../../utils/Changes'
 
 class Bubble extends Object3D {
 
@@ -30,7 +28,7 @@ class Bubble extends Object3D {
     renderer: Renderer
     scene: Scene
     
-    mesh: Mesh
+    mesh: any
     shader: any
 
     bubbleCamera?: CubeCamera
@@ -48,28 +46,11 @@ class Bubble extends Object3D {
         this.detail = detail
         this.renderer = renderer
         this.scene = scene
-        
-        this.GUI()
 
         this.generateCubeCamera()
-
         this.mesh = new Mesh(this.generateGeometry(), this.generateMaterial())
 
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
-    }
-
-    // ---------------- INITIALIZATION
-
-    GUI() {
-        const bubbleFolder = GUI.addFolder('Bubble')
-        const geoBubbleFolder = bubbleFolder.addFolder('geometry')
-        geoBubbleFolder.add(BubbleData, 'speed', 0, 1, 0.1)
-        geoBubbleFolder.add(BubbleData, 'density', 0, 1, 0.1)
-        geoBubbleFolder.add(BubbleData, 'strength', 0, 1, 0.1)
-        const matBubbleFolder = bubbleFolder.addFolder('material')
-        matBubbleFolder.add(BubbleData, 'envMapIntensity', 0, 10, 1)
-        matBubbleFolder.add(BubbleData, 'transmission', 0, 1, 0.01)
-        matBubbleFolder.addColor(BubbleData, 'color').onChange(handleColorChange(BubbleData.color))
     }
 
     // ---------------- METHODS
@@ -94,7 +75,7 @@ class Bubble extends Object3D {
 
     generateMaterial(): MeshPhysicalMaterial {
         const bubbleTexture = new CanvasTexture( this.generateTexture() )
-        bubbleTexture.repeat.set(1, 0)
+        bubbleTexture.repeat.set( 1, 0 )
 
         const material = new MeshPhysicalMaterial ({
             color: BubbleData.color,
@@ -111,7 +92,7 @@ class Bubble extends Object3D {
             side: BackSide
         })
 
-        material.onBeforeCompile = (shader) => {
+        material.onBeforeCompile = ( shader ) => {
             shader.uniforms = {
                 ...shader.uniforms,
                 uTime: { value: 0 },
@@ -148,10 +129,10 @@ class Bubble extends Object3D {
             this.shader.uniforms.uSpeed.value = BubbleData.speed
             this.shader.uniforms.uNoiseDensity.value = BubbleData.density
             this.shader.uniforms.uNoiseStrength.value = BubbleData.strength
-            // this.mesh.material.transmission = BubbleData.transmission
-            // this.mesh.material.envMapIntensity = BubbleData.envMapIntensity
-            // this.mesh.material.color = BubbleData.color.getHex()
-            // this.mesh.material.needsUpdate = true
+            this.mesh.material.transmission = BubbleData.transmission
+            this.mesh.material.envMapIntensity = BubbleData.envMapIntensity
+            // TODO : Fix color change, seems to only work for extreme RGB colors
+            this.mesh.material.color = BubbleData.color
         }
     }
 }

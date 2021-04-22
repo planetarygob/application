@@ -5,7 +5,8 @@ import {
     Mesh,
     DirectionalLight,
     AmbientLight,
-    TorusKnotGeometry
+    TorusKnotGeometry,
+    BoxGeometry
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Scene from './core/Scene'
@@ -16,6 +17,8 @@ import EventBus from '../utils/EventBus'
 import Sky from './custom/Sky'
 import { GLEvents } from '../utils/GLEvents'
 import Tracker from '../utils/dev/Tracker'
+import GUI from '../utils/dev/GUI'
+import { initGUI } from '../utils/dev/GUIFolders'
 
 
 interface Size {
@@ -41,6 +44,7 @@ class GL {
     constructor() {
         Stats.showPanel(0)
         document.body.appendChild(Stats.dom)
+        initGUI()
 
         this.size = {
             width: window.innerWidth,
@@ -94,18 +98,23 @@ class GL {
         this.scene.add( this.camera )
 
         // TODO : Should not be here at the end, should rather be in Scene.ts
-
-        const boxGeometry = new TorusKnotGeometry( 1, 1, 5, 32 );
-        const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
-        const box2 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box2 )
-        box2.position.x = 10
-        const box3 = new Mesh( boxGeometry, boxMaterial )
-        this.scene.add( box3 )
-        box3.position.x = -10
+        // TODO : 
+        const g = new BoxGeometry(1, 1, 1)
+        const m = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
+        const box = new Mesh(g, m)
+        this.scene.add(box)
+        box.position.y = -5
 
         const bubble = new Bubble( 1, 12, this.scene, this.renderer )
         this.scene.add( bubble.mesh )
+
+        const bubble2 = new Bubble( 1, 12, this.scene, this.renderer )
+        this.scene.add( bubble2.mesh )
+        bubble2.mesh.position.x = 3
+
+        const bubble3 = new Bubble( 1, 12, this.scene, this.renderer )
+        this.scene.add( bubble3.mesh )
+        bubble3.mesh.position.x = -3
 
         const sky = new Sky( this.canvas.width, this.canvas.height )
         this.scene.add( sky.mesh )
