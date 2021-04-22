@@ -147,6 +147,9 @@ class GL {
         this.controls.addEventListener('change', () => {
             EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         })
+        this.canvas.addEventListener( 'click', () => {
+            EventBus.emit(GLEvents.CLICK)
+        })
     }  
     
     resize() {
