@@ -7,6 +7,8 @@ import {
     DirectionalLight,
     AnimationMixer,
     AmbientLight
+    BoxGeometry
+    TorusKnotGeometry,
 } from 'three'
 import Stats from 'stats.js'
 import Proton from 'three.proton.js';
@@ -19,6 +21,9 @@ import Bubble from './custom/Bubble'
 import Sky from './custom/Sky'
 import EventBus from '../utils/EventBus'
 import { GLEvents } from '../utils/GLEvents'
+import GUI from '../utils/dev/GUI'
+import { initGUI } from '../utils/dev/GUIFolders'
+import Planet from './custom/Planet'
 import Camera from './core/Camera'
 
 let previousTime = 0
@@ -52,9 +57,9 @@ class GL {
     cubeRenderTarget: any
 
     constructor() {
-        this.stats = new Stats()
-        this.stats.showPanel(0)
-        document.body.appendChild(this.stats.dom)
+        Stats.showPanel(0)
+        document.body.appendChild(Stats.dom)
+        initGUI()
 
         this.size = {
             width: window.innerWidth,
@@ -120,24 +125,24 @@ class GL {
     // ---------------- METHODS
 
     addElements() {
-        this.scene.add(this.camera)
+        // TODO : createCamera()
+        // NOTE : Update camera layer range if needed, atm 0 - 1
+        this.camera.layers.enable( 1 )
+        this.scene.add( this.camera )
+        this.camera.position.z = 30
 
         // const ambientLight = new AmbientLight(0xffffff, 0.8)
         // this.scene.add(ambientLight)
 
-        // const boxGeometry = new TorusKnotBufferGeometry( 1, 1, 5, 32 );
-        // const boxMaterial = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
-        // const box2 = new Mesh( boxGeometry, boxMaterial )
-        // this.scene.add( box2 )
-        // box2.position.x = 10
-        // const box3 = new Mesh( boxGeometry, boxMaterial )
-        // this.scene.add( box3 )
-        // box3.position.x = -10
-
-        // const bubble = new Bubble( 1, 12, this.scene, this.renderer )
+        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
         // this.scene.add( bubble.mesh )
+        bubble.mesh.position.z = -3
 
-        // const sky = new Sky( this.canvas.width, this.canvas.height )
+        const planet = new Planet( this.scene, this.renderer )
+        this.scene.add(planet)
+        
+        // TODO : createSky()
+        const sky = new Sky( this.canvas.width, this.canvas.height )
         // this.scene.add( sky.mesh )
 
         // this.createLights()
@@ -147,6 +152,9 @@ class GL {
         window.addEventListener( 'resize', this.resize.bind(this) )
         this.controls.addEventListener('change', () => {
             EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
+        })
+        this.canvas.addEventListener( 'click', () => {
+            EventBus.emit(GLEvents.CLICK)
         })
     }  
     
