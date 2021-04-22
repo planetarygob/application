@@ -2,7 +2,7 @@
     {
       "name": "mode",
       "type": "sun",
-      "url": "sun_mode--animation.gltf",
+      "url": "sun_mode.gltf",
       "teasing": {
         "title": "MODE",
         "description": "Principe d'affirmation, appartenance à un groupe social, reflet des valeurs et idées... Découvre à travers 3 planètes comment la mode a le pouvoir de déplacer les normes et les idéologies dans la société des années 60 à 80."
@@ -17,36 +17,69 @@
       },
       "bubbles":[
         {
-          "name":"mode_bubble1",
+          "name":"mode_bubble_skirt",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "object_planet_skirt.gltf",
           "model":null,
           "position":{
-            "x": 200,
-            "y": 1,
-            "z": -16
+            "x": 12,
+            "y": -2,
+            "z": -2
+          },
+          "scenery": {
+            "name":"mode_bubble_skirt_scenery",
+            "type": "scenery",
+            "url": "scenery_planet_skirt.gltf",
+            "model":null,
+            "position":{
+              "x": 12,
+              "y": -2,
+              "z": -2
+            }
           }
         },
         {
-          "name":"mode_bubble2",
+          "name":"mode_bubble_hippie",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "object_planet_hippie.gltf",
           "model":null,
           "position":{
-            "x": 20,
-            "y": 1,
-            "z": -5
+            "x": -8,
+            "y": -7,
+            "z": -6
+          },
+          "scenery": {
+            "name":"mode_bubble_hippie_scenery",
+            "type": "scenery",
+            "url": "scenery_planet_hippie.glb",
+            "model":null,
+            "position":{
+              "x": -8,
+              "y": -7,
+              "z": -6
+            }
           }
         },
         {
-          "name":"mode_bubble3",
+          "name":"mode_bubble_rock",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "object_planet_skirt.gltf",
           "model":null,
           "position":{
-            "x": 30,
-            "y": 1,
-            "z": -5
+            "x": -9,
+            "y": 8,
+            "z": 8
+          },
+          "scenery": {
+            "name":"mode_bubble_rock_scenery",
+            "type": "scenery",
+            "url": "scenery_planet_skirt.gltf",
+            "model":null,
+            "position":{
+              "x": 12,
+              "y": -2,
+              "z": -2
+            }
           }
         }
       ]
@@ -54,7 +87,7 @@
     {
       "name":"song",
       "type": "sun",
-      "url": "sun_mode--animation.gltf",
+      "url": "sun_mode.gltf",
       "teasing": {
         "title": "SEXUALITÉ",
         "description": "Le droit au plaisir ! c'est ce que revendiquent les jeunes de l'époque qui formulent alors leur propres revendications et médiatisent les luttes pour la sexualité. Découvre à travers 3 planètes comment cette révolution sexuelle a-t-elle fait avancer la société."
@@ -71,34 +104,34 @@
         {
           "name":"song_bubble1",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "scenery_planet_skirt.gltf",
           "model":null,
           "position":{
-            "x":-25,
-            "y":1,
-            "z":-15
+            "x": 12,
+            "y": -2,
+            "z": -2
           }
         },
         {
           "name":"song_bubble2",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "scenery_planet_skirt.gltf",
           "model":null,
           "position":{
-            "x":-20,
-            "y":1,
-            "z":-5
+            "x": -8,
+            "y": -7,
+            "z": -6
           }
         },
         {
           "name":"song_bubble3",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "scenery_planet_skirt.gltf",
           "model":null,
           "position":{
-            "x":-30,
-            "y":1,
-            "z":-5
+            "x": -9,
+            "y": 8,
+            "z": 8
           }
         }
       ]
@@ -106,7 +139,7 @@
     {
       "name":"quiz",
       "type": "sun",
-      "url": "sun_mode--animation.gltf",
+      "url": "satellite.glb",
       "teasing": {
         "title": "QUIZ",
         "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia voluptate eveniet, ipsa eius velit reprehenderit minus deserunt quos exercitationem a qui est, dolores atque labore quod vel cum dicta."
@@ -139,35 +172,35 @@
         {
           "name":"work_bubble1",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "scenery_planet_skirt.gltf",
           "model":null,
           "light":null,
           "position":{
-            "x":20,
-            "y":1,
-            "z":10
+            "x": 12,
+            "y": -2,
+            "z": -2
           }
         },
         {
           "name":"work_bubble2",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "scenery_planet_skirt.gltf",
           "model":null,
           "position":{
-            "x":25,
-            "y":1,
-            "z":5
+            "x": -8,
+            "y": -7,
+            "z": -6
           }
         },
         {
           "name":"work_bubble3",
           "type": "bubble",
-          "url": "bubble_skirt.gltf",
+          "url": "scenery_planet_skirt.gltf",
           "model":null,
           "position":{
-            "x":30,
-            "y":1,
-            "z":10
+            "x": -9,
+            "y": 8,
+            "z": 8
           }
         }
       ]

@@ -198,8 +198,7 @@ class GL {
             this.proton.update()
         }
 
-        if (this.mixer && this.clock) {
-            // console.log('mixer update', );       
+        if (this.mixer && this.clock) {    
             this.mixer.update(this.clock.getDelta())
         }
 

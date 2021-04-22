@@ -5,7 +5,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
-import JSONModels from '../../../datas/themes.json'
+import JSONSuns from '../../../datas/themes.json'
 
 export class CustomLoadingManager {
     private static instance: CustomLoadingManager
@@ -40,14 +40,18 @@ export class CustomLoadingManager {
         onAllLoaded: () => void,
         onModelLoaded: (gltf: GLTF) => void
     ) {
-        for (let modelToLoad of JSONModels) {
-            if (modelToLoad.hasOwnProperty('bubbles')) {
-                for (let bubble of modelToLoad.bubbles) {
+        for (let sun of JSONSuns) {
+            this.loadModel(sun, onError, onLoading, onAllLoaded, onModelLoaded)
+
+            if (sun.hasOwnProperty('bubbles')) {
+                for (let bubble of sun.bubbles) {
                     this.loadModel(bubble, onError, onLoading, onAllLoaded, onModelLoaded)
+
+                    if (bubble.hasOwnProperty('scenery')) {
+                        this.loadModel(bubble.scenery, onError, onLoading, onAllLoaded, onModelLoaded)
+                    }
                 }
             }
-            
-            this.loadModel(modelToLoad, onError, onLoading, onAllLoaded, onModelLoaded)
         }
     }
 
@@ -62,16 +66,17 @@ export class CustomLoadingManager {
             modelToLoad.url,
 
             (gltf) => {
+                gltf.userData = {type: modelToLoad.type}
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
                 // todo: get the right number
-                if (this.modelsLoaded.size === 13) {
+                if (this.modelsLoaded.size === 16) {
                     onAllLoaded()
                 }
             },
 
             function (xhr) {
-                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
                 onLoading(xhr)
             },
 
@@ -97,20 +102,28 @@ export class CustomLoadingManager {
     }
 
     getGLTFInfos (key: string) {
-        let modelInfos = JSONModels.find(model => model.name === key)
-
-        if (!modelInfos) {
-            for (let model of JSONModels) {
-                if (model.hasOwnProperty('bubbles')) {
-                    modelInfos = model.bubbles.find(bubble => bubble.name === key)
-                    if (modelInfos) {
-                        return modelInfos
+        console.log('key', key)
+        if (key.includes('scenery')) {
+            for (let sun of JSONSuns) {
+                if (sun.hasOwnProperty('bubbles')) {
+                    let sceneryInfos = sun.bubbles.find(bubble => bubble.hasOwnProperty('scenery') && bubble.scenery.name === key)
+                    if (sceneryInfos) {
+                        return sceneryInfos
                     }
                 }
             }
+        } else if (key.includes('bubble')) {
+            for (let sun of JSONSuns) {
+                if (sun.hasOwnProperty('bubbles')) {
+                    let bubbleInfos = sun.bubbles.find(bubble => bubble.name === key)
+                    if (bubbleInfos) {
+                        return bubbleInfos
+                    }
+                }
+            }
+        } else {
+            return JSONSuns.find(sun => sun.name === key)
         }
-
-        return modelInfos
     }
 
     getGLTFsByType (type: string) {
@@ -120,9 +133,7 @@ export class CustomLoadingManager {
 
         let gltfs: Map<string, GLTF> = new Map()
         for (const [key, value] of this.modelsLoaded) {
-            let modelInfos = this.getGLTFInfos(key)
-
-            if (modelInfos && modelInfos.type === type) {
+            if (value.userData.type === type) {
                 gltfs.set(key, value)
             }
         }
