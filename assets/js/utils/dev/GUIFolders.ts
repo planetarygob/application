@@ -2,6 +2,7 @@ import { BubbleData } from "../../webgl/data/BubbleData"
 import { handleColorChange } from "../Changes"
 import GUI from "./GUI"
 
+// TODO : Do everyhting in the same GUI class
 export const initGUI = () => {
     initBubbleGUI()
 }

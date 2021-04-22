@@ -95,27 +95,26 @@ class GL {
     // ---------------- METHODS
 
     addElements() {
+        // TODO : createCamera()
+        // NOTE : Update camera layer range if needed, atm 0 - 1
+        this.camera.layers.enable( 1 )
         this.scene.add( this.camera )
 
         // TODO : Should not be here at the end, should rather be in Scene.ts
-        // TODO : 
-        const g = new BoxGeometry(1, 1, 1)
+        
+        const g = new BoxGeometry( 1, 1, 1) 
         const m = new MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
         const box = new Mesh(g, m)
-        this.scene.add(box)
-        box.position.y = -5
+        this.scene.add( box )
+        box.position.y = -2
 
         const bubble = new Bubble( 1, 12, this.scene, this.renderer )
         this.scene.add( bubble.mesh )
 
         const bubble2 = new Bubble( 1, 12, this.scene, this.renderer )
         this.scene.add( bubble2.mesh )
-        bubble2.mesh.position.x = 3
-
-        const bubble3 = new Bubble( 1, 12, this.scene, this.renderer )
-        this.scene.add( bubble3.mesh )
-        bubble3.mesh.position.x = -3
-
+        bubble2.mesh.position.x = 5
+        
         const sky = new Sky( this.canvas.width, this.canvas.height )
         this.scene.add( sky.mesh )
 

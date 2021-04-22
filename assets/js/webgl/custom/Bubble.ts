@@ -30,6 +30,7 @@ class Bubble extends Object3D {
     
     mesh: any
     shader: any
+    oldShader: any
 
     bubbleCamera?: CubeCamera
     hdrCubeRenderTarget?: WebGLRenderTarget
@@ -49,6 +50,7 @@ class Bubble extends Object3D {
 
         this.generateCubeCamera()
         this.mesh = new Mesh(this.generateGeometry(), this.generateMaterial())
+        this.mesh.layers.set( 1 )
 
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
     }
@@ -73,6 +75,7 @@ class Bubble extends Object3D {
         return geometry
     }
 
+    // TODO : Seems like several instance of Bubble have the same envMap
     generateMaterial(): MeshPhysicalMaterial {
         const bubbleTexture = new CanvasTexture( this.generateTexture() )
         bubbleTexture.repeat.set( 1, 0 )
@@ -104,6 +107,7 @@ class Bubble extends Object3D {
             shader.vertexShader = vertexShader
             shader.fragmentShader = fragmentShader
 
+            this.oldShader = this.shader
             this.shader = shader
         }
 
@@ -115,9 +119,11 @@ class Bubble extends Object3D {
 
         const pmremGenerator = new PMREMGenerator( this.renderer )
         this.hdrCubeRenderTarget = pmremGenerator.fromScene( this.scene )
+        pmremGenerator.dispose()
 
         // TODO : 30 is worldSize
         this.bubbleCamera = new BubbleCamera( 1, 30, cubeRenderTarget, this.renderer, this.scene )
+        this.bubbleCamera.layers.set( 0 )
         this.add( this.bubbleCamera )
     }
 
@@ -131,6 +137,7 @@ class Bubble extends Object3D {
             this.shader.uniforms.uNoiseStrength.value = BubbleData.strength
             this.mesh.material.transmission = BubbleData.transmission
             this.mesh.material.envMapIntensity = BubbleData.envMapIntensity
+
             // TODO : Fix color change, seems to only work for extreme RGB colors
             this.mesh.material.color = BubbleData.color
         }
