@@ -234,6 +234,9 @@ class GL {
 
         this.renderer.render(this.scene, this.camera)
 
+        EventBus.emit(GLEvents.UPDATE, {
+            elapsedTime: this.clock.getElapsedTime() 
+        })
 
         if (this.highlightManager) {
             // console.log('higlight update');

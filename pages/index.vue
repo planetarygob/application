@@ -271,7 +271,7 @@ export default {
 
             for (let planetInfos of systemInfos.planets) {
                 let objectModel = this.objects.get(planetInfos.object.name)
-                planetInfos.object.model = new Planet(this.gl.scene, this.gl.renderer, objectModel, new Vector3(-5, 1, -4))
+                planetInfos.object.model = new Planet(this.gl.scene, this.gl.renderer, objectModel, new Vector3(planetInfos.position.x, planetInfos.position.y, planetInfos.position.z))
                 planetInfos.object.model.position.set(planetInfos.position.x, planetInfos.position.y, planetInfos.position.z)
 
                 planetInfos.object.model.addEventListener('click', this.planetClicked.bind(event, planetInfos))
@@ -348,6 +348,8 @@ export default {
 
         addPlanetSceneryOnScene (planetInfos) {
             planetInfos.object.model.visible = false
+            planetInfos.object.model.isComplete = true
+            planetInfos.object.model.remove(planetInfos.object.model.bubble.mesh)
             this.gl.controls.enableRotate = true
             this.sceneries = this.gl.loadingManager.getGLTFsByType('scenery')
 
