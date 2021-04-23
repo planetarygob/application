@@ -37,16 +37,18 @@ class Planet extends Group {
     update( elapsedTime: number ) {
         if ( this.isComplete ) {
             // TODO : Talk with designers to be more precise about the movement we want the Bubbles to achieve
+            // todo: improve orbit movement
             this.position.set(
-                this.coords.x * Math.cos( elapsedTime ),
-                this.coords.y * Math.sin( elapsedTime ) * .3,
-                this.coords.z * Math.sin( elapsedTime ),
+                this.coords.x * Math.cos(elapsedTime),
+                Math.sin( elapsedTime ) * .3,
+                this.coords.z * Math.sin(elapsedTime),
             )
         } else {
+            const angle = elapsedTime * 2
             // TODO : Use initial position of Bubble / Planet instead of 0. Keep in mind it will be related to System coordinates & not Scene
             this.position.set(
                 this.coords.x,
-                this.coords.y * Math.sin( elapsedTime ) * 2 * Math.sin( elapsedTime ),
+                this.coords.y + Math.sin(angle),
                 this.coords.z,
             )
         }

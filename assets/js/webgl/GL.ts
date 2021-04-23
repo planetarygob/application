@@ -148,6 +148,7 @@ class GL {
 
     addEvents() {
         window.addEventListener( 'resize', this.resize.bind(this) )
+        // todo: fire only on world change
         // this.controls.addEventListener('change', () => {
         //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         // })
@@ -226,7 +227,7 @@ class GL {
             this.interactionManager.update()
         }
 
-        if (this.mixer && this.clock) {  
+        if (this.mixer && this.clock) {
             this.mixer.update(this.clock.getDelta())
         }
 
@@ -234,6 +235,9 @@ class GL {
 
         this.renderer.render(this.scene, this.camera)
 
+        EventBus.emit(GLEvents.UPDATE, {
+            elapsedTime: this.clock.getElapsedTime() 
+        })
 
         if (this.highlightManager) {
             // console.log('higlight update');
