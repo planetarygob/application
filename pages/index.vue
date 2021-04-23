@@ -488,7 +488,6 @@ export default {
                 z: this.systemSelected.position.z - 20,
                 onUpdate: function () {
                     self.gl.camera.updateProjectionMatrix();
-                    console.log('self.gl.camera', self.gl.camera);
                 }
             })
             gsap.to(this.gl.controls.target, {

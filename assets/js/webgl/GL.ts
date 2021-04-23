@@ -11,7 +11,8 @@ import {
     BufferGeometry,
     BufferAttribute,
     sRGBEncoding,
-    Vector3
+    Vector3,
+    Points
 } from 'three'
 import Stats from '../utils/dev/Stats'
 import Proton from 'three.proton.js';
