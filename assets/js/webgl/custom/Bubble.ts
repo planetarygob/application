@@ -49,8 +49,11 @@ class Bubble extends Object3D {
         this.scene = scene
 
         this.generateCubeCamera()
+        
+        // NOTE : Use Point Particles for explosion animation might be an option
         this.mesh = new Mesh(this.generateGeometry(), this.generateMaterial())
-        // We set bubbles on a different layer, only visible to main PerspectiveCamera to avoid infinite light reflection on envMap from CubeCameras
+
+        // NOTE : We set bubbles on a different layer, only visible to main PerspectiveCamera to avoid infinite light reflection on envMap from CubeCameras
         this.mesh.layers.set( 1 )
 
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
