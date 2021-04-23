@@ -21,6 +21,7 @@ class Planet extends Group {
         // TODO : Detect the change on this.isComplete pour dispose la Bulle
         this.bubble = new Bubble( 1, 12, scene, renderer )
         this.add( this.bubble.mesh )
+        console.log("bubble")
 
         const loader = new GLTFLoader();
 
