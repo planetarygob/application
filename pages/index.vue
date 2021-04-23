@@ -547,7 +547,6 @@ export default {
         },
         
         onModelLoaded (gltf) {
-            console.log('gltf.userData.name', gltf.userData.name);
             // const satellite = 
             // const modelToImport = gltf.scene
             // modelToImport.position.set(Math.random() * 5, 1, 0)

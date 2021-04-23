@@ -227,7 +227,7 @@ class GL {
             this.interactionManager.update()
         }
 
-        if (this.mixer && this.clock) {  
+        if (this.mixer && this.clock) {
             this.mixer.update(this.clock.getDelta())
         }
 
