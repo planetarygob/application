@@ -1,5 +1,5 @@
 import { Group, Vector3 } from "three";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import EventBus from "../../utils/EventBus";
 import { GLEvents } from "../../utils/GLEvents";
 import Renderer from "../core/Renderer";
@@ -14,8 +14,8 @@ class Planet extends Group {
     constructor(
         scene: Scene,
         renderer: Renderer,
+        gltf: GLTF,
         coords: Vector3
-        gltf: GLTF
     ) {
         super()
         this.coords = coords
