@@ -83,7 +83,7 @@ export class CustomLoadingManager {
             },
 
             function (xhr) {
-                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');s
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
                 onLoading(xhr)
             },
 
