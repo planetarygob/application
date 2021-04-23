@@ -7,8 +7,15 @@ import {
     DirectionalLight,
     AnimationMixer,
     AmbientLight,
+    TorusKnotGeometry,
     BoxGeometry,
-    TorusKnotGeometry
+    SphereGeometry,
+    PointsMaterial,
+    Points,
+    BufferGeometry,
+    BufferAttribute,
+    sRGBEncoding,
+    Vector3
 } from 'three'
 import Stats from '../utils/dev/Stats'
 import Proton from 'three.proton.js';
@@ -141,9 +148,33 @@ class GL {
         
         // TODO : createSky()
         const sky = new Sky( this.canvas.width, this.canvas.height )
-        // this.scene.add( sky.mesh )
+        this.scene.add( sky.mesh )
 
-        // this.createLights()
+        // ___________________________
+
+        const particlesMaterial = new PointsMaterial({
+            size: 0.02,
+            sizeAttenuation: true
+        })
+
+        // Geometry
+        const particlesGeometry = new BufferGeometry()
+        const count = 500
+
+        const positions = new Float32Array(count * 3) // Multiply by 3 because each position is composed of 3 values (x, y, z)
+
+        for(let i = 0; i < count * 3; i++) // Multiply by 3 for same reason
+        {
+            positions[i] = (Math.random() - 0.5) * 60 // Math.random() - 0.5 to have a random value between -0.5 and +0.5
+        }
+
+        particlesGeometry.setAttribute('position', new BufferAttribute(positions, 3)) // Create the Three.js BufferAttribute and specify that each information is composed of 3 values
+
+        const particles = new Points(particlesGeometry, particlesMaterial)
+        this.scene.add(particles)
+
+        this.renderer.outputEncoding = sRGBEncoding
+        this.createLights()
     }
 
     addEvents() {
@@ -180,6 +211,7 @@ class GL {
     }
 
     // ---------------- LIFECYCLE
+    // TODO : Rework so that we're not dependent of the user's framerate
 
     animate() {
         Stats.begin()
