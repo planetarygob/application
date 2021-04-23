@@ -10,27 +10,30 @@ import {
     PMREMGenerator,
     RGBFormat, 
     Scene,
-    WebGLCubeRenderTarget
+    WebGLCubeRenderTarget,
+    WebGLRenderTarget
 } from 'three'
 import vertexShader from '../shaders/Bubble/vertex'
 import fragmentShader from '../shaders/Bubble/fragment'
-import GUI from '../../utils/dev/GUI'
 import EventBus from '../../utils/EventBus'
 import { GLEvents } from '../../utils/GLEvents'
 import Renderer from '../core/Renderer'
 import BubbleCamera from './BubbleCamera'
+import { BubbleData } from '../data/BubbleData'
 
 class Bubble extends Object3D {
 
+    radius: number
+    detail: number
     renderer: Renderer
     scene: Scene
-    bubbleCamera?: CubeCamera
-
+    
+    mesh: any
     shader: any
-    mesh: Mesh
+    oldShader: any
 
-    hdrCubeRenderTarget: any
-    hdrEquirect: any
+    bubbleCamera?: CubeCamera
+    hdrCubeRenderTarget?: WebGLRenderTarget
 
     constructor(
         radius: number, 
@@ -40,31 +43,20 @@ class Bubble extends Object3D {
     ) {
         super()
 
-        this.scene = scene
+        this.radius = radius
+        this.detail = detail
         this.renderer = renderer
+        this.scene = scene
 
-        this.userData = {
-            speed: 0.3,
-            density: 0.3,
-            strength: 0.2
-        }
+        this.generateCubeCamera()
+        
+        // NOTE : Use Point Particles for explosion animation might be an option
+        this.mesh = new Mesh(this.generateGeometry(), this.generateMaterial())
 
-        this.GUI()
-
-        this.addCubeCamera()
-        const geometry = new IcosahedronGeometry( radius, detail )
-        this.mesh = new Mesh(geometry, this.generateMaterial())
+        // NOTE : We set bubbles on a different layer, only visible to main PerspectiveCamera to avoid infinite light reflection on envMap from CubeCameras
+        this.mesh.layers.set( 1 )
 
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
-    }
-
-    // ---------------- INITIALIZATION
-
-    GUI() {
-        const bubbleFolder = GUI.addFolder('Bubble')
-        bubbleFolder.add(this.userData, 'speed', 0, 2.5, 0.1)
-        bubbleFolder.add(this.userData, 'density', 0, 2.5, 0.1)
-        bubbleFolder.add(this.userData, 'strength', 0, 2.5, 0.1)
     }
 
     // ---------------- METHODS
@@ -81,49 +73,57 @@ class Bubble extends Object3D {
         return canvas
     }
 
-    generateMaterial(): MeshPhysicalMaterial {
+    generateGeometry(): IcosahedronGeometry {
+        const geometry = new IcosahedronGeometry( this.radius, this.detail )
 
+        return geometry
+    }
+
+    // TODO : Seems like several instance of Bubble have the same envMap
+    generateMaterial(): MeshPhysicalMaterial {
         const bubbleTexture = new CanvasTexture( this.generateTexture() )
-        bubbleTexture.repeat.set(1, 0)
+        bubbleTexture.repeat.set( 1, 0 )
 
         const material = new MeshPhysicalMaterial ({
-            color: 0xffffff,
+            color: BubbleData.color,
             metalness: 0,
             roughness: 0,
             alphaMap: bubbleTexture,
             alphaTest: 0.5,
-            envMap: this.hdrCubeRenderTarget.texture,
-            envMapIntensity: 8,
+            envMap: this.hdrCubeRenderTarget!.texture,
+            envMapIntensity: BubbleData.envMapIntensity,
             depthWrite: false,
-            transmission: 0.9,
+            transmission: BubbleData.transmission,
             opacity: 1,
             transparent: true,
             side: BackSide
         })
 
-        material.onBeforeCompile = (shader) => {
+        material.onBeforeCompile = ( shader ) => {
             shader.uniforms = {
                 ...shader.uniforms,
                 uTime: { value: 0 },
-                uSpeed: { value: this.userData.speed },
-                uNoiseDensity: { value: this.userData.density },
-                uNoiseStrength: { value: this.userData.strength }
+                uSpeed: { value: BubbleData.speed },
+                uNoiseDensity: { value: BubbleData.density },
+                uNoiseStrength: { value: BubbleData.strength }
             }
 
             shader.vertexShader = vertexShader
             shader.fragmentShader = fragmentShader
 
+            this.oldShader = this.shader
             this.shader = shader
         }
 
         return material
     }
 
-    addCubeCamera() {
+    generateCubeCamera() {
         const cubeRenderTarget = new WebGLCubeRenderTarget( 5, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter } )
 
         const pmremGenerator = new PMREMGenerator( this.renderer )
         this.hdrCubeRenderTarget = pmremGenerator.fromScene( this.scene )
+        pmremGenerator.dispose()
 
         // TODO : 30 is worldSize
         this.bubbleCamera = new BubbleCamera( 1, 30, cubeRenderTarget, this.renderer, this.scene )
@@ -132,12 +132,17 @@ class Bubble extends Object3D {
 
     // ---------------- LIFECYCLE
 
-    update(elapsedTime: number) {
+    update( elapsedTime: number ) {
         if ( this.shader ) {
             this.shader.uniforms.uTime.value = elapsedTime
-            this.shader.uniforms.uSpeed.value = this.userData.speed
-            this.shader.uniforms.uNoiseDensity.value = this.userData.density
-            this.shader.uniforms.uNoiseStrength.value = this.userData.strength
+            this.shader.uniforms.uSpeed.value = BubbleData.speed
+            this.shader.uniforms.uNoiseDensity.value = BubbleData.density
+            this.shader.uniforms.uNoiseStrength.value = BubbleData.strength
+            this.mesh.material.transmission = BubbleData.transmission
+            this.mesh.material.envMapIntensity = BubbleData.envMapIntensity
+
+            // TODO : Fix color change, seems to only work for extreme RGB colors
+            this.mesh.material.color = BubbleData.color
         }
     }
 }

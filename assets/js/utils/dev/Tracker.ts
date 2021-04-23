@@ -1,5 +1,5 @@
 class Tracker {
-    update( infos: any ) {
+    update(infos: any) {
         const linesCounter = document.querySelector( '#linesCounter') as HTMLElement
         const pointsCounter = document.querySelector( '#pointsCounter') as HTMLElement
         const trianglesCounter = document.querySelector( '#trianglesCounter') as HTMLElement

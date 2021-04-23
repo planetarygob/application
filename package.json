@@ -12,16 +12,23 @@
     "@types/dat-gui": "^0.6.3",
     "core-js": "^3.9.1",
     "dat.gui": "^0.7.7",
+    "gsap": "^3.6.1",
     "mitt": "^2.1.0",
     "nuxt": "^2.15.3",
     "stats.js": "^0.17.0",
-    "three": "^0.127.0"
+    "three": "^0.127.0",
+    "three.interactive": "^1.1.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.3",
     "@nuxt/typescript-build": "^2.1.0",
+    "@nuxtjs/tailwindcss": "^4.0.3",
+    "@tailwindcss/postcss7-compat": "^2.1.0",
     "@types/dat.gui": "^0.7.6",
     "@types/stats.js": "^0.17.0",
-    "@types/three": "^0.127.0"
+    "@types/three": "^0.127.0",
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.35",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.0"
   }
 }

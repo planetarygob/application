@@ -21,7 +21,7 @@ class Sky extends Object3D {
         const t = new CanvasTexture(i.context.canvas);
 
         // TODO : 30 is worldSize
-        const geometry = new SphereGeometry(30, 32);
+        const geometry = new SphereGeometry(100, 100);
         const material = new MeshBasicMaterial({
             side: BackSide,
             map: t,

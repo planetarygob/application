@@ -1,0 +1,244 @@
+[
+  {
+    "name": "mode",
+    "type": "system",
+    "teasing": {
+      "title": "MODE",
+      "description": "Principe d'affirmation, appartenance à un groupe social, reflet des valeurs et idées... Découvre à travers 3 planètes comment la mode a le pouvoir de déplacer les normes et les idéologies dans la société des années 60 à 80."
+    },
+    "currentPosition": 0,
+    "position":{
+      "x":0,
+      "y":0,
+      "z":0
+    },
+    "sun": {
+      "name": "mode_sun",
+      "type": "sun",
+      "url": "sun_mode.gltf",
+      "model": null,
+      "light": null
+    },
+    "planets": [
+      {
+        "name": "mode_planet_skirt",
+        "type": "planet",
+        "position":{
+          "x": 12,
+          "y": -2,
+          "z": -2
+        },
+        "object": {
+          "name":"mode_object_skirt",
+          "type": "object",
+          "url": "object_planet_skirt.gltf",
+          "model":null
+        },
+        "scenery": {
+          "name":"mode_scenery_skirt",
+          "type": "scenery",
+          "url": "scenery_planet_skirt.gltf",
+          "model": null
+        }
+      },
+      {
+        "name": "mode_planet_hippie",
+        "type": "planet",
+        "position":{
+          "x": -8,
+          "y": -7,
+          "z": -6
+        },
+        "object": {
+          "name": "mode_object_hippie",
+          "type": "object",
+          "url": "object_planet_hippie.gltf",
+          "model": null
+        },
+        "scenery": {
+          "name": "mode_scenery_hippie.",
+          "type": "scenery",
+          "url": "scenery_planet_hippie.glb",
+          "model":null
+        }
+      },
+      {
+        "name": "mode_planet_rock",
+        "type": "planet",
+        "position":{
+          "x": -9,
+          "y": 8,
+          "z": 8
+        },
+        "object": {
+          "name": "mode_object_rock",
+          "type": "object",
+          "url": "object_planet_skirt.gltf",
+          "model": null
+        },
+        "scenery": {
+          "name":"mode_scenery_planet_rock",
+          "type": "scenery",
+          "url": "scenery_planet_skirt.gltf",
+          "model": null
+        }
+      }
+    ]
+  },
+  {
+    "name": "song",
+    "type": "system",
+    "teasing": {
+      "title": "SEXUALITÉ",
+      "description": "Le droit au plaisir ! c'est ce que revendiquent les jeunes de l'époque qui formulent alors leur propres revendications et médiatisent les luttes pour la sexualité. Découvre à travers 3 planètes comment cette révolution sexuelle a-t-elle fait avancer la société."
+    },
+    "currentPosition": 1,
+    "position":{
+      "x": -75,
+      "y": 8,
+      "z": 35
+    },
+    "sun": {
+      "name":"song_sun",
+      "type": "sun",
+      "url": "sun_mode.gltf",
+      "model":null,
+      "light":null
+    },
+    "planets": [
+      {
+        "name": "song_planet1",
+        "type": "planet",
+        "position":{
+          "x": 12,
+          "y": -2,
+          "z": -2
+        },
+        "object": {
+          "name":"song_object_planet1",
+          "type": "object",
+          "url": "object_planet_skirt.gltf",
+          "model":null
+        }
+      },
+      {
+        "name": "song_planet2",
+        "type": "planet",
+        "position":{
+          "x": -8,
+          "y": -7,
+          "z": -6
+        },
+        "object": {
+          "name": "song_object_planet2",
+          "type": "object",
+          "url": "object_planet_skirt.gltf",
+          "model": null
+        }
+      },
+      {
+        "name": "song_planet3",
+        "type": "planet",
+        "position":{
+          "x": -9,
+          "y": 8,
+          "z": 8
+        },
+        "object": {
+          "name":"song_object_planet3",
+          "type": "object",
+          "url": "scenery_planet_skirt.gltf",
+          "model":null
+        }
+      }
+    ]
+  },
+  {
+    "name": "quiz",
+    "type": "system",
+    "teasing": {
+      "title": "QUIZ",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia voluptate eveniet, ipsa eius velit reprehenderit minus deserunt quos exercitationem a qui est, dolores atque labore quod vel cum dicta."
+    },
+    "currentPosition": 2,
+    "position":{
+      "x": 0,
+      "y": 0,
+      "z": 75
+    },
+    "sun": {
+      "name":"quiz_sun",
+      "type": "sun",
+      "url": "satellite.glb",
+      "model":null
+    }
+  },
+  {
+    "name": "work",
+    "type": "system",
+    "teasing": {
+      "title": "LOISIR",
+      "description": "Partir en vacances, faire du sport, regarder la télé... Tous ces loisirs n'existaient pas avant les années 60 ! A travers 4 planètes, découvre comment les loisirs se sont développés et ce qui a profondément changé dans la société de l'époque."
+    },
+    "currentPosition": 3,
+    "position":{
+      "x": 75,
+      "y": 8,
+      "z": 35
+    },
+    "sun": {
+      "name":"work_sun",
+      "type": "sun",
+      "url": "sun_mode.gltf",
+      "model":null,
+      "light":null
+    },
+    "planets": [
+      {
+        "name": "work_planet1",
+        "type": "planet",
+        "position":{
+          "x": 12,
+          "y": -2,
+          "z": -2
+        },
+        "object": {
+          "name":"work_object_planet1",
+          "type": "object",
+          "url": "object_planet_skirt.gltf",
+          "model":null
+        }
+      },
+      {
+        "name": "work_planet2",
+        "type": "planet",
+        "position":{
+          "x": -8,
+          "y": -7,
+          "z": -6
+        },
+        "object": {
+          "name":"work_object_planet2",
+          "type": "object",
+          "url": "object_planet_skirt.gltf",
+          "model":null
+        }
+      },
+      {
+        "name": "work_planet3",
+        "type": "planet",
+        "position":{
+          "x": -9,
+          "y": 8,
+          "z": 8
+        },
+        "object": {
+          "name":"work_object_planet3",
+          "type": "object",
+          "url": "object_planet_skirt.gltf",
+          "model":null
+        }
+      }
+    ]
+  }
+]
