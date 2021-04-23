@@ -7,10 +7,10 @@ import { WebGLRenderer, PerspectiveCamera, Vector2 } from 'three';
 
 class HighlightManager {
     private static instance: HighlightManager
-    composer: EffectComposer
+    composer: EffectComposer|null
     outlinePass: OutlinePass
-    renderPass: RenderPass
-    shaderPass: ShaderPass
+    renderPass: RenderPass|null
+    shaderPass: ShaderPass|null
 
     constructor (renderer: WebGLRenderer, scene: THREE.Scene, camera: PerspectiveCamera) {
         this.composer = new EffectComposer(renderer);
@@ -35,18 +35,22 @@ class HighlightManager {
     }
 
     render () {
-        this.composer.render()
+        if (this.composer) {
+            this.composer.render()
+        }
     }
 
     dispose () {
-        this.composer.removePass(this.outlinePass)
-        this.composer.removePass(this.shaderPass)
-        this.composer.removePass(this.renderPass)
+        if (this.composer && this.shaderPass && this.renderPass) {
+            this.composer.removePass(this.outlinePass)
+            this.composer.removePass(this.shaderPass)
+            this.composer.removePass(this.renderPass)
+            this.outlinePass.dispose()
+            this.shaderPass.material.dispose()
+            this.shaderPass = null
+            this.renderPass = null
+        }
         this.composer = null
-        this.outlinePass.dispose()
-        this.shaderPass.material.dispose()
-        this.shaderPass = null
-        this.renderPass = null
     }
 }
 

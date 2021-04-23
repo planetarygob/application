@@ -15,7 +15,6 @@ import {
     Points
 } from 'three'
 import Stats from '../utils/dev/Stats'
-import Proton from 'three.proton.js';
 import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
 import HighlightManager from '../utils/managers/HighlightManager'
 import { CustomLoadingManager } from '../utils/managers/CustomLoadingManager'
@@ -50,8 +49,7 @@ class GL {
     interactionManager: CustomInteractionManager
     highlightManager: HighlightManager
     loadingManager: CustomLoadingManager
-    proton: Proton
-    mixer: AnimationMixer
+    mixer: AnimationMixer|null
     sphereCamera: any
     hdrCubeRenderTarget: any
     hdrEquirect: any
@@ -81,9 +79,10 @@ class GL {
         this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
 
         this.controls = new Controls(this.camera, this.canvas)
-        
 
         this.clock = new Clock()
+
+        this.mixer = null
 
         // EventBusManager.getInstance().emitter.on('gl:needClock', function needClock (e: any) {
         //     self.clock = new Clock()
@@ -97,11 +96,7 @@ class GL {
 
         this.interactionManager = new CustomInteractionManager(this.renderer, this.camera)
 
-        // this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
-
-        // EventBusManager.getInstance().emitter.on('gl:needProton', (e: any) => {
-        //     this.proton = new Proton()
-        // })
+        this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
 
         // EventBusManager.getInstance().emitter.on('gl:needSphereCamera', (e: any) => {
         //     this.cubeRenderTarget = new WebGLCubeRenderTarget(5, {format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter})
@@ -145,6 +140,33 @@ class GL {
         const sky = new Sky( this.canvas.width, this.canvas.height )
         this.scene.add( sky.mesh )
 
+        this.addBackgroundStars()
+
+        this.renderer.outputEncoding = sRGBEncoding
+        this.createLights()
+    }
+
+    addEvents() {
+        window.addEventListener( 'resize', this.resize.bind(this) )
+        // this.controls.addEventListener('change', () => {
+        //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
+        // })
+        this.canvas.addEventListener( 'click', () => {
+            EventBus.emit(GLEvents.CLICK)
+        })
+    }  
+    
+    resize() {
+        this.size.width = window.innerWidth;
+        this.size.height = window.innerHeight;
+
+        this.camera.aspect = this.size.width / this.size.height
+        this.renderer.setSize(this.size.width, this.size.height)
+
+        this.camera.updateProjectionMatrix()
+    }
+
+    addBackgroundStars () {
         // ___________________________ PARTICLES
 
         const particlesMaterial = new PointsMaterial({
@@ -167,29 +189,6 @@ class GL {
 
         const particles = new Points(particlesGeometry, particlesMaterial)
         this.scene.add(particles)
-
-        this.renderer.outputEncoding = sRGBEncoding
-        this.createLights()
-    }
-
-    addEvents() {
-        window.addEventListener( 'resize', this.resize.bind(this) )
-        // this.controls.addEventListener('change', () => {
-        //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
-        // })
-        // this.canvas.addEventListener( 'click', () => {
-        //     EventBus.emit(GLEvents.CLICK)
-        // })
-    }  
-    
-    resize() {
-        this.size.width = window.innerWidth;
-        this.size.height = window.innerHeight;
-
-        this.camera.aspect = this.size.width / this.size.height
-        this.renderer.setSize(this.size.width, this.size.height)
-
-        this.camera.updateProjectionMatrix()
     }
 
     createLights() {
@@ -226,14 +225,8 @@ class GL {
             // console.log('interactionManager update');
             this.interactionManager.update()
         }
-        
-        if (this.proton) {
-            // console.log('proton update');
-            this.proton.update()
-        }
 
         if (this.mixer && this.clock) {  
-            console.log('mixer update');  
             this.mixer.update(this.clock.getDelta())
         }
 

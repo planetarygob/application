@@ -43,14 +43,15 @@ export class CustomLoadingManager {
         for (let system of JSONSystems) {
             this.loadModel(system.sun, onError, onLoading, onAllLoaded, onModelLoaded)
 
-            if (system.hasOwnProperty('planets')) {
+            if (system.hasOwnProperty('planets') && system.planets) {
                 for (let planet of system.planets) {
-                    if (planet.hasOwnProperty('object')) {
+                    if (planet.hasOwnProperty('object') && planet.object) {
                         this.loadModel(planet.object, onError, onLoading, onAllLoaded, onModelLoaded)
                     }
 
-                    if (planet.hasOwnProperty('scenery')) {
-                        this.loadModel(planet.scenery, onError, onLoading, onAllLoaded, onModelLoaded)
+                    // wtf ts wants to have planet['scenery'] instead planet.scenery ??
+                    if (planet.hasOwnProperty('scenery') && planet['scenery']) {
+                        this.loadModel(planet['scenery'], onError, onLoading, onAllLoaded, onModelLoaded)
                     }
                 }
             }
@@ -58,15 +59,16 @@ export class CustomLoadingManager {
     }
 
     loadModel(
-        modelToLoad,
+        modelToLoad: { 
+            url: string,
+            type: string,
+            name: string
+        },
         onError: (error: ErrorEvent) => void,
         onLoading: (xhr: ProgressEvent<EventTarget>) => void,
         onAllLoaded: () => void,
         onModelLoaded: (gltf: GLTF) => void
     ) {
-        // console.log('modelToLoad.name', modelToLoad.name);
-        // console.log('modelToLoad.url', modelToLoad.url);
-
         this.loader.load(
             modelToLoad.url,
 
@@ -107,28 +109,18 @@ export class CustomLoadingManager {
     }
 
     getGLTFInfos (key: string, parent = false) {
-        console.log('key', key)
-        if (key.includes('scenery')) {
+        if (key.includes('object')) {
             for (let system of JSONSystems) {
-                if (system.sun.hasOwnProperty('planets')) {
-                    let sceneryInfos = system.sun.planets.find(planet => planet.hasOwnProperty('scenery') && planet.scenery.name === key)
-                    if (sceneryInfos) {
-                        return sceneryInfos
-                    }
-                }
-            }
-        } else if (key.includes('object')) {
-            for (let system of JSONSystems) {
-                if (system.hasOwnProperty('planets')) {
-                    let sceneryInfos = system.planets.find(planet => planet.hasOwnProperty('object') && planet.object.name === key)
-                    if (sceneryInfos) {
-                        return sceneryInfos
+                if (system.hasOwnProperty('planets') && system.planets) {
+                    let objectInfos = system.planets.find((planet: {object: {name: string}}) => planet.hasOwnProperty('object') && planet.object.name === key)
+                    if (objectInfos) {
+                        return objectInfos
                     }
                 }
             }
         } else if (key.includes('sun')) {
             if (parent) {
-                return JSONSystems.find(system => system.sun.name === key)
+                return JSONSystems.find((system: { sun: {name: string}}) => system.sun.name === key)
             }
 
             for (let system of JSONSystems) {
@@ -137,7 +129,7 @@ export class CustomLoadingManager {
                 }
             }
         } else {
-            return JSONSystems.find(system => system.name === key)
+            return JSONSystems.find((system: {name: string}) => system.name === key)
         }
     }
 
