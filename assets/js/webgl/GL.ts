@@ -12,7 +12,8 @@ import {
     Points,
     BufferGeometry,
     BufferAttribute,
-    sRGBEncoding
+    sRGBEncoding,
+    Vector3
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Scene from './core/Scene'
@@ -121,27 +122,14 @@ class GL {
             console.error( error )
         })
 
-        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
-        // this.scene.add( bubble.mesh )
-        bubble.mesh.position.z = -3
-
-        const planet = new Planet( this.scene, this.renderer )
+        const planet = new Planet( this.scene, this.renderer, new Vector3(-5, 1, -4) )
         this.scene.add(planet)
-        planet.position.x = -5
-        planet.position.y = 1
-        planet.position.z = -5
 
-        const planet2 = new Planet( this.scene, this.renderer )
+        const planet2 = new Planet( this.scene, this.renderer, new Vector3(-5, -1, 2) )
         this.scene.add(planet2)
-        planet2.position.x = -5
-        planet2.position.y = -1
-        planet2.position.z = 5
 
-        const planet3 = new Planet( this.scene, this.renderer )
+        const planet3 = new Planet( this.scene, this.renderer, new Vector3(6, 1, 3) )
         this.scene.add(planet3)
-        planet3.position.x = 6
-        planet3.position.y = 1
-        planet3.position.z = 0
 
         // TODO : createSky()
         const sky = new Sky( this.canvas.width, this.canvas.height )
@@ -209,6 +197,7 @@ class GL {
     }
 
     // ---------------- LIFECYCLE
+    // TODO : Rework so that we're not dependent of the user's framerate
 
     animate() {
         Stats.update()
