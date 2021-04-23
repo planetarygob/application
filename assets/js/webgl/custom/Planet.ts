@@ -37,6 +37,7 @@ class Planet extends Group {
     update( elapsedTime: number ) {
         if ( this.isComplete ) {
             // TODO : Talk with designers to be more precise about the movement we want the Bubbles to achieve
+            // todo: improve orbit movement
             this.position.set(
                 this.coords.x * Math.cos(elapsedTime),
                 Math.sin( elapsedTime ) * .3,

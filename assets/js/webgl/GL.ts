@@ -148,6 +148,7 @@ class GL {
 
     addEvents() {
         window.addEventListener( 'resize', this.resize.bind(this) )
+        // todo: fire only on world change
         // this.controls.addEventListener('change', () => {
         //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         // })
