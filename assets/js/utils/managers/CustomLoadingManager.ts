@@ -5,7 +5,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
-import JSONModels from '../../../datas/themes.json'
+import JSONSystems from '../../../datas/themes.json'
 
 export class CustomLoadingManager {
     private static instance: CustomLoadingManager
@@ -40,14 +40,20 @@ export class CustomLoadingManager {
         onAllLoaded: () => void,
         onModelLoaded: (gltf: GLTF) => void
     ) {
-        for (let modelToLoad of JSONModels) {
-            if (modelToLoad.hasOwnProperty('bubbles')) {
-                for (let bubble of modelToLoad.bubbles) {
-                    this.loadModel(bubble, onError, onLoading, onAllLoaded, onModelLoaded)
+        for (let system of JSONSystems) {
+            this.loadModel(system.sun, onError, onLoading, onAllLoaded, onModelLoaded)
+
+            if (system.hasOwnProperty('planets')) {
+                for (let planet of system.planets) {
+                    if (planet.hasOwnProperty('object')) {
+                        this.loadModel(planet.object, onError, onLoading, onAllLoaded, onModelLoaded)
+                    }
+
+                    if (planet.hasOwnProperty('scenery')) {
+                        this.loadModel(planet.scenery, onError, onLoading, onAllLoaded, onModelLoaded)
+                    }
                 }
             }
-            
-            this.loadModel(modelToLoad, onError, onLoading, onAllLoaded, onModelLoaded)
         }
     }
 
@@ -58,19 +64,24 @@ export class CustomLoadingManager {
         onAllLoaded: () => void,
         onModelLoaded: (gltf: GLTF) => void
     ) {
+        // console.log('modelToLoad.name', modelToLoad.name);
+        // console.log('modelToLoad.url', modelToLoad.url);
+
         this.loader.load(
             modelToLoad.url,
 
             (gltf) => {
+                gltf.userData = {type: modelToLoad.type, name: modelToLoad.name}
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
-                if (this.modelsLoaded.size === 13) {
+                // todo: get the right number
+                if (this.modelsLoaded.size === 16) {
                     onAllLoaded()
                 }
             },
 
             function (xhr) {
-                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');s
                 onLoading(xhr)
             },
 
@@ -95,21 +106,39 @@ export class CustomLoadingManager {
         return gltf
     }
 
-    getGLTFInfos (key: string) {
-        let modelInfos = JSONModels.find(model => model.name === key)
-
-        if (!modelInfos) {
-            for (let model of JSONModels) {
-                if (model.hasOwnProperty('bubbles')) {
-                    modelInfos = model.bubbles.find(bubble => bubble.name === key)
-                    if (modelInfos) {
-                        return modelInfos
+    getGLTFInfos (key: string, parent = false) {
+        console.log('key', key)
+        if (key.includes('scenery')) {
+            for (let system of JSONSystems) {
+                if (system.sun.hasOwnProperty('planets')) {
+                    let sceneryInfos = system.sun.planets.find(planet => planet.hasOwnProperty('scenery') && planet.scenery.name === key)
+                    if (sceneryInfos) {
+                        return sceneryInfos
                     }
                 }
             }
-        }
+        } else if (key.includes('object')) {
+            for (let system of JSONSystems) {
+                if (system.hasOwnProperty('planets')) {
+                    let sceneryInfos = system.planets.find(planet => planet.hasOwnProperty('object') && planet.object.name === key)
+                    if (sceneryInfos) {
+                        return sceneryInfos
+                    }
+                }
+            }
+        } else if (key.includes('sun')) {
+            if (parent) {
+                return JSONSystems.find(system => system.sun.name === key)
+            }
 
-        return modelInfos
+            for (let system of JSONSystems) {
+                if (system.sun.name === key) {
+                    return system.sun
+                }
+            }
+        } else {
+            return JSONSystems.find(system => system.name === key)
+        }
     }
 
     getGLTFsByType (type: string) {
@@ -119,9 +148,7 @@ export class CustomLoadingManager {
 
         let gltfs: Map<string, GLTF> = new Map()
         for (const [key, value] of this.modelsLoaded) {
-            let modelInfos = this.getGLTFInfos(key)
-
-            if (modelInfos && modelInfos.type === type) {
+            if (value.userData.type === type) {
                 gltfs.set(key, value)
             }
         }

@@ -1,5 +1,6 @@
 import Scene from './core/Scene'
 import Renderer from './core/Renderer'
+import Controls from './core/Controls'
 import { 
     PerspectiveCamera,
     Clock,
@@ -10,13 +11,9 @@ import {
     BufferGeometry,
     BufferAttribute,
     sRGBEncoding,
-    Points,
-    TorusKnotGeometry,
-    BoxGeometry,
-    SphereGeometry,
+    Vector3
 } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import Stats from 'stats.js'
+import Stats from '../utils/dev/Stats'
 import Proton from 'three.proton.js';
 import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
 import HighlightManager from '../utils/managers/HighlightManager'
@@ -25,14 +22,14 @@ import Bubble from './custom/Bubble'
 import Sky from './custom/Sky'
 import EventBus from '../utils/EventBus'
 import { GLEvents } from '../utils/GLEvents'
-import Tracker from '../utils/dev/Tracker'
 import GUI from '../utils/dev/GUI'
 import { initGUI } from '../utils/dev/GUIFolders'
 import Planet from './custom/Planet'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import Camera from './core/Camera'
 
 let previousTime = 0
 let elapsedTime = 0
+
 
 interface Size {
     width: number
@@ -42,12 +39,11 @@ interface Size {
 
 class GL {
     private static instance: GL
-    stats: Stats
     canvas: HTMLCanvasElement
     scene: Scene 
     renderer: Renderer 
     camera: PerspectiveCamera
-    controls: OrbitControls
+    controls: Controls
     clock: Clock
     size: Size
     interactionManager: CustomInteractionManager
@@ -61,9 +57,9 @@ class GL {
     cubeRenderTarget: any
 
     constructor() {
-        this.stats = new Stats()
-        this.stats.showPanel(0)
-        document.body.appendChild(this.stats.dom)
+        Stats.showPanel(0)
+        document.body.appendChild(Stats.dom)
+        initGUI()
 
         this.size = {
             width: window.innerWidth,
@@ -81,10 +77,10 @@ class GL {
 
         this.scene = new Scene()
 
-        this.camera = new PerspectiveCamera(75, this.size.width / this.size.height, 0.1, 1000)
-        this.camera.position.set(0, 10, -15)
+        this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
 
-        this.controls = new OrbitControls(this.camera, this.canvas)
+        this.controls = new Controls(this.camera, this.canvas)
+        
 
         this.clock = new Clock()
 
@@ -100,7 +96,7 @@ class GL {
 
         this.interactionManager = new CustomInteractionManager(this.renderer, this.camera)
 
-        this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
+        // this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
 
         // EventBusManager.getInstance().emitter.on('gl:needProton', (e: any) => {
         //     this.proton = new Proton()
@@ -129,39 +125,21 @@ class GL {
     // ---------------- METHODS
 
     addElements() {
-        this.scene.add(this.camera)
+        // TODO : createCamera()
+        // NOTE : Update camera layer range if needed, atm 0 - 1
+        this.camera.layers.enable( 1 )
+        this.scene.add( this.camera )
 
-        const loader = new GLTFLoader();
+        // const ambientLight = new AmbientLight(0xffffff, 0.8)
+        // this.scene.add(ambientLight)
 
-        loader.load( 'https://florianblandin.fr/assets/sun_mode.gltf', ( gltf ) => {
-            gltf.scene.scale.set(0.007, 0.007, 0.007)
-            gltf.scene.position.y = -0.25
-            this.scene.add( gltf.scene )
-        }, undefined, function ( error ) {
-            console.error( error )
-        })
-
-        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
+        // const bubble = new Bubble( 1, 12, this.scene, this.renderer )
         // this.scene.add( bubble.mesh )
+        // bubble.mesh.position.z = -3
 
-        const planet = new Planet( this.scene, this.renderer )
-        this.scene.add(planet)
-        planet.position.x = -5
-        planet.position.y = 1
-        planet.position.z = -5
-
-        const planet2 = new Planet( this.scene, this.renderer )
-        this.scene.add(planet2)
-        planet2.position.x = -5
-        planet2.position.y = -1
-        planet2.position.z = 5
-
-        const planet3 = new Planet( this.scene, this.renderer )
-        this.scene.add(planet3)
-        planet3.position.x = 6
-        planet3.position.y = 1
-        planet3.position.z = 0
-
+        // const planet = new Planet( this.scene, this.renderer )
+        // this.scene.add(planet)
+        
         // TODO : createSky()
         const sky = new Sky( this.canvas.width, this.canvas.height )
         this.scene.add( sky.mesh )
@@ -195,12 +173,12 @@ class GL {
 
     addEvents() {
         window.addEventListener( 'resize', this.resize.bind(this) )
-        this.controls.addEventListener('change', () => {
-            EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
-        })
-        this.canvas.addEventListener( 'click', () => {
-            EventBus.emit(GLEvents.CLICK)
-        })
+        // this.controls.addEventListener('change', () => {
+        //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
+        // })
+        // this.canvas.addEventListener( 'click', () => {
+        //     EventBus.emit(GLEvents.CLICK)
+        // })
     }  
     
     resize() {
@@ -227,14 +205,15 @@ class GL {
     }
 
     // ---------------- LIFECYCLE
+    // TODO : Rework so that we're not dependent of the user's framerate
 
     animate() {
-        this.stats.begin()
+        Stats.begin()
 
         window.requestAnimationFrame(this.animate.bind(this))
         this.render()
 
-        this.stats.end()
+        Stats.end()
     }
 
     render() {
@@ -243,6 +222,7 @@ class GL {
 
         // interactionManager couteux
         if (this.interactionManager) {
+            // console.log('interactionManager update');
             this.interactionManager.update()
         }
         
@@ -251,28 +231,23 @@ class GL {
             this.proton.update()
         }
 
-        if (this.clock) {
-            elapsedTime = this.clock.getElapsedTime()
+        if (this.mixer && this.clock) {  
+            console.log('mixer update');  
+            this.mixer.update(this.clock.getDelta())
         }
 
-        if (this.mixer) {
-            let deltaTime = 0
-            deltaTime = elapsedTime - previousTime
-            previousTime = elapsedTime
-
-            this.mixer.update(deltaTime)
-        }
-
-        Tracker.update(this.renderer.render)
+        // Tracker.update(this.renderer.render)
 
         this.renderer.render(this.scene, this.camera)
 
 
         if (this.highlightManager) {
-            this.highlightManager.render();
+            // console.log('higlight update');
+            // this.highlightManager.render();
         }
         
         if (this.sphereCamera) {
+            console.log('sphere camera update');
             this.sphereCamera.update(this.renderer, this.scene)
         }
 
