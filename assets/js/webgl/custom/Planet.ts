@@ -1,5 +1,5 @@
 import { Group } from "three";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import EventBus from "../../utils/EventBus";
 import { GLEvents } from "../../utils/GLEvents";
 import Renderer from "../core/Renderer";
@@ -13,24 +13,19 @@ class Planet extends Group {
     constructor(
         scene: Scene,
         renderer: Renderer,
+        gltf: GLTF
     ) {
         super()
 
         this.isComplete = false
         // TODO : Is there no other solution than passing scene & renderer through all objects so that Bubble has access to it ?
         // TODO : Detect the change on this.isComplete pour dispose la Bulle
-        this.bubble = new Bubble( 1, 12, scene, renderer )
+        this.bubble = new Bubble( 2, 12, scene, renderer )
         this.add( this.bubble.mesh )
-
-        const loader = new GLTFLoader();
-
-        loader.load( 'https://florianblandin.fr/assets/object_planet_hippie.gltf', ( gltf ) => {
-            gltf.scene.scale.set(0.007, 0.007, 0.007)
-            gltf.scene.position.y = -0.25
-            this.add( gltf.scene );
-        }, undefined, function ( error ) {
-            console.error( error );
-        });
+                
+        gltf.scene.scale.set(0.015, 0.015, 0.015)
+        gltf.scene.position.y = -0.25
+        this.add(gltf.scene);
 
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
         EventBus.on(GLEvents.CLICK, () => { this.isComplete ? this.isComplete = false : this.isComplete = true })

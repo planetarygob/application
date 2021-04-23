@@ -6,11 +6,11 @@ import {
     Clock,
     DirectionalLight,
     AnimationMixer,
-    AmbientLight
-    BoxGeometry
-    TorusKnotGeometry,
+    AmbientLight,
+    BoxGeometry,
+    TorusKnotGeometry
 } from 'three'
-import Stats from 'stats.js'
+import Stats from '../utils/dev/Stats'
 import Proton from 'three.proton.js';
 import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
 import HighlightManager from '../utils/managers/HighlightManager'
@@ -38,7 +38,6 @@ interface Size {
 
 class GL {
     private static instance: GL
-    stats: Stats
     canvas: HTMLCanvasElement
     scene: Scene 
     renderer: Renderer 
@@ -96,7 +95,7 @@ class GL {
 
         this.interactionManager = new CustomInteractionManager(this.renderer, this.camera)
 
-        this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
+        // this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
 
         // EventBusManager.getInstance().emitter.on('gl:needProton', (e: any) => {
         //     this.proton = new Proton()
@@ -129,17 +128,16 @@ class GL {
         // NOTE : Update camera layer range if needed, atm 0 - 1
         this.camera.layers.enable( 1 )
         this.scene.add( this.camera )
-        this.camera.position.z = 30
 
         // const ambientLight = new AmbientLight(0xffffff, 0.8)
         // this.scene.add(ambientLight)
 
-        const bubble = new Bubble( 1, 12, this.scene, this.renderer )
+        // const bubble = new Bubble( 1, 12, this.scene, this.renderer )
         // this.scene.add( bubble.mesh )
-        bubble.mesh.position.z = -3
+        // bubble.mesh.position.z = -3
 
-        const planet = new Planet( this.scene, this.renderer )
-        this.scene.add(planet)
+        // const planet = new Planet( this.scene, this.renderer )
+        // this.scene.add(planet)
         
         // TODO : createSky()
         const sky = new Sky( this.canvas.width, this.canvas.height )
@@ -150,12 +148,12 @@ class GL {
 
     addEvents() {
         window.addEventListener( 'resize', this.resize.bind(this) )
-        this.controls.addEventListener('change', () => {
-            EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
-        })
-        this.canvas.addEventListener( 'click', () => {
-            EventBus.emit(GLEvents.CLICK)
-        })
+        // this.controls.addEventListener('change', () => {
+        //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
+        // })
+        // this.canvas.addEventListener( 'click', () => {
+        //     EventBus.emit(GLEvents.CLICK)
+        // })
     }  
     
     resize() {
@@ -184,12 +182,12 @@ class GL {
     // ---------------- LIFECYCLE
 
     animate() {
-        this.stats.begin()
+        Stats.begin()
 
         window.requestAnimationFrame(this.animate.bind(this))
         this.render()
 
-        this.stats.end()
+        Stats.end()
     }
 
     render() {
@@ -198,6 +196,7 @@ class GL {
 
         // interactionManager couteux
         if (this.interactionManager) {
+            // console.log('interactionManager update');
             this.interactionManager.update()
         }
         
@@ -206,7 +205,8 @@ class GL {
             this.proton.update()
         }
 
-        if (this.mixer && this.clock) {    
+        if (this.mixer && this.clock) {  
+            console.log('mixer update');  
             this.mixer.update(this.clock.getDelta())
         }
 
@@ -216,10 +216,12 @@ class GL {
 
 
         if (this.highlightManager) {
-            this.highlightManager.render();
+            // console.log('higlight update');
+            // this.highlightManager.render();
         }
         
         if (this.sphereCamera) {
+            console.log('sphere camera update');
             this.sphereCamera.update(this.renderer, this.scene)
         }
 

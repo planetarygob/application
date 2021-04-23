@@ -1,21 +1,21 @@
 <template>
     <div class="relative">
-        <template v-if="sunSelected && shouldShowTeasingTexts">
+        <template v-if="systemSelected && showSystemTexts">
             <div
                 class="container flex flex-col justify-center p-8 w-3/12 absolute text-white mx-auto"
                 style="left: 52.5%; top: 35%">
-                <h1 class="font-extrabold text-3xl">{{ sunSelected.teasing.title }}</h1>
-                <span class="text-gray-400 text-sm mt-3">{{ sunSelected.teasing.description }}</span>
+                <h1 class="font-extrabold text-3xl">{{ systemSelected.teasing.title }}</h1>
+                <span class="text-gray-400 text-sm mt-3">{{ systemSelected.teasing.description }}</span>
                 <button
                     class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border hover:bg-white hover:text-purple-500 font-bold py-2 px-4 rounded-full"
-                    @click="discoverSun()">
+                    @click="discoverSystem()">
                     DECOUVRIR
                 </button>
             </div>
             <div 
                 class="absolute left-0 ml-6 cursor-pointer"
                 style="top: 50%"
-                @click="previousSun">
+                @click="previousSystem">
                 <svg-icon
                     svg-name="arrow_left"
                     :width="24"
@@ -25,7 +25,7 @@
             <div 
                 class="absolute right-0 mr-6 cursor-pointer"
                 style="top: 50%"
-                @click="nextSun">
+                @click="nextSystem">
                 <svg-icon 
                     svg-name="arrow_right"
                     :width="24"
@@ -55,6 +55,7 @@ import WebGl from '../components/WebGL.vue'
 import Tracker from '../components/Tracker.vue'
 import GL from '../assets/js/webgl/GL'
 import SvgIcon from '../components/SvgIcon.vue'
+import Planet from '../assets/js/webgl/custom/Planet'
 
 import {
     PerspectiveCamera,
@@ -77,18 +78,19 @@ export default {
     data: () => ({
         gl: GL,
         models: [],
+        systems: Map,
         suns: Map,
-        bubbles: Map,
-        selectedObjects: [],
+        planets: Map,
         emitter: null,
-        bubbleModel: null,
+        planetModel: null,
+        systemSelected: null,
         sunSelected: null,
-        bubbleSelected: null,
+        planetSelected: null,
         sunLight: PointLight,
         canClick: true,
         canMouseOver: true,
         firstZoomIsAlreadyLaunched: false,
-        shouldShowTeasingTexts: false,
+        showSystemTexts: false,
         currentStep: 0,
         positions: [
             {
@@ -113,8 +115,8 @@ export default {
             },
         ],
         timeline: null,
-        sunDiscovered: false,
-        bubbleDiscovered: false
+        discoveringSystem: false,
+        discoveringPlanet: false
     }),
 
     async mounted() {
@@ -134,40 +136,38 @@ export default {
             console.log('onAllModelsLoaded');
             this.suns = this.gl.loadingManager.getGLTFsByType('sun')
 
-            for (let [sunKey, sun] of this.suns) {
-                let sunInfos = this.gl.loadingManager.getGLTFInfos(sunKey)
+            for (let [key, sun] of this.suns) {
+                let systemInfos = this.gl.loadingManager.getGLTFInfos(key, true)
 
-                sunInfos.model = sun.scene.children[0].clone()
-                sunInfos.model.rotation.y = Math.PI
-                sunInfos.model.position.set(0, 0, 0)
-                sunInfos.model.scale.set(0.05, 0.05, 0.05)
-                sunInfos.light = this.sunLight
-                sunInfos.model.visible = false
+                systemInfos.sun.model = sun.scene.children[0].clone()
+                systemInfos.sun.model.rotation.y = Math.PI
+                systemInfos.sun.model.position.set(0, 0, 0)
+                systemInfos.sun.model.scale.set(0.05, 0.05, 0.05)
+                systemInfos.sun.light = this.sunLight
+                systemInfos.sun.model.visible = false
 
-                this.launchBigBangAnimation(sunInfos)
+                this.launchBigBangAnimation(systemInfos)
 
-                this.gl.scene.add(sunInfos.model)
+                this.gl.scene.add(systemInfos.sun.model)
             }
-
-            this.listenBackEvents()
         },
 
-        launchBigBangAnimation (sun) {
+        launchBigBangAnimation (systemInfos) {
             let self = this
             
             let bingBangTimeline = gsap.timeline({onComplete: () => {
                 TweenLite.delayedCall(5, this.firstZoom())
             }})
 
-            bingBangTimeline.set(sun.model, {
+            bingBangTimeline.set(systemInfos.sun.model, {
                 visible: true,
                 delay: 0.5
-            }).to(sun.model.position, {
+            }).to(systemInfos.sun.model.position, {
                 delay: 1,
                 duration: 2,
-                x: sun.position.x,
-                y: sun.position.y,
-                z: sun.position.z,
+                x: systemInfos.position.x,
+                y: systemInfos.position.y,
+                z: systemInfos.position.z,
                 onUpdate: function () {
                     self.gl.camera.updateProjectionMatrix();
                 }
@@ -177,58 +177,57 @@ export default {
         firstZoom () {
             if (!this.firstZoomIsAlreadyLaunched) {
                 this.firstZoomIsAlreadyLaunched = true
-                let sunInfos = this.gl.loadingManager.getGLTFInfos('mode')
-                this.sunClicked(sunInfos, null, true)
+                let systemInfos = this.gl.loadingManager.getGLTFInfos('mode')
+                this.sunClicked(systemInfos, null, true)
             }
         },
 
-        sunClicked (sun, event, firstZoom = false) {
-            this.sunSelected = sun
+        sunClicked (systemInfos, event, firstZoom = false) {
+            this.systemSelected = systemInfos
 
-            // this.triggerSuns(false, true)
             if (firstZoom) {
-                this.firstZoomOnSun(sun)
+                this.firstZoomOnSun(systemInfos)
             } else {
-                this.zoomCameraOnSun(sun)
+                this.zoomCameraOnSystem(systemInfos)
             }
             
             this.canMouseOver = false
 
-            this.gl.controls.target.set(sun.position.x, sun.position.y, sun.position.z)
+            this.gl.controls.target.set(systemInfos.position.x, systemInfos.position.y, systemInfos.position.z)
             this.canClick = false
         },
 
-        firstZoomOnSun (sun) {
+        firstZoomOnSun (systemInfos) {
             let self = this
 
             gsap.to(this.gl.camera.position, {
                 duration: 3,
-                x: sun.position.x,
-                y: sun.position.y + 4,
-                z: sun.position.z - 20,
+                x: systemInfos.position.x,
+                y: systemInfos.position.y + 4,
+                z: systemInfos.position.z - 20,
                 onUpdate: function () {
                     self.gl.camera.updateProjectionMatrix();
                 }
             })
 
-            gsap.to(sun.model.position, {
+            gsap.to(systemInfos.sun.model.position, {
                 duration: 2,
-                x: sun.position.x + 10,
-                y: sun.position.y - 3
+                x: systemInfos.position.x + 10,
+                y: systemInfos.position.y - 3
             })
 
             this.timeline.to(this.gl.controls.target, {
                 duration: 3,
-                x: sun.position.x,
-                y: sun.position.y,
-                z: sun.position.z,
+                x: systemInfos.position.x,
+                y: systemInfos.position.y,
+                z: systemInfos.position.z,
                 onUpdate: function () {
                     self.gl.controls.update()
                 }
-            }).call(this.onZoomCompleted, [true, sun], "-=1")
+            }).call(this.onZoomCompleted, [true, systemInfos], "-=1")
         },
 
-        zoomCameraOnSun (sun) {
+        zoomCameraOnSystem (systemInfos) {
             let self = this
 
             gsap.to(this.gl.camera.position, {
@@ -241,7 +240,7 @@ export default {
                 }
             })
 
-            gsap.to(sun.model.position, {
+            gsap.to(systemInfos.sun.model.position, {
                 duration: 2,
                 x: 0,
                 y: - 2
@@ -255,50 +254,48 @@ export default {
                 onUpdate: function () {
                     self.gl.controls.update()
                 }
-            }).call(this.onZoomCompleted, [false, sun], "-=1")
+            }).call(this.onZoomCompleted, [false, systemInfos], "-=1")
         },
 
-        onZoomCompleted (firstZoom, sun) {          
+        onZoomCompleted (firstZoom, systemInfos) {          
             if (firstZoom) {
-                this.shouldShowTeasingTexts = true
+                this.showSystemTexts = true
             } else {
-                this.addSunBubblesOnScene(sun)
+                this.addSystemPlanetsOnScene(systemInfos)
             }
         },
 
-        addSunBubblesOnScene (sun) {
-            this.bubbles = this.gl.loadingManager.getGLTFsByType('bubble')
+        addSystemPlanetsOnScene (systemInfos) {
+            this.objects = this.gl.loadingManager.getGLTFsByType('object')
+            this.gl.controls.enableRotate = true
 
-            for (let bubble of this.sunSelected.bubbles) {
-                let bubbleModel = this.bubbles.get(bubble.name)
+            for (let planetInfos of systemInfos.planets) {
+                let objectModel = this.objects.get(planetInfos.object.name)
+                planetInfos.object.model = new Planet(this.gl.scene, this.gl.renderer, objectModel)
+                planetInfos.object.model.position.set(planetInfos.position.x, planetInfos.position.y, planetInfos.position.z)
 
-                bubble.model = bubbleModel.scene.clone()
-                bubble.model.scale.set(0.02, 0.02, 0.02)
-                bubble.light = this.sunLight
-                bubble.model.position.set(bubble.position.x, bubble.position.y, bubble.position.z)
+                planetInfos.object.model.addEventListener('click', this.planetClicked.bind(event, planetInfos))
+                planetInfos.object.model.addEventListener('mouseover', this.planetHovered.bind(event, planetInfos))
+                planetInfos.object.model.addEventListener('mouseout', this.planetMouseOut.bind(event, planetInfos))
 
-                bubble.model.addEventListener('click', this.bubbleClicked.bind(event, bubble))
-                // bubble.model.addEventListener('mouseover', this.bubbleHovered.bind(event, bubble))
-                // bubble.model.addEventListener('mouseout', this.bubbleMouseOut.bind(event, bubble))
-
-                this.gl.scene.add(bubble.model)
-                this.gl.interactionManager.add(bubble.model);
+                this.gl.scene.add(planetInfos.object.model)
+                this.gl.interactionManager.add(planetInfos.object.model)
             }
         },
 
-        bubbleClicked (bubble, event) {
-            this.bubbleSelected = bubble
-            this.gl.controls.enableZoom = true
+        planetClicked (planetInfos, event) {
+            this.planetSelected = planetInfos
+            // this.gl.controls.enableZoom = true
 
-            this.sunSelected.model.visible = false
+            this.systemSelected.sun.model.visible = false
 
             let self = this
 
             gsap.to(this.gl.camera.position, {
                 duration: 2,
-                x: bubble.position.x,
-                y: bubble.position.y + 2,
-                z: bubble.position.z - 5,
+                x: planetInfos.position.x,
+                y: planetInfos.position.y + 2,
+                z: planetInfos.position.z - 5,
                 onUpdate: function () {
                     self.gl.camera.updateProjectionMatrix();
                 }
@@ -307,32 +304,54 @@ export default {
             let timeline = gsap.timeline()
             timeline.to(this.gl.controls.target, {
                 duration: 2,
-                x: bubble.position.x,
-                y: bubble.position.y,
-                z: bubble.position.z,
+                x: planetInfos.position.x,
+                y: planetInfos.position.y,
+                z: planetInfos.position.z,
                 onUpdate: function () {
                     self.gl.controls.update()
                 }
-            }).call(this.triggerBubbles, [false, true], "+1.5")
+            }).call(this.triggerPlanets, [false, true], "+1.5")
 
-            let bubbleTimeline = gsap.timeline()
-            bubbleTimeline.to(bubble.model.scale, {
+            let planetTimeline = gsap.timeline()
+            planetTimeline.to(planetInfos.object.model.scale, {
                 delay: 1,
                 duration: 2.5,
                 x: 0,
                 y: 0,
                 z: 0
-            }).call(this.addBubbleSceneryOnScene, [bubble], 2)
+            }).call(this.addPlanetSceneryOnScene, [planetInfos], 2)
 
-            this.gl.controls.target.set(bubble.position.x, bubble.position.y, bubble.position.z)
+            this.gl.controls.target.set(planetInfos.position.x, planetInfos.position.y, planetInfos.position.z)
         },
 
-        addBubbleSceneryOnScene (bubble) {
-            console.log('addBubbleSceneryOnScene')
-            this.sceneries = this.gl.loadingManager.getGLTFsByType('scenery')
-            console.log('this.sceneries', this.sceneries);
+        planetHovered (planetInfos, event) {
+            document.body.style.cursor = 'pointer';
 
-            const scenery = bubble.scenery
+            gsap.to(planetInfos.object.model.scale, {
+                duration: 1,
+                x: 1.2,
+                y: 1.2,
+                z: 1.2
+            })
+        },
+
+        planetMouseOut (planetInfos, event) {
+            document.body.style.cursor = 'default';
+
+            gsap.to(planetInfos.object.model.scale, {
+                duration: 1,
+                x: 1,
+                y: 1,
+                z: 1
+            })
+        },
+
+        addPlanetSceneryOnScene (planetInfos) {
+            planetInfos.object.model.visible = false
+            this.gl.controls.enableRotate = true
+            this.sceneries = this.gl.loadingManager.getGLTFsByType('scenery')
+
+            const scenery = planetInfos.scenery
             if (!scenery) {
                 return
             }
@@ -341,7 +360,7 @@ export default {
 
             scenery.model = sceneryModel.scene.clone()
             scenery.model.scale.set(0.005, 0.005, 0.005)
-            scenery.model.position.set(scenery.position.x, scenery.position.y, scenery.position.z)
+            scenery.model.position.set(planetInfos.position.x, planetInfos.position.y, planetInfos.position.z)
 
             this.gl.scene.add(scenery.model)
 
@@ -354,28 +373,27 @@ export default {
             })
         },
 
-        discoverSun () {
-            this.shouldShowTeasingTexts = false
-            this.sunDiscovered = true
-            this.zoomCameraOnSun(this.sunSelected)
-            this.triggerSuns(false, true)
-            this.gl.controls.enableRotate = true
+        discoverSystem () {
+            this.showSystemTexts = false
+            this.discoveringSystem = true
+            this.zoomCameraOnSystem(this.systemSelected)
+            this.triggerSystems(false, true)
         },
 
-        previousSun () {
-            for (const [sunKey, value] of this.suns.entries()) {
-                let currentSun = this.gl.loadingManager.getGLTFInfos(sunKey)
-                currentSun.currentPosition = this.getNextPosition(currentSun.currentPosition)
+        previousSystem () {
+            for (const [key, value] of this.suns) {
+                let currentSystem = this.gl.loadingManager.getGLTFInfos(key, true)
+                currentSystem.currentPosition = this.getNextPosition(currentSystem.currentPosition)
 
-                if (currentSun.currentPosition === 0) {
-                    this.sunSelected = currentSun
+                if (currentSystem.currentPosition === 0) {
+                    this.systemSelected = currentSystem
                 }
 
-                gsap.to(currentSun.model.position, {
+                gsap.to(currentSystem.sun.model.position, {
                     duration: 2,
-                    x: this.positions[currentSun.currentPosition].x,
-                    y: this.positions[currentSun.currentPosition].y,
-                    z: this.positions[currentSun.currentPosition].z,
+                    x: this.positions[currentSystem.currentPosition].x,
+                    y: this.positions[currentSystem.currentPosition].y,
+                    z: this.positions[currentSystem.currentPosition].z,
                 })
             }
         },
@@ -388,20 +406,20 @@ export default {
             return currentPosition + 1
         },
 
-        nextSun () {
-            for (const [sunKey, value] of this.suns.entries()) {
-                let currentSun = this.gl.loadingManager.getGLTFInfos(sunKey)
-                currentSun.currentPosition = this.getPreviousPosition(currentSun.currentPosition)
+        nextSystem () {
+            for (const [key, value] of this.suns) {
+                let currentSystem = this.gl.loadingManager.getGLTFInfos(key, true)
+                currentSystem.currentPosition = this.getPreviousPosition(currentSystem.currentPosition)
 
-                if (currentSun.currentPosition === 0) {
-                    this.sunSelected = currentSun
+                if (currentSystem.currentPosition === 0) {
+                    this.systemSelected = currentSystem
                 }
 
-                gsap.to(currentSun.model.position, {
+                gsap.to(currentSystem.sun.model.position, {
                     duration: 2,
-                    x: this.positions[currentSun.currentPosition].x,
-                    y: this.positions[currentSun.currentPosition].y,
-                    z: this.positions[currentSun.currentPosition].z,
+                    x: this.positions[currentSystem.currentPosition].x,
+                    y: this.positions[currentSystem.currentPosition].y,
+                    z: this.positions[currentSystem.currentPosition].z,
                 })
             }
         },
@@ -414,68 +432,84 @@ export default {
             return currentPosition - 1
         },
 
-        triggerBubbles (visible, others = false) {
-            console.log('triggerBubbles', );
-            for (let bubble of this.sunSelected.bubbles) {
+        triggerPlanets (visible, others = false) {
+            for (let planet of this.systemSelected.planets) {
                 if (others) {
-                     if (this.bubbleSelected.name !== bubble.name) {
-                        bubble.model.visible = visible
+                     if (this.planetSelected.name !== planet.name) {
+                        planet.object.model.visible = visible
                     }
                 } else {
-                    bubble.model.visible = visible
+                    planet.object.model.visible = visible
                 }
             }
         },
 
-        triggerSuns (visible, others = false) {
-            for (let [sunKey, sun] of this.suns) {
-                let sunInfos = this.gl.loadingManager.getGLTFInfos(sunKey)
+        triggerSystems (visible, others = false) {
+            for (let [key, sun] of this.suns) {
+                let systemInfos = this.gl.loadingManager.getGLTFInfos(key, true)
                 if (others) {
-                    if (this.sunSelected.name !== sunInfos.name) {
-                        sunInfos.model.visible = visible
+                    if (this.systemSelected.name !== systemInfos.name) {
+                        systemInfos.sun.model.visible = visible
                     }
                 } else {
-                    sunInfos.model.visible = visible
+                    systemInfos.sun.model.visible = visible
                 }
             }
+        },
+
+        triggerScenery (visible) {
+            this.planetSelected.scenery.model.visible = false
         },
 
         backOnPreviousView () {
-            console.log('backOnPreviousView');
+            this.gl.controls.target.set(0, 0.75, 0)
+            this.canClick = true
+
+            if (this.planetSelected) {
+                this.backOnSelectedSystem()
+            } else {
+                this.backOnSystemsChoice()
+            }
         },
 
-        backOnSelectedSun () {
-            this.triggerBubbles(true, true)
-            this.sunSelected.model.visible = true
-            this.bubbleSelected = null
+        backOnSelectedSystem () {
+            this.triggerPlanets(true)
+            this.triggerScenery(false)
+            this.planetSelected.object.model.scale.set(0.7, 0.7, 0.7)
+            this.systemSelected.sun.model.visible = true
+            this.planetSelected = null
 
             let self = this
 
             gsap.to(this.gl.camera.position, {
                 duration: 2,
-                x: this.sunSelected.position.x,
-                y: this.sunSelected.position.y + 3,
-                z: this.sunSelected.position.z - 10,
+                x: this.systemSelected.position.x,
+                y: this.systemSelected.position.y + 4,
+                z: this.systemSelected.position.z - 20,
                 onUpdate: function () {
                     self.gl.camera.updateProjectionMatrix();
+                    console.log('self.gl.camera', self.gl.camera);
                 }
             })
             gsap.to(this.gl.controls.target, {
                 duration: 2,
-                x: this.sunSelected.position.x,
-                y: this.sunSelected.position.y,
-                z: this.sunSelected.position.z,
+                x: this.systemSelected.position.x,
+                y: this.systemSelected.position.y,
+                z: this.systemSelected.position.z,
                 onUpdate: function () {
                     self.gl.controls.update()
                 }
             })
         },
 
-        backOnSunsChoice () {
+        backOnSystemsChoice () {
             this.canClick = true
-            this.triggerSuns(true, true)
-            this.triggerBubbles(false)
-            this.sunSelected = null
+            this.triggerSystems(true, true)
+            this.triggerPlanets(false)
+            this.systemSelected = null
+            this.firstZoomIsAlreadyLaunched = false
+            this.gl.controls.enableRotate = false
+
 
             let self = this
 
@@ -488,7 +522,9 @@ export default {
                     self.gl.camera.updateProjectionMatrix();
                 }
             })
-            gsap.to(this.gl.controls.target, {
+
+            let timeline = gsap.timeline()
+            timeline.to(this.gl.controls.target, {
                 duration: 2,
                 x: 0,
                 y: 0.075,
@@ -496,25 +532,9 @@ export default {
                 onUpdate: function () {
                     self.gl.controls.update()
                 }
-            })
+            }).call(this.firstZoom, null)
+            
             this.canMouseOver = true
-        },
-
-        listenBackEvents () {
-            document.addEventListener('keyup', (event) => {
-                var key = event.keyCode || event.charCode;
-                // press back
-                if (key == 8) {
-                    this.gl.controls.target.set(0, 0.75, 0)
-                    this.canClick = true
-
-                    if (this.bubbleSelected) {
-                        this.backOnSelectedSun()
-                    } else {
-                        this.backOnSunsChoice()
-                    }
-                }
-            })
         },
 
         onError (error) {
@@ -526,7 +546,6 @@ export default {
         },
         
         onModelLoaded (gltf) {
-            console.log('modelLoaded', gltf)
             // const satellite = 
             // const modelToImport = gltf.scene
             // modelToImport.position.set(Math.random() * 5, 1, 0)
@@ -572,32 +591,6 @@ export default {
         //         z: 0.04
         //     })
         //     this.gl.scene.remove(sun.light)
-        // },
-
-        // bubbleHovered (bubble, event) {
-        //     document.body.style.cursor = 'pointer';
-
-        //     gsap.to(bubble.model.scale, {
-        //         duration: 1,
-        //         x: 0.025,
-        //         y: 0.025,
-        //         z: 0.025
-        //     })
-        //     bubble.light.position.set(bubble.model.position.x, bubble.model.position.y + 4, bubble.model.position.z)
-        //     this.gl.scene.add(bubble.light)
-        // },
-
-        // bubbleMouseOut (bubble, event) {
-        //     console.log('bubble mouseout');
-        //     document.body.style.cursor = 'default';
-
-        //     gsap.to(bubble.model.scale, {
-        //         duration: 1,
-        //         x: 0.02,
-        //         y: 0.02,
-        //         z: 0.02
-        //     })
-        //     this.gl.scene.remove(bubble.light)
         // },
     }
 }
