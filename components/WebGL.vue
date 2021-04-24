@@ -13,7 +13,6 @@ export default {
     },
     mounted() {
         let gl = GL.getInstance()
-        // gl.scene.toggle('exp')
     },
     methods: {
     }

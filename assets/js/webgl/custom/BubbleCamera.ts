@@ -1,6 +1,6 @@
 import { CubeCamera, WebGLCubeRenderTarget } from "three";
 import EventBus from "../../utils/EventBus";
-import { GLEvents } from "../../utils/GLEvents";
+import { GLEvents } from "../../utils/Events";
 import Renderer from "../core/Renderer";
 import Scene from "../core/Scene";
 

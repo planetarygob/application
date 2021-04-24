@@ -76,7 +76,7 @@ export class CustomLoadingManager {
                 gltf.userData = {type: modelToLoad.type, name: modelToLoad.name}
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
-                // todo: get the right number
+                // TODO: get the right number
                 if (this.modelsLoaded.size === 16) {
                     onAllLoaded()
                 }

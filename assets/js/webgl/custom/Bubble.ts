@@ -16,7 +16,7 @@ import {
 import vertexShader from '../shaders/Bubble/vertex'
 import fragmentShader from '../shaders/Bubble/fragment'
 import EventBus from '../../utils/EventBus'
-import { GLEvents } from '../../utils/GLEvents'
+import { GLEvents } from '../../utils/Events'
 import Renderer from '../core/Renderer'
 import BubbleCamera from './BubbleCamera'
 import { BubbleData } from '../data/BubbleData'
