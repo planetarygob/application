@@ -131,7 +131,7 @@ class AnimationManager {
             duration: 2,
             x: planet.initialPosition.x,
             y: planet.initialPosition.y + 2,
-            z: planet.initialPosition.z - 5,
+            z: planet.initialPosition.z - 8,
             onUpdate: function () {
                 self.camera.updateProjectionMatrix();
             }
@@ -155,13 +155,42 @@ class AnimationManager {
             x: 0,
             y: 0,
             z: 0
-        }).call(() => EventBus.emit(AnimationEvents.PLANET_ZOOM_FINISHED), [], "-=1")
+        }).call(() => {EventBus.emit(AnimationEvents.PLANET_ZOOM_FINISHED)}, [], "-=1")
 
         this.controls.target.set(planet.initialPosition.x, planet.initialPosition.y, planet.initialPosition.z)
     }
 
-    showSceneryAnimation (planet: Planet) {
+    hoverPlanet (planet: Planet) {
+        document.body.style.cursor = 'pointer';
 
+        gsap.to(planet.scale, {
+            duration: 1,
+            x: 1.2,
+            y: 1.2,
+            z: 1.2
+        })
+    }
+
+    outPlanet (planet: Planet) {
+        document.body.style.cursor = 'default';
+
+        gsap.to(planet.scale, {
+            duration: 1,
+            x: 1,
+            y: 1,
+            z: 1
+        })
+    }
+
+    showSceneryAnimation (planet: Planet) {
+        if (planet && planet.scenery) {
+            gsap.to(planet.scale, {
+                duration: 2,
+                x: 1,
+                y: 1,
+                z: 1
+            })
+        }
     }
 
     slideToAnotherSystem (next: boolean, systems: Array<System>) {
@@ -195,6 +224,60 @@ class AnimationManager {
     
             return navPosition + 1
         }
+    }
+
+    backOnSystemDiscoveredView (selectedSystem: System) {
+        
+        let self = this
+
+        this.controls.enableRotate = true
+
+        gsap.to(this.camera.position, {
+            duration: 2,
+            x: selectedSystem.position.x,
+            y: selectedSystem.position.y + 4,
+            z: selectedSystem.position.z - 20,
+            onUpdate: function () {
+                self.camera.updateProjectionMatrix();
+            }
+        })
+        gsap.to(this.controls.target, {
+            duration: 2,
+            x: selectedSystem.position.x,
+            y: selectedSystem.position.y,
+            z: selectedSystem.position.z,
+            onUpdate: function () {
+                self.controls.update()
+            }
+        })
+    }
+
+    backOnSystemsChoiceView (selectedSystem: System) {
+        this.isFirstZoomLaunched = false
+        this.controls.enableRotate = false
+
+        const self = this
+
+        gsap.to(this.camera.position, {
+            duration: 2,
+            x: 0,
+            y: 15,
+            z: -35,
+            onUpdate: function () {
+                self.camera.updateProjectionMatrix();
+            }
+        })
+
+        let timeline = gsap.timeline()
+        timeline.to(this.controls.target, {
+            duration: 2,
+            x: 0,
+            y: 0.075,
+            z: 0,
+            onUpdate: function () {
+                self.controls.update()
+            }
+        }).call(this.firstZoomOnSystem.bind(this), [selectedSystem])
     }
 }
 

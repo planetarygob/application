@@ -1,27 +1,19 @@
 import { 
     Scene as TScene, 
-    WebGLRenderer, 
-    Object3D, 
+    WebGLRenderer,
     Vector3, 
-    Group, 
     PointsMaterial, 
     BufferGeometry, 
     BufferAttribute, 
     Points,
-    sRGBEncoding,
     AmbientLight,
-    DirectionalLight,
-    BoxGeometry,
-    MeshBasicMaterial,
-    Mesh
+    DirectionalLight
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { gsap, TweenLite } from 'gsap'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import Camera from './Camera'
 import Controls from './Controls'
-import GL from '../GL'
 import { UIEvents, GLEvents, AnimationEvents } from '../../utils/Events'
 import Planet from '../custom/Planet'
 import Renderer from './Renderer'
@@ -42,7 +34,6 @@ class Scene extends TScene {
     camera: Camera
     controls: Controls
     isFirstZoomLaunched: Boolean
-    timeline: gsap.core.Timeline
     canvas: HTMLCanvasElement
     size: Size
     renderer: WebGLRenderer
@@ -74,8 +65,6 @@ class Scene extends TScene {
         this.animationManager = AnimationManager.getInstance(this.camera, this.controls)
         
         this.isFirstZoomLaunched = false
-        
-        this.timeline = gsap.timeline()
 
         this.handleBackground()
         this.createLights()
@@ -111,7 +100,6 @@ class Scene extends TScene {
             }
         })
 
-
         // DISCOVER EVENTS
         EventBus.on<System>(AnimationEvents.DISCOVER_SYSTEM, (selectedSystem) => {
             if (selectedSystem) {
@@ -132,11 +120,12 @@ class Scene extends TScene {
             }
         })
         EventBus.on(AnimationEvents.PLANET_ZOOM_FINISHED, () => {
+            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, false)
             this.triggerScenery(true)
+            this.controls.enableRotate = false
             if (this.selectedPlanet) {
                 this.animationManager.showSceneryAnimation(this.selectedPlanet)
             }
-            
         })
 
         // GL PLANET EVENTS
@@ -144,22 +133,36 @@ class Scene extends TScene {
             if (selectedPlanet) {
                 this.selectedPlanet = selectedPlanet
                 if (this.selectedSystem) {
-                    const sun = this.selectedSystem.children[0]
-                    sun.visible = false
+                    this.selectedSystem.triggerSun(false)
                 }
-                // setTimeOut?
                 this.triggerPlanets(false, true)
                 this.animationManager.discoverPlanet(selectedPlanet)
             }
         })
         EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
             if (selectedPlanet) {
-                
+                this.animationManager.hoverPlanet(selectedPlanet)
             }
         })
         EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
             if (selectedPlanet) {
-                
+                this.animationManager.outPlanet(selectedPlanet)
+            }
+        })
+
+        // BACK EVENTS
+        EventBus.on(AnimationEvents.BACK, () => {
+            if (this.selectedPlanet && this.selectedSystem) {
+                this.triggerPlanets(true)
+                this.selectedPlanet.triggerObject(true)
+                this.selectedPlanet.isComplete = true
+                this.selectedPlanet = undefined
+                this.selectedSystem.triggerSun(true)
+                this.animationManager.backOnSystemDiscoveredView(this.selectedSystem)
+            } else if (this.selectedSystem) {
+                this.triggerSystems(true, true)
+                this.triggerPlanets(false)
+                this.animationManager.backOnSystemsChoiceView(this.selectedSystem)
             }
         })
     }

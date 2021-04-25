@@ -81,88 +81,21 @@ export default {
     },
     
     data: () => ({
-        gl: GL,
-        models: [],
-        suns: Map,
-        planets: Map,
-
         selectedSystem: System,
         discoveringSystem: false,
-
-        sunSelected: null,
-        planetSelected: null,
-        sunLight: PointLight,
-        canClick: true,
-        canMouseOver: true,
-        firstZoomIsAlreadyLaunched: false,
         showSystemTexts: false,
-        currentStep: 0,
-        timeline: null
     }),
 
     mounted() {
         EventBus.on(UIEvents.SHOW_SYSTEM_TEXTS, (newValue: boolean) => {
-            console.log('SHOW_SYSTEM_TEXTS', newValue)
             this.showSystemTexts = newValue
         })
         EventBus.on(GLEvents.SELECTED_SYSTEM, (newValue: System) => {
-            console.log('SELECTED_SYSTEM', newValue)
             this.selectedSystem = newValue
         })
     },
 
     methods: {
-        planetHovered (planetInfos, event) {
-            document.body.style.cursor = 'pointer';
-
-            gsap.to(planetInfos.object.model.scale, {
-                duration: 1,
-                x: 1.2,
-                y: 1.2,
-                z: 1.2
-            })
-        },
-
-        planetMouseOut (planetInfos, event) {
-            document.body.style.cursor = 'default';
-
-            gsap.to(planetInfos.object.model.scale, {
-                duration: 1,
-                x: 1,
-                y: 1,
-                z: 1
-            })
-        },
-
-        addPlanetSceneryOnScene (planetInfos) {
-            planetInfos.object.model.visible = false
-            planetInfos.object.model.isComplete = true
-            planetInfos.object.model.remove(planetInfos.object.model.bubble.mesh)
-            this.gl.controls.enableRotate = true
-            this.sceneries = this.gl.loadingManager.getGLTFsByType('scenery')
-
-            const scenery = planetInfos.scenery
-            if (!scenery) {
-                return
-            }
-
-            const sceneryModel = this.sceneries.get(scenery.name)
-
-            scenery.model = sceneryModel.scene.clone()
-            scenery.model.scale.set(0.005, 0.005, 0.005)
-            scenery.model.position.set(planetInfos.position.x, planetInfos.position.y, planetInfos.position.z)
-
-            this.gl.scene.add(scenery.model)
-
-            let sceneryTimeline = gsap.timeline()
-            sceneryTimeline.to(scenery.model.scale, {
-                duration: 2,
-                x: 0.02,
-                y: 0.02,
-                z: 0.02
-            })
-        },
-
         discoverSystem () {
             this.showSystemTexts = false
             this.discoveringSystem = true
@@ -178,79 +111,8 @@ export default {
         },
 
         backOnPreviousView () {
-            this.gl.controls.target.set(0, 0.75, 0)
-            this.canClick = true
-
-            if (this.planetSelected) {
-                this.backOnSelectedSystem()
-            } else {
-                this.backOnSystemsChoice()
-            }
+            EventBus.emit(AnimationEvents.BACK)
         },
-
-        backOnSelectedSystem () {
-            this.triggerPlanets(true)
-            this.triggerScenery(false)
-            this.planetSelected.object.model.scale.set(0.7, 0.7, 0.7)
-            this.selectedSystem.sun.model.visible = true
-            this.planetSelected = null
-
-            let self = this
-
-            gsap.to(this.gl.camera.position, {
-                duration: 2,
-                x: this.selectedSystem.position.x,
-                y: this.selectedSystem.position.y + 4,
-                z: this.selectedSystem.position.z - 20,
-                onUpdate: function () {
-                    self.gl.camera.updateProjectionMatrix();
-                }
-            })
-            gsap.to(this.gl.controls.target, {
-                duration: 2,
-                x: this.selectedSystem.position.x,
-                y: this.selectedSystem.position.y,
-                z: this.selectedSystem.position.z,
-                onUpdate: function () {
-                    self.gl.controls.update()
-                }
-            })
-        },
-
-        backOnSystemsChoice () {
-            this.canClick = true
-            this.triggerSystems(true, true)
-            this.triggerPlanets(false)
-            this.selectedSystem = null
-            this.firstZoomIsAlreadyLaunched = false
-            this.gl.controls.enableRotate = false
-
-
-            let self = this
-
-            gsap.to(this.gl.camera.position, {
-                duration: 2,
-                x: 0,
-                y: 15,
-                z: -35,
-                onUpdate: function () {
-                    self.gl.camera.updateProjectionMatrix();
-                }
-            })
-
-            let timeline = gsap.timeline()
-            timeline.to(this.gl.controls.target, {
-                duration: 2,
-                x: 0,
-                y: 0.075,
-                z: 0,
-                onUpdate: function () {
-                    self.gl.controls.update()
-                }
-            }).call(this.firstZoom, null)
-            
-            this.canMouseOver = true
-        }
     }
 }
 </script>

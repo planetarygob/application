@@ -1,8 +1,7 @@
-import { Group, Vector3, WebGLRenderer } from "three";
-import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { Group, Vector3 } from "three";
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import EventBus from "../../utils/EventBus";
-import { GLEvents, UIEvents, AnimationEvents } from "../../utils/Events";
-import Renderer from "../core/Renderer";
+import { GLEvents } from "../../utils/Events";
 import Scene from "../core/Scene";
 import Bubble from "./Bubble";
 import CustomInteractionManager from "../../utils/managers/CustomInteractionManager";
@@ -48,7 +47,6 @@ class Planet extends Group {
             this.scenery = scenery
             this.scenery.scene.visible = false
             this.scenery.scene.scale.set(0.005, 0.005, 0.005)
-            this.scenery.scene.position.y = -0.25
             this.add(scenery.scene)
         }
 
@@ -58,24 +56,39 @@ class Planet extends Group {
         EventBus.on(GLEvents.CLICK, () => { this.isComplete ? this.isComplete = false : this.isComplete = true })
     }
 
+    removeBubble () {
+        this.remove(this.bubble.mesh)
+        // TODO
+        // this.bubble.dispose
+    }
+
     triggerPlanet (visible: boolean) {
         this.visible = visible
-        if (this.visible) {
-            CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).add(this)
+        this.listenEvents()
+    }
+
+    triggerObject (visible: boolean) {
+        if (this.object && this.scenery) {
+            this.object.scene.visible = visible
+            this.scenery.scene.visible = !visible
+            this.object.scene.scale.set(0.015, 0.015, 0.015)
             this.listenEvents()
-        } else {
-            CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).remove(this)
-            this.removeEvents()
         }
     }
 
     triggerScenery (visible: boolean) {
-        if (this.scenery) {
+        if (this.scenery && this.object) {
+            this.object.scene.visible = !visible
             this.scenery.scene.visible = visible
+            this.scenery.scene.scale.set(0.04, 0.04, 0.04)
+            this.removeBubble()
+            this.removeEvents()
         }
     }
 
     listenEvents () {
+        CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).add(this)
+
         this.addEventListener('click', () => {
             EventBus.emit(GLEvents.CLICK_PLANET, this)
         })
@@ -88,28 +101,32 @@ class Planet extends Group {
     }
 
     removeEvents () {
+        CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).remove(this)
+
         this.removeEventListener('click', () => {})
         this.removeEventListener('mouseover', () => {})
         this.removeEventListener('mouseout', () => {})
     }
 
-    update( elapsedTime: number ) {
-        if ( this.isComplete ) {
-            // TODO : Talk with designers to be more precise about the movement we want the Bubbles to achieve
-            // todo: improve orbit movement
-            this.position.set(
-                this.initialPosition.x * Math.cos(elapsedTime),
-                Math.sin( elapsedTime ) * .3,
-                this.initialPosition.z * Math.sin(elapsedTime),
-            )
-        } else {
-            const angle = elapsedTime * 2
-            // TODO : Use initial position of Bubble / Planet instead of 0. Keep in mind it will be related to System coordinates & not Scene
-            this.position.set(
-                this.initialPosition.x,
-                this.initialPosition.y + Math.sin(angle),
-                this.initialPosition.z,
-            )
+    update(elapsedTime: number) {
+        if (this.scenery && !this.scenery.scene.visible) {
+            if (this.isComplete) {
+                // TODO : Talk with designers to be more precise about the movement we want the Bubbles to achieve
+                // todo: improve orbit movement
+                this.position.set(
+                    this.initialPosition.x * Math.cos(elapsedTime),
+                    Math.sin( elapsedTime ) * .3,
+                    this.initialPosition.z * Math.sin(elapsedTime),
+                )
+            } else {
+                const angle = elapsedTime * 2
+                // TODO : Use initial position of Bubble / Planet instead of 0. Keep in mind it will be related to System coordinates & not Scene
+                this.position.set(
+                    this.initialPosition.x,
+                    this.initialPosition.y + Math.sin(angle),
+                    this.initialPosition.z,
+                )
+            }
         }
     }
 }

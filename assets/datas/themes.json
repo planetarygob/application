@@ -15,7 +15,7 @@
     "sun": {
       "name": "mode_sun",
       "type": "sun",
-      "url": "sun_mode.gltf",
+      "url": "sun_mode.glb",
       "model": null,
       "light": null
     },
@@ -37,7 +37,7 @@
         "scenery": {
           "name":"mode_scenery_skirt",
           "type": "scenery",
-          "url": "scenery_planet_skirt.gltf",
+          "url": "scenery_planet_skirt.glb",
           "model": null
         }
       },
@@ -73,20 +73,20 @@
         "object": {
           "name": "mode_object_rock",
           "type": "object",
-          "url": "object_planet_skirt.gltf",
+          "url": "object_planet_rock.glb",
           "model": null
         },
         "scenery": {
           "name":"mode_scenery_planet_rock",
           "type": "scenery",
-          "url": "scenery_planet_skirt.gltf",
+          "url": "scenery_planet_rock.glb",
           "model": null
         }
       }
     ]
   },
   {
-    "name": "song",
+    "name": "hobbies",
     "type": "system",
     "teasing": {
       "title": "SEXUALITÉ",
@@ -99,9 +99,9 @@
       "z": 35
     },
     "sun": {
-      "name":"song_sun",
+      "name":"hobbies_sun",
       "type": "sun",
-      "url": "sun_mode.gltf",
+      "url": "sun_hobbies.glb",
       "model":null,
       "light":null
     },
@@ -147,7 +147,7 @@
         "object": {
           "name":"song_object_planet3",
           "type": "object",
-          "url": "scenery_planet_skirt.gltf",
+          "url": "scenery_planet_skirt.glb",
           "model":null
         }
       }
@@ -174,7 +174,7 @@
     }
   },
   {
-    "name": "work",
+    "name": "techno",
     "type": "system",
     "teasing": {
       "title": "LOISIR",
@@ -187,9 +187,9 @@
       "z": 35
     },
     "sun": {
-      "name":"work_sun",
+      "name":"techno_sun",
       "type": "sun",
-      "url": "sun_mode.gltf",
+      "url": "sun_techno.glb",
       "model":null,
       "light":null
     },

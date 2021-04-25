@@ -96,6 +96,11 @@ class System extends Group {
             this.add(planet)
         }  
     }
+
+    triggerSun (visible: boolean) {
+        const sun = this.children[0]
+        sun.visible = visible
+    }
 }
 
 export default System

@@ -73,6 +73,7 @@ export class CustomLoadingManager {
             modelToLoad.url,
 
             (gltf) => {
+                gltf.scene.rotation.y = Math.PI
                 gltf.userData = {type: modelToLoad.type, name: modelToLoad.name}
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
