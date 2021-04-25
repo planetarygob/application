@@ -15,6 +15,7 @@ export const UIEvents = {
     SHOW_PLANET_DIALOG: 'ui:show_planet_dialog',
     SHOW_PLANET_MODAL: 'ui:show_planet_modal',
     SELECTED_PLANET_INFOS: 'ui:selected_planet_infos',
+    RESET_PLANET_DIALOG: 'ui:reset_planet_dialog'
 }
 
 export const AnimationEvents = {

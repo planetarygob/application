@@ -15,6 +15,8 @@
 </template>
 
 <script lang="ts">
+import EventBus from '../assets/js/utils/EventBus'
+import { UIEvents } from '../assets/js/utils/Events'
 
 export default {
     props: {
@@ -33,6 +35,13 @@ export default {
         isFinished: false
     }),
 
+    mounted () {
+        EventBus.on<boolean>(UIEvents.RESET_PLANET_DIALOG, () => {
+            this.currentStep = 0
+            this.isFinished = false
+        })
+    },
+
     computed: {
         maxStep () {
             return this.content.paragraphs.length - 1
@@ -46,6 +55,7 @@ export default {
     methods: {
         updateCurrentStep () {
             if (this.currentStep + 1 > this.maxStep) {
+                this.$emit('update:is-displayed', false)
                 this.isFinished = true
             }
 
@@ -70,7 +80,7 @@ export default {
         margin-bottom: 75px;
         cursor: default;
         border-left: 5px solid #7956b2;
-        max-height: 230px;
+        max-height: 210px;
     }
     
     p:before {
