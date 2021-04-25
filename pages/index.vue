@@ -110,15 +110,9 @@ export default {
         EventBus.on<boolean>(UIEvents.SHOW_SYSTEM_TEXTS, (newValue) => this.showSystemTexts = newValue)
         EventBus.on<System>(GLEvents.SELECTED_SYSTEM, (newValue) => this.selectedSystem = newValue)
         EventBus.on(UIEvents.SELECTED_PLANET_INFOS, (newValue) => {
-            console.log('SELECTED_PLANET_INFOS', newValue);
             this.selectedPlanetInfos = newValue
         })
         EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
-            console.log('SHOW_PLANET_DIALOG', newValue);
-            console.log('this.selectedPlanetInfos', this.selectedPlanetInfos);
-            if (this.selectedPlanetInfos) {
-                console.log('this.selectedPlanetInfos.dialogContent', this.selectedPlanetInfos.dialogContent)
-            }
             this.displayDialog = newValue
         })
     },
