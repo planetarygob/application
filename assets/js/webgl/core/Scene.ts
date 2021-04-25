@@ -161,6 +161,7 @@ class Scene extends TScene {
                 this.selectedPlanet.complete()
                 this.selectedPlanet = undefined
                 this.selectedSystem.triggerSun(true)
+                EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
                 this.animationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {
                 this.triggerSystems(true, true)
