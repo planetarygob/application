@@ -137,10 +137,9 @@ class Scene extends TScene {
             console.log('CLICK_PLANET', );
             if (selectedPlanet) {
                 this.animationManager.discoverPlanet(selectedPlanet)
-
                 this.selectedPlanet = selectedPlanet
-                // const selectedPlanetInfos = this.loadingManager.getGLTFInfos(this.selectedPlanet.name)
-                // EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
+                const selectedPlanetInfos = this.loadingManager.getGLTFInfos(this.selectedPlanet.name)
+                EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
             }
         })
         EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {

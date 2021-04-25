@@ -105,20 +105,15 @@ export default {
         displayDialog: false
     }),
 
-    watch: {
-        selectedPlanetInfos (val) {
-            console.log('selectedPlanetInfos', val);
-        }
-    },
-
     mounted() {
         EventBus.on<boolean>(UIEvents.SHOW_SYSTEM_TEXTS, (newValue) => this.showSystemTexts = newValue)
         EventBus.on<System>(GLEvents.SELECTED_SYSTEM, (newValue) => this.selectedSystem = newValue)
         EventBus.on(UIEvents.SELECTED_PLANET_INFOS, (newValue) => {
-            console.log('SELECTED_PLANET_INFOS', newValue);
             this.selectedPlanetInfos = newValue
         })
-        EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => this.displayDialog = newValue)
+        EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
+            this.displayDialog = newValue
+        })
     },
 
     methods: {
