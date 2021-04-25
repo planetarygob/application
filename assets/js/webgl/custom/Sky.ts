@@ -9,7 +9,7 @@ class Sky extends Object3D {
 
     constructor(width: number, height: number) {
         super()
-
+        
         this.GUI()
 
         // TODO : maybe set a maximum dezoom on camera of the scene to avoid texture to be too tiny

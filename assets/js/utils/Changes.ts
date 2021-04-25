@@ -8,6 +8,5 @@ export const handleColorChange = ( color: Color ) => {
             value = value.replace( '#', '0x' )
         }
         color.setHex( value )
-        console.log(BubbleData.color)
     }
 }

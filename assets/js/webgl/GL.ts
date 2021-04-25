@@ -1,35 +1,13 @@
 import Scene from './core/Scene'
-import Renderer from './core/Renderer'
-import Controls from './core/Controls'
 import { 
-    PerspectiveCamera,
-    Clock,
-    DirectionalLight,
-    AnimationMixer,
-    AmbientLight,
-    PointsMaterial,
-    BufferGeometry,
-    BufferAttribute,
-    sRGBEncoding,
-    Vector3,
-    Points
+    Clock
 } from 'three'
 import Stats from '../utils/dev/Stats'
 import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
-import HighlightManager from '../utils/managers/HighlightManager'
-import { CustomLoadingManager } from '../utils/managers/CustomLoadingManager'
-import Bubble from './custom/Bubble'
-import Sky from './custom/Sky'
 import EventBus from '../utils/EventBus'
-import { GLEvents } from '../utils/GLEvents'
-import GUI from '../utils/dev/GUI'
+import { GLEvents } from '../utils/Events'
 import { initGUI } from '../utils/dev/GUIFolders'
-import Planet from './custom/Planet'
-import Camera from './core/Camera'
-
-let previousTime = 0
-let elapsedTime = 0
-
+import Tracker from '../utils/dev/Tracker'
 
 interface Size {
     width: number
@@ -39,21 +17,11 @@ interface Size {
 
 class GL {
     private static instance: GL
-    canvas: HTMLCanvasElement
-    scene: Scene 
-    renderer: Renderer 
-    camera: PerspectiveCamera
-    controls: Controls
+    scene: Scene
     clock: Clock
     size: Size
-    interactionManager: CustomInteractionManager
-    highlightManager: HighlightManager
-    loadingManager: CustomLoadingManager
-    mixer: AnimationMixer|null
-    sphereCamera: any
-    hdrCubeRenderTarget: any
-    hdrEquirect: any
-    cubeRenderTarget: any
+    canvas: HTMLCanvasElement
+    isInteractionManagerRequired: boolean
 
     constructor() {
         Stats.showPanel(0)
@@ -74,40 +42,15 @@ class GL {
             console.log("No canvas")
         }
 
-        this.scene = new Scene()
+        this.scene = new Scene(this.canvas, this.size)
 
-        this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
-
-        this.controls = new Controls(this.camera, this.canvas)
+        this.isInteractionManagerRequired = false
 
         this.clock = new Clock()
 
-        this.mixer = null
+        this.listenEvents()
 
-        // EventBusManager.getInstance().emitter.on('gl:needClock', function needClock (e: any) {
-        //     self.clock = new Clock()
-        //     EventBusManager.getInstance().emitter.off('gl:needClock', needClock)
-        // })
-
-        this.renderer = new Renderer({ canvas: this.canvas }, this.size.width, this.size.height)
-        this.renderer.render(this.scene, this.camera)
-
-        this.loadingManager = new CustomLoadingManager(this.renderer, this.scene)
-
-        this.interactionManager = new CustomInteractionManager(this.renderer, this.camera)
-
-        this.highlightManager = new HighlightManager(this.renderer, this.scene, this.camera)
-
-        // EventBusManager.getInstance().emitter.on('gl:needSphereCamera', (e: any) => {
-        //     this.cubeRenderTarget = new WebGLCubeRenderTarget(5, {format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter})
-        //     this.sphereCamera = new CubeCamera(1, 30, this.cubeRenderTarget)
-        //     this.scene.add(this.sphereCamera)
-        // })
-
-        this.addElements()
-        this.addEvents()
-
-        this.animate();    
+        this.animate()
     }
 
     public static getInstance(): GL {
@@ -120,40 +63,12 @@ class GL {
 
     // ---------------- METHODS
 
-    addElements() {
-        // TODO : createCamera()
-        // NOTE : Update camera layer range if needed, atm 0 - 1
-        this.camera.layers.enable( 1 )
-        this.scene.add( this.camera )
-
-        // const ambientLight = new AmbientLight(0xffffff, 0.8)
-        // this.scene.add(ambientLight)
-
-        // const bubble = new Bubble( 1, 12, this.scene, this.renderer )
-        // this.scene.add( bubble.mesh )
-        // bubble.mesh.position.z = -3
-
-        // const planet = new Planet( this.scene, this.renderer )
-        // this.scene.add(planet)
-        
-        // TODO : createSky()
-        const sky = new Sky( this.canvas.width, this.canvas.height )
-        this.scene.add( sky.mesh )
-
-        this.addBackgroundStars()
-
-        this.renderer.outputEncoding = sRGBEncoding
-        this.createLights()
-    }
-
-    addEvents() {
-        window.addEventListener( 'resize', this.resize.bind(this) )
-        // todo: fire only on world change
-        // this.controls.addEventListener('change', () => {
-        //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
-        // })
-        this.canvas.addEventListener( 'click', () => {
-            EventBus.emit(GLEvents.CLICK)
+    listenEvents() {
+        window.addEventListener('resize', this.resize.bind(this))
+        EventBus.on<boolean>(GLEvents.UPDATE_INTERACTION_MANAGER, (required) => {
+            if (required !== undefined) {
+                this.isInteractionManagerRequired = required
+            }
         })
     }  
     
@@ -161,48 +76,10 @@ class GL {
         this.size.width = window.innerWidth;
         this.size.height = window.innerHeight;
 
-        this.camera.aspect = this.size.width / this.size.height
-        this.renderer.setSize(this.size.width, this.size.height)
+        this.scene.camera.aspect = this.size.width / this.size.height
+        this.scene.renderer.setSize(this.size.width, this.size.height)
 
-        this.camera.updateProjectionMatrix()
-    }
-
-    addBackgroundStars () {
-        // ___________________________ PARTICLES
-
-        const particlesMaterial = new PointsMaterial({
-            size: 0.02,
-            sizeAttenuation: true
-        })
-
-        // Geometry
-        const particlesGeometry = new BufferGeometry()
-        const count = 500
-
-        const positions = new Float32Array(count * 3) // Multiply by 3 because each position is composed of 3 values (x, y, z)
-
-        for(let i = 0; i < count * 3; i++) // Multiply by 3 for same reason
-        {
-            positions[i] = (Math.random() - 0.5) * 60 // Math.random() - 0.5 to have a random value between -0.5 and +0.5
-        }
-
-        particlesGeometry.setAttribute('position', new BufferAttribute(positions, 3)) // Create the Three.js BufferAttribute and specify that each information is composed of 3 values
-
-        const particles = new Points(particlesGeometry, particlesMaterial)
-        this.scene.add(particles)
-    }
-
-    createLights() {
-        const ambientLight = new AmbientLight(0xaa54f0, 1)
-      
-        const directionalLight1 = new DirectionalLight(0xffffff, 1)
-        directionalLight1.position.set(-2, 2, 5)
-      
-        const directionalLight2 = new DirectionalLight(0xfff000, 1)
-        directionalLight2.position.set(-2, 4, 4)
-        directionalLight2.castShadow = true
-      
-        this.scene.add(ambientLight, directionalLight1, directionalLight2)
+        this.scene.camera.updateProjectionMatrix()
     }
 
     // ---------------- LIFECYCLE
@@ -218,37 +95,20 @@ class GL {
     }
 
     render() {
-        // controls update useless?
-        // this.controls.update()
-
         // interactionManager couteux
-        if (this.interactionManager) {
-            // console.log('interactionManager update');
-            this.interactionManager.update()
+        if (this.isInteractionManagerRequired) {
+            CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).update()
         }
 
-        if (this.mixer && this.clock) {
-            this.mixer.update(this.clock.getDelta())
+        if (this.clock) {
+            EventBus.emit(GLEvents.UPDATE, {
+                elapsedTime: this.clock.getElapsedTime() 
+            })
         }
 
-        // Tracker.update(this.renderer.render)
+        Tracker.update(this.scene.renderer.render)
 
-        this.renderer.render(this.scene, this.camera)
-
-        EventBus.emit(GLEvents.UPDATE, {
-            elapsedTime: this.clock.getElapsedTime() 
-        })
-
-        if (this.highlightManager) {
-            // console.log('higlight update');
-            // this.highlightManager.render();
-        }
-        
-        if (this.sphereCamera) {
-            console.log('sphere camera update');
-            this.sphereCamera.update(this.renderer, this.scene)
-        }
-
+        this.scene.renderer.render(this.scene, this.scene.camera)
     }
 }
 
