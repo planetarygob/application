@@ -69,7 +69,8 @@ class System extends Group {
                         name: string
                     },
                     scenery: {
-                        name: string
+                        name: string,
+                        yPosition: number
                     }
                 }
             ]
@@ -83,16 +84,17 @@ class System extends Group {
         for (let planetInfos of systemInfos.planets) {
             let objectModel: GLTF|undefined
             let sceneryModel: GLTF|undefined
+            let ySceneryPosition: number = 0
 
             if (planetInfos.hasOwnProperty('object')) {
                 objectModel = this.loadingManager.getGLTFByName(planetInfos.object.name)
             }
             if (planetInfos.hasOwnProperty('scenery')) {
                 sceneryModel = this.loadingManager.getGLTFByName(planetInfos.scenery.name)
+                ySceneryPosition = planetInfos.scenery.yPosition
             }
 
-            const planet = new Planet(gl.scene, planetInfos.name, objectModel, sceneryModel, planetInfos.initialPosition)
-
+            const planet = new Planet(gl.scene, planetInfos.name, objectModel, sceneryModel, planetInfos.initialPosition, ySceneryPosition)
             this.add(planet)
         }  
     }

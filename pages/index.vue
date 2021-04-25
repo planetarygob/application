@@ -45,6 +45,15 @@
                 style="margin-top: 5px" />
             <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
+        <planet-modal
+            v-if="selectedPlanetInfos && selectedPlanetInfos.modalContent"
+            :is-displayed.sync="displayModal"
+            :content="selectedPlanetInfos.modalContent"
+             />
+        <planet-dialog
+            v-if="selectedPlanetInfos && selectedPlanetInfos.dialogContent"
+            :is-displayed.sync="displayDialog"
+            :content="selectedPlanetInfos.dialogContent" />
         <web-gl />
         <tracker />
     </div>
@@ -61,6 +70,11 @@ import Planet from '../assets/js/webgl/custom/Planet'
 import EventBus from '../assets/js/utils/EventBus'
 import { UIEvents, GLEvents, AnimationEvents } from '../assets/js/utils/Events'
 import System from '../assets/js/webgl/custom/System'
+import PlanetModal from '../components/PlanetModal.vue'
+import PlanetDialog from '../components/PlanetDialog.vue'
+import Tracker from '../components/Tracker.vue'
+import { CustomLoadingManager } from '../assets/js/utils/managers/CustomLoadingManager'
+
 
 import {
     PerspectiveCamera,
@@ -77,22 +91,34 @@ export default {
     components: {
         WebGl,
         Tracker,
-        SvgIcon
+        SvgIcon,
+        PlanetModal,
+        PlanetDialog
     },
     
     data: () => ({
         selectedSystem: System,
+        selectedPlanetInfos: null,
         discoveringSystem: false,
         showSystemTexts: false,
+        displayModal: false,
+        displayDialog: false
     }),
 
+    watch: {
+        selectedPlanetInfos (val) {
+            console.log('selectedPlanetInfos', val);
+        }
+    },
+
     mounted() {
-        EventBus.on(UIEvents.SHOW_SYSTEM_TEXTS, (newValue: boolean) => {
-            this.showSystemTexts = newValue
+        EventBus.on<boolean>(UIEvents.SHOW_SYSTEM_TEXTS, (newValue) => this.showSystemTexts = newValue)
+        EventBus.on<System>(GLEvents.SELECTED_SYSTEM, (newValue) => this.selectedSystem = newValue)
+        EventBus.on(UIEvents.SELECTED_PLANET_INFOS, (newValue) => {
+            console.log('SELECTED_PLANET_INFOS', newValue);
+            this.selectedPlanetInfos = newValue
         })
-        EventBus.on(GLEvents.SELECTED_SYSTEM, (newValue: System) => {
-            this.selectedSystem = newValue
-        })
+        EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => this.displayDialog = newValue)
     },
 
     methods: {

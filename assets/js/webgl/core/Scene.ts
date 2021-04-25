@@ -115,13 +115,17 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.SHOW_SYSTEM_TEXTS, true)
             } else if (this.selectedSystem) {
                 this.triggerPlanets(true)
-                EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
+                // EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
                 this.controls.enableRotate = true
             }
         })
         EventBus.on(AnimationEvents.PLANET_ZOOM_FINISHED, () => {
-            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, false)
+            // EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, false)
             this.triggerScenery(true)
+            if (this.selectedSystem) {
+                this.selectedSystem.triggerSun(false)
+            }
+            this.triggerPlanets(false, true)
             this.controls.enableRotate = false
             if (this.selectedPlanet) {
                 this.animationManager.showSceneryAnimation(this.selectedPlanet)
@@ -130,13 +134,13 @@ class Scene extends TScene {
 
         // GL PLANET EVENTS
         EventBus.on<Planet>(GLEvents.CLICK_PLANET, (selectedPlanet) => {
+            console.log('CLICK_PLANET', );
             if (selectedPlanet) {
-                this.selectedPlanet = selectedPlanet
-                if (this.selectedSystem) {
-                    this.selectedSystem.triggerSun(false)
-                }
-                this.triggerPlanets(false, true)
                 this.animationManager.discoverPlanet(selectedPlanet)
+
+                this.selectedPlanet = selectedPlanet
+                // const selectedPlanetInfos = this.loadingManager.getGLTFInfos(this.selectedPlanet.name)
+                // EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
             }
         })
         EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
@@ -155,7 +159,7 @@ class Scene extends TScene {
             if (this.selectedPlanet && this.selectedSystem) {
                 this.triggerPlanets(true)
                 this.selectedPlanet.triggerObject(true)
-                this.selectedPlanet.isComplete = true
+                this.selectedPlanet.complete()
                 this.selectedPlanet = undefined
                 this.selectedSystem.triggerSun(true)
                 this.animationManager.backOnSystemDiscoveredView(this.selectedSystem)
@@ -260,6 +264,9 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
+        const sceneCopy = gltf.scene.clone()
+        sceneCopy.scale.set(5, 5, 5)
+        gltf.scene = sceneCopy
         console.log('gltf name', gltf.userData.name);
     }
     

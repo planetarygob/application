@@ -73,7 +73,6 @@ export class CustomLoadingManager {
             modelToLoad.url,
 
             (gltf) => {
-                gltf.scene.rotation.y = Math.PI
                 gltf.userData = {type: modelToLoad.type, name: modelToLoad.name}
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
@@ -118,6 +117,15 @@ export class CustomLoadingManager {
                     }
                 }
             }
+        } else if (key.includes('planet')) {
+            for (let system of JSONSystems) {
+                if (system.hasOwnProperty('planets') && system.planets) {
+                    let planetInfos = system.planets.find((planet: {name: string, type: string}) => planet.name === key)
+                    if (planetInfos) {
+                        return planetInfos
+                    }
+                }
+            }
         } else if (key.includes('sun')) {
             if (parent) {
                 return JSONSystems.find((system: { sun: {name: string}}) => system.sun.name === key)
@@ -151,5 +159,4 @@ export class CustomLoadingManager {
 
         return gltfs
     }
-
 }

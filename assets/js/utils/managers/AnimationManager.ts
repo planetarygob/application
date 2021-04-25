@@ -1,11 +1,12 @@
 import System from "../../webgl/custom/System";
 import EventBus from "../EventBus";
-import { GLEvents, AnimationEvents } from "../Events";
+import { GLEvents, AnimationEvents, UIEvents } from "../Events";
 import { SystemsData } from "../../webgl/data/SystemsData";
 import { gsap } from 'gsap'
 import Camera from "../../webgl/core/Camera";
 import Controls from "../../webgl/core/Controls";
 import Planet from "../../webgl/custom/Planet";
+import { PlaneGeometry } from "three";
 
 class AnimationManager {
     private static instance: AnimationManager
@@ -131,7 +132,7 @@ class AnimationManager {
             duration: 2,
             x: planet.initialPosition.x,
             y: planet.initialPosition.y + 2,
-            z: planet.initialPosition.z - 8,
+            z: planet.initialPosition.z - 6,
             onUpdate: function () {
                 self.camera.updateProjectionMatrix();
             }
@@ -155,7 +156,7 @@ class AnimationManager {
             x: 0,
             y: 0,
             z: 0
-        }).call(() => {EventBus.emit(AnimationEvents.PLANET_ZOOM_FINISHED)}, [], "-=1")
+        }).call(() => {EventBus.emit(AnimationEvents.PLANET_ZOOM_FINISHED)}, [], "-=1.5")
 
         this.controls.target.set(planet.initialPosition.x, planet.initialPosition.y, planet.initialPosition.z)
     }
@@ -184,7 +185,11 @@ class AnimationManager {
 
     showSceneryAnimation (planet: Planet) {
         if (planet && planet.scenery) {
-            gsap.to(planet.scale, {
+            let sceneryTimeline = gsap.timeline({onComplete: () => {
+                EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, true)
+            }})
+
+            sceneryTimeline.to(planet.scale, {
                 duration: 2,
                 x: 1,
                 y: 1,

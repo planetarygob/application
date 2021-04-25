@@ -14,6 +14,7 @@ class Sun extends Object3D {
 
         this.add(model.scene.children[0].clone())
         this.scale.set(0.05, 0.05, 0.05)
+        this.rotation.y = this.rotation.y + Math.PI
         this.visible = false
     }
 }

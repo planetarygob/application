@@ -11,7 +11,10 @@ export const GLEvents = {
 
 export const UIEvents = {
     SHOW_SYSTEM_TEXTS: 'ui:show_system_texts',
-    SHOW_PLANET: 'ui:show_planet'
+    SHOW_PLANET: 'ui:show_planet',
+    SHOW_PLANET_DIALOG: 'ui:show_planet_dialog',
+    SHOW_PLANET_MODAL: 'ui:show_planet_modal',
+    SELECTED_PLANET_INFOS: 'ui:selected_planet_infos',
 }
 
 export const AnimationEvents = {

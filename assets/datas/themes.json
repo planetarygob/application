@@ -28,6 +28,49 @@
           "y": -2,
           "z": -2
         },
+        "modalContent": {
+          "title": "LA MINIJUPE",
+          "paragraphs": [
+            "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br></br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br></br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
+            "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
+            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+          ],
+          "images": [
+            {
+              "name": "wfef",
+              "type": "large",
+              "url": "ewfrgewf"
+            },
+            {
+              "name": "wfef",
+              "type": "small",
+              "url": "ewfrgewf"
+            },
+            {
+              "name": "wfef",
+              "type": "small",
+              "url": "ewfrgewf"
+            }
+          ],
+          "videos": [
+            {
+              "name": "wefwg",
+              "url": "wefw"
+            }
+          ]
+        },
+        "dialogContent": {
+          "position": {
+            "top": "5%",
+            "left": "42%"
+          },
+          "paragraphs": [
+            "Bienvenue dans mon atelier de couture !",
+            "Je me présente, je suis Mary Quant couturière. Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
+            "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
+            "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+          ]
+        },
         "object": {
           "name":"mode_object_skirt",
           "type": "object",
@@ -38,7 +81,8 @@
           "name":"mode_scenery_skirt",
           "type": "scenery",
           "url": "scenery_planet_skirt.glb",
-          "model": null
+          "model": null,
+          "yPosition": 0
         }
       },
       {
@@ -48,6 +92,48 @@
           "x": -8,
           "y": -7,
           "z": -6
+        },
+        "modalContent": {
+          "title": "",
+          "paragraphs": [
+            "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
+            "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
+            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+          ],
+          "images": [
+            {
+              "name": "wfef",
+              "type": "large",
+              "url": "ewfrgewf"
+            },
+            {
+              "name": "wfef",
+              "type": "small",
+              "url": "ewfrgewf"
+            },
+            {
+              "name": "wfef",
+              "type": "small",
+              "url": "ewfrgewf"
+            }
+          ],
+          "videos": [
+            {
+              "name": "wefwg",
+              "url": "wefw"
+            }
+          ]
+        },
+        "dialogContent": {
+          "position": {
+            "top": "5%",
+            "left": "42%"
+          },
+          "paragraphs": [
+            "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
+            "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
+            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+          ]
         },
         "object": {
           "name": "mode_object_hippie",
@@ -59,7 +145,8 @@
           "name": "mode_scenery_hippie.",
           "type": "scenery",
           "url": "scenery_planet_hippie.glb",
-          "model":null
+          "model": null,
+          "yPosition": 2.635
         }
       },
       {
@@ -69,6 +156,48 @@
           "x": -9,
           "y": 8,
           "z": 8
+        },
+        "modalContent": {
+          "title": "",
+          "paragraphs": [
+            "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
+            "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
+            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+          ],
+          "images": [
+            {
+              "name": "wfef",
+              "type": "large",
+              "url": "ewfrgewf"
+            },
+            {
+              "name": "wfef",
+              "type": "small",
+              "url": "ewfrgewf"
+            },
+            {
+              "name": "wfef",
+              "type": "small",
+              "url": "ewfrgewf"
+            }
+          ],
+          "videos": [
+            {
+              "name": "wefwg",
+              "url": "wefw"
+            }
+          ]
+        },
+        "dialogContent": {
+          "position": {
+            "top": "5%",
+            "left": "42%"
+          },
+          "paragraphs": [
+            "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
+            "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
+            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+          ]
         },
         "object": {
           "name": "mode_object_rock",
@@ -80,7 +209,8 @@
           "name":"mode_scenery_planet_rock",
           "type": "scenery",
           "url": "scenery_planet_rock.glb",
-          "model": null
+          "model": null,
+          "yPosition": 0.61
         }
       }
     ]
@@ -89,8 +219,8 @@
     "name": "hobbies",
     "type": "system",
     "teasing": {
-      "title": "SEXUALITÉ",
-      "description": "Le droit au plaisir ! c'est ce que revendiquent les jeunes de l'époque qui formulent alors leur propres revendications et médiatisent les luttes pour la sexualité. Découvre à travers 3 planètes comment cette révolution sexuelle a-t-elle fait avancer la société."
+      "title": "TECHNOLOGIE",
+      "description": "La période des années 60 à 80 a apporté d'énormes bouleversements technologiques. De l'électroménager à l'astronomie en passant par l'informatique, découvre à travers 5 planètes les innovations qui ont fait évoluer nos modes de vie."
     },
     "navPosition": 1,
     "initialPosition":{

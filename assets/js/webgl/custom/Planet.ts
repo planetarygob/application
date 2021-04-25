@@ -14,13 +14,15 @@ class Planet extends Group {
     isComplete: boolean
     initialPosition: Vector3
     scene: Scene
+    canClick: boolean
 
     constructor(
         scene: Scene,
         name: string,
         object: GLTF|undefined,
         scenery: GLTF|undefined,
-        initialPosition: Vector3
+        initialPosition: Vector3,
+        ySceneryPosition: number
     ) {
         super()
 
@@ -30,6 +32,10 @@ class Planet extends Group {
         this.initialPosition = initialPosition
         this.position.set(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z)
         this.isComplete = false
+
+        this.rotation.y = this.rotation.y + Math.PI
+
+        this.canClick = true
 
         // TODO : Is there no other solution than passing scene & renderer through all objects so that Bubble has access to it ?
         // TODO : Detect the change on this.isComplete pour dispose la Bulle
@@ -46,6 +52,7 @@ class Planet extends Group {
         if (scenery) {
             this.scenery = scenery
             this.scenery.scene.visible = false
+            this.scenery.scene.position.y = ySceneryPosition
             this.scenery.scene.scale.set(0.005, 0.005, 0.005)
             this.add(scenery.scene)
         }
@@ -54,6 +61,17 @@ class Planet extends Group {
 
         EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
         EventBus.on(GLEvents.CLICK, () => { this.isComplete ? this.isComplete = false : this.isComplete = true })
+    }
+
+    complete () {
+        this.isComplete = true
+        this.canClick = false
+        if (this.scenery) {
+            this.remove(this.scenery.scene)
+            this.scenery = undefined
+        }
+        CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).remove(this)
+        // this.removeEvents()
     }
 
     removeBubble () {
@@ -90,7 +108,10 @@ class Planet extends Group {
         CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).add(this)
 
         this.addEventListener('click', () => {
-            EventBus.emit(GLEvents.CLICK_PLANET, this)
+            if (this.canClick) {
+                this.canClick = false
+                EventBus.emit(GLEvents.CLICK_PLANET, this)
+            }
         })
         this.addEventListener('mouseover', () => {
             EventBus.emit(GLEvents.MOUSE_OVER_PLANET, this)
@@ -109,7 +130,7 @@ class Planet extends Group {
     }
 
     update(elapsedTime: number) {
-        if (this.scenery && !this.scenery.scene.visible) {
+        if (this.object && this.object.scene.visible) {
             if (this.isComplete) {
                 // TODO : Talk with designers to be more precise about the movement we want the Bubbles to achieve
                 // todo: improve orbit movement

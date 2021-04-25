@@ -50,6 +50,7 @@ class GL {
 
         this.listenEvents()
 
+        this.animateWithInterval()
         this.animate()
     }
 
@@ -85,6 +86,16 @@ class GL {
     // ---------------- LIFECYCLE
     // TODO : Rework so that we're not dependent of the user's framerate
 
+    animateWithInterval () {
+        // interactionManager couteux
+        setInterval(() => {
+            if (this.isInteractionManagerRequired) {
+                CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).update()
+            }
+        }, 300)
+        
+    }
+
     animate() {
         Stats.begin()
 
@@ -95,18 +106,13 @@ class GL {
     }
 
     render() {
-        // interactionManager couteux
-        if (this.isInteractionManagerRequired) {
-            CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).update()
-        }
-
         if (this.clock) {
             EventBus.emit(GLEvents.UPDATE, {
                 elapsedTime: this.clock.getElapsedTime() 
             })
         }
 
-        Tracker.update(this.scene.renderer.render)
+        // Tracker.update(this.scene.renderer.render)
 
         this.scene.renderer.render(this.scene, this.scene.camera)
     }
