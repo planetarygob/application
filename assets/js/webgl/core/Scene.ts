@@ -21,6 +21,7 @@ import Sky from '../custom/Sky'
 import JSONSystems from '../../../datas/themes.json'
 import System from '../custom/System'
 import AnimationManager from '../../utils/managers/AnimationManager'
+import DragControls from './DragControls'
 
 interface Size {
     width: number
@@ -33,6 +34,8 @@ class Scene extends TScene {
     animationManager: AnimationManager
     camera: Camera
     controls: Controls
+    dragControls: DragControls
+    draggableObjects: Array<any>
     isFirstZoomLaunched: Boolean
     canvas: HTMLCanvasElement
     size: Size
@@ -52,7 +55,9 @@ class Scene extends TScene {
         this.renderer.render(this, this.camera)
 
         this.controls = new Controls(this.camera, this.canvas)
-        // todo: fire only on world change
+        this.draggableObjects = []
+        this.dragControls = new DragControls(this.draggableObjects, this.camera, this.renderer)
+        // TODO: fire only on world change
         // this.controls.addEventListener('change', () => {
         //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         // })

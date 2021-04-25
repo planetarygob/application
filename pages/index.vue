@@ -62,7 +62,6 @@
 <script lang="ts">
 
 import WebGl from '../components/WebGL.vue'
-import Tracker from '../components/Tracker.vue'
 import GL from '../assets/js/webgl/GL'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import SvgIcon from '../components/SvgIcon.vue'
