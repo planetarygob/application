@@ -43,14 +43,7 @@ class System extends Group {
         this.createPlanets(systemInfos, gl)
     }
 
-    createSun (
-        systemInfos: {
-            sun: {
-                name: string,
-                model: GLTF
-            }
-        }
-    ) {
+    createSun (systemInfos: any) {
         // system always have a sun
         const sunInfos = systemInfos.sun
         const sunModel = this.loadingManager.getGLTFByName(sunInfos.name)
@@ -59,24 +52,7 @@ class System extends Group {
         this.add(sun)
     }
 
-    createPlanets (
-        systemInfos: {
-            planets: [
-                {
-                    name: string,
-                    initialPosition: Vector3
-                    object: {
-                        name: string
-                    },
-                    scenery: {
-                        name: string,
-                        yPosition: number
-                    }
-                }
-            ]
-        },
-        gl: GL
-    ) { 
+    createPlanets (systemInfos: any,gl: GL) { 
         if (!systemInfos.hasOwnProperty('planets')) {
             return
         }

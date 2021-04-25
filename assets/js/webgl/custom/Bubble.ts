@@ -8,8 +8,7 @@ import {
     MeshPhysicalMaterial, 
     Object3D, 
     PMREMGenerator,
-    RGBFormat, 
-    Scene,
+    RGBFormat,
     WebGLCubeRenderTarget,
     WebGLRenderTarget
 } from 'three'
@@ -20,6 +19,7 @@ import { GLEvents } from '../../utils/Events'
 import Renderer from '../core/Renderer'
 import BubbleCamera from './BubbleCamera'
 import { BubbleData } from '../data/BubbleData'
+import Scene from '../core/Scene'
 
 class Bubble extends Object3D {
 
