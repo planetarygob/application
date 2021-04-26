@@ -16,8 +16,6 @@
 
 <script lang="ts">
 
-import EventBusManager from '~/assets/js/managers/EventBusManager'
-
 export default {
     props: {
         isDisplayed: {
@@ -30,6 +28,11 @@ export default {
         }
     },
 
+    data: () => ({
+        currentStep: 0,
+        isFinished: false
+    }),
+
     computed: {
         maxStep () {
             return this.content.paragraphs.length - 1
@@ -39,11 +42,6 @@ export default {
             return this.currentStep === this.maxStep
         }
     },
-
-    data: () => ({
-        currentStep: 0,
-        isFinished: false
-    }),
 
     methods: {
         updateCurrentStep () {
@@ -74,21 +72,7 @@ export default {
         border-left: 5px solid #7956b2;
         max-height: 230px;
     }
-
-    article::after {
-        content: '';
-        margin-top: -2.5rem;
-        padding-top: 0px;
-        position: relative;
-        bottom: -4rem;
-        left: 0;
-        border-width: 2.5rem 0 0 2.5rem;
-        border-style: solid;
-        border-color: #26272b transparent;
-        display: block;
-        width: 0;
-    }
-
+    
     p:before {
         content: "“";
         font-family: Georgia;

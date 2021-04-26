@@ -124,8 +124,6 @@ class AnimationManager {
     }
 
     discoverPlanet (planet: Planet) {
-        this.controls.enableZoom = true
-
         const self = this
 
         gsap.to(this.camera.position, {

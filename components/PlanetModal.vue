@@ -42,7 +42,6 @@
 </template>
 
 <script lang="ts">
-import EventBusManager from '~/assets/js/managers/EventBusManager'
 
 export default {
     props: {

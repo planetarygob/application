@@ -7,7 +7,9 @@
                 <h1 class="font-extrabold text-3xl">{{ selectedSystem.title }}</h1>
                 <span class="text-gray-400 text-sm mt-3">{{ selectedSystem.description }}</span>
                 <button
-                    class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border hover:bg-white hover:text-purple-500 font-bold py-2 px-4 rounded-full"
+                    class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border font-bold py-2 px-4 rounded-full"
+                    :class="selectedSystem.name !== 'quiz' ? 'hover:bg-white hover:text-purple-500' : ''"
+                    :disabled="selectedSystem.name === 'quiz'"
                     @click="discoverSystem()">
                     DECOUVRIR
                 </button>
@@ -104,27 +106,25 @@ export default {
         displayDialog: false
     }),
 
-    watch: {
-        selectedPlanetInfos (val) {
-            console.log('selectedPlanetInfos', val);
-        }
-    },
-
     mounted() {
         EventBus.on<boolean>(UIEvents.SHOW_SYSTEM_TEXTS, (newValue) => this.showSystemTexts = newValue)
         EventBus.on<System>(GLEvents.SELECTED_SYSTEM, (newValue) => this.selectedSystem = newValue)
         EventBus.on(UIEvents.SELECTED_PLANET_INFOS, (newValue) => {
-            console.log('SELECTED_PLANET_INFOS', newValue);
             this.selectedPlanetInfos = newValue
         })
-        EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => this.displayDialog = newValue)
+        EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
+            this.displayDialog = newValue
+        })
     },
 
     methods: {
         discoverSystem () {
-            this.showSystemTexts = false
-            this.discoveringSystem = true
-            EventBus.emit(AnimationEvents.DISCOVER_SYSTEM, this.selectedSystem)
+            console.log('this.selectedSystem.name', this.selectedSystem.name);
+            if (this.selectedSystem.name === 'mode') {
+                this.showSystemTexts = false
+                this.discoveringSystem = true
+                EventBus.emit(AnimationEvents.DISCOVER_SYSTEM, this.selectedSystem)
+            }
         },
 
         previousSystem () {
@@ -142,6 +142,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
+button:disabled {
+    opacity: 0.5;
+}
 
 </style>

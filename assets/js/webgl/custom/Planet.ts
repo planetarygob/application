@@ -52,14 +52,18 @@ class Planet extends Group {
 
         // TODO : Is there no other solution than passing scene & renderer through all objects so that Bubble has access to it ?
         // TODO : Detect the change on this.isComplete pour dispose la Bulle
-        this.bubble = new Bubble(2, 12, scene, scene.renderer)
+        this.bubble = new Bubble(2.5, 12, scene, scene.renderer)
         this.add(this.bubble.mesh)
                 
         if (object) {
             this.object = object
             this.object.scene.scale.set(0.015, 0.015, 0.015)
+<<<<<<< HEAD
             this.object.scene.position.y = -0.25
 
+=======
+            this.object.scene.position.y = -0.5
+>>>>>>> dev
             this.add(object.scene);
         }
 
