@@ -115,6 +115,9 @@ export default {
         EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
             this.displayDialog = newValue
         })
+        EventBus.on<boolean>(UIEvents.SHOW_PLANET_MODAL, (newValue) => {
+            this.displayModal = newValue
+        })
     },
 
     methods: {

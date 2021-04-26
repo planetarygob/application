@@ -9,7 +9,6 @@ class CustomInteractionManager {
 
     constructor (renderer: WebGLRenderer, camera: PerspectiveCamera) {
         this.interactionManager = new InteractionManager(renderer, camera, renderer.domElement)
-        EventBus.on(GLEvents.UPDATE_INTERACTION_MANAGER, () => this.update())
     }
 
     public static getInstance (renderer: WebGLRenderer, camera: PerspectiveCamera): CustomInteractionManager {

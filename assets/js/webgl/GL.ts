@@ -1,6 +1,6 @@
 import Scene from './core/Scene'
 import { 
-    Clock
+    Clock, AnimationMixer
 } from 'three'
 import Stats from '../utils/dev/Stats'
 import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
@@ -21,8 +21,8 @@ class GL {
     clock: Clock
     size: Size
     canvas: HTMLCanvasElement
-    isInteractionManagerRequired: boolean
-    isHighlighterManagerRequired: boolean
+    isAnimationMixerRequired: boolean
+    mixer?: AnimationMixer | null
 
     constructor() {
         Stats.showPanel(0)
@@ -44,15 +44,13 @@ class GL {
         }
 
         this.scene = new Scene(this.canvas, this.size)
-
-        this.isInteractionManagerRequired = false
-        this.isHighlighterManagerRequired = false
-
+        
         this.clock = new Clock()
+
+        this.isAnimationMixerRequired = false
 
         this.listenEvents()
 
-        this.animateWithInterval()
         this.animate()
     }
 
@@ -68,14 +66,9 @@ class GL {
 
     listenEvents() {
         window.addEventListener('resize', this.resize.bind(this))
-        EventBus.on<boolean>(GLEvents.UPDATE_INTERACTION_MANAGER, (required) => {
+        EventBus.on<boolean>(GLEvents.ANIMATION_MIXER_REQUIRED, (required) => {
             if (required !== undefined) {
-                this.isInteractionManagerRequired = required
-            }
-        })
-        EventBus.on<boolean>(GLEvents.UPDATE_HIGHLIGHT_MANAGER, (required) => {
-            if (required !== undefined) {
-                this.isHighlighterManagerRequired = required
+                this.isAnimationMixerRequired = required
             }
         })
     }  
@@ -93,16 +86,6 @@ class GL {
     // ---------------- LIFECYCLE
     // TODO : Rework so that we're not dependent of the user's framerate
 
-    animateWithInterval () {
-        // interactionManager couteux
-        setInterval(() => {
-            if (this.isInteractionManagerRequired) {
-                CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera).update()
-            }
-        }, 300)
-        
-    }
-
     animate() {
         Stats.begin()
 
@@ -117,17 +100,10 @@ class GL {
             EventBus.emit(GLEvents.UPDATE, {
                 elapsedTime: this.clock.getElapsedTime() 
             })
+            if (this.isAnimationMixerRequired) {
+                EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
+            }
         }
-
-        if (this.isHighlighterManagerRequired) {
-            EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER)
-        }
-
-        if (this.isInteractionManagerRequired) {
-            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER)
-        }
-
-        // Tracker.update(this.scene.renderer.render)
 
         this.scene.renderer.render(this.scene, this.scene.camera)
     }

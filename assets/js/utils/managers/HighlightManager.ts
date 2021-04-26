@@ -26,8 +26,6 @@ class HighlightManager {
         this.shaderPass = new ShaderPass(FXAAShader);
         this.shaderPass.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
         this.composer.addPass(this.shaderPass);
-
-        EventBus.on(GLEvents.UPDATE_HIGHLIGHT_MANAGER, () => this.update())
     }
 
     public static getInstance (renderer: WebGLRenderer, scene: THREE.Scene, camera: PerspectiveCamera): HighlightManager {
@@ -44,7 +42,7 @@ class HighlightManager {
 
     update () {
         if (this.composer) {
-            this.composer.render()
+            this.composer.render(1/60)
         }
     }
 
