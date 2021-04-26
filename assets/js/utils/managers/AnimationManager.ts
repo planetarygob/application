@@ -129,7 +129,7 @@ class AnimationManager {
         gsap.to(this.camera.position, {
             duration: 2,
             x: planet.initialPosition.x,
-            y: planet.initialPosition.y + 2,
+            y: planet.initialPosition.y + 3,
             z: planet.initialPosition.z - 6,
             onUpdate: function () {
                 self.camera.updateProjectionMatrix();

@@ -1,8 +1,9 @@
 export const GLEvents = {
     UPDATE : 'gl:update',
     UPDATE_CUBE_CAMERA : 'gl:update_cube_camera',
-    UPDATE_INTERACTION_MANAGER : 'gl:update_interaction_manager',
-    UPDATE_HIGHLIGHT_MANAGER: 'gl:update_highlight_manager',
+    UPDATE_ANIMATION_MIXER: 'gl:update_animation_mixer',
+    ANIMATION_MIXER_REQUIRED: 'gl:animation_mixer_required',
+    HIGHLIGHT_MANAGER_REQUIRED: 'gl:highlight_manager_required',
     CLICK : 'gl:click',
     SELECTED_SYSTEM: 'gl:selected_system',
     CLICK_PLANET: 'gl:click_planet',

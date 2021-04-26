@@ -7,7 +7,9 @@ import {
     BufferAttribute, 
     Points,
     AmbientLight,
-    DirectionalLight
+    DirectionalLight,
+    AnimationMixer,
+    Mesh
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
@@ -120,12 +122,10 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.SHOW_SYSTEM_TEXTS, true)
             } else if (this.selectedSystem) {
                 this.triggerPlanets(true)
-                // EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
                 this.controls.enableRotate = true
             }
         })
         EventBus.on(AnimationEvents.PLANET_ZOOM_FINISHED, () => {
-            // EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, false)
             this.triggerScenery(true)
             if (this.selectedSystem) {
                 this.selectedSystem.triggerSun(false)
@@ -147,16 +147,16 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
             }
         })
-        EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
-            if (selectedPlanet) {
-                this.animationManager.hoverPlanet(selectedPlanet)
-            }
-        })
-        EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
-            if (selectedPlanet) {
-                this.animationManager.outPlanet(selectedPlanet)
-            }
-        })
+        // EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
+        //     if (selectedPlanet) {
+        //         this.animationManager.hoverPlanet(selectedPlanet)
+        //     }
+        // })
+        // EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
+        //     if (selectedPlanet) {
+        //         this.animationManager.outPlanet(selectedPlanet)
+        //     }
+        // })
 
         // BACK EVENTS
         EventBus.on(AnimationEvents.BACK, () => {
@@ -168,8 +168,6 @@ class Scene extends TScene {
                 this.selectedSystem.triggerSun(true)
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
                 this.animationManager.backOnSystemDiscoveredView(this.selectedSystem)
-                EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER, false)
-                EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, false)
             } else if (this.selectedSystem) {
                 this.triggerSystems(true, true)
                 this.triggerPlanets(false)
@@ -259,7 +257,9 @@ class Scene extends TScene {
         directionalLight2.position.set(-2, 4, 4)
         directionalLight2.castShadow = true
       
-        this.add(ambientLight, directionalLight1, directionalLight2)
+        // this.add(ambientLight)
+        // this.add(directionalLight1)
+        this.add(directionalLight2)
     }
 
     onError (error: ErrorEvent) {
@@ -271,9 +271,6 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
-        const sceneCopy = gltf.scene.clone()
-        sceneCopy.scale.set(5, 5, 5)
-        gltf.scene = sceneCopy
         console.log('gltf name', gltf.userData.name);
     }
     

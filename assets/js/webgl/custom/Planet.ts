@@ -1,7 +1,7 @@
 import { AnimationAction, AnimationClip, AnimationMixer, Group, LoopOnce, Object3D, Vector3 } from "three";
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import EventBus from "../../utils/EventBus";
-import { GLEvents } from "../../utils/Events";
+import { GLEvents, UIEvents } from "../../utils/Events";
 import Scene from "../core/Scene";
 import Bubble from "./Bubble";
 import CustomInteractionManager from "../../utils/managers/CustomInteractionManager";
@@ -13,14 +13,16 @@ class Planet extends Group {
     object: GLTF|undefined
     scenery: GLTF|undefined
     animationTool: any
+    animationToolName: string
     animationTarget: any
+    animationTargetName: string
     isComplete: boolean
     initialPosition: Vector3
     scene: Scene
     canClick: boolean
     interactionManager: CustomInteractionManager
     highlightManager: HighlightManager
-    animationManager?: AnimationMixer 
+    animationMixer?: AnimationMixer 
     sceneryAnimation?: AnimationAction
     isAboveTarget: boolean
 
@@ -30,7 +32,9 @@ class Planet extends Group {
         object: GLTF|undefined,
         scenery: GLTF|undefined,
         initialPosition: Vector3,
-        ySceneryPosition: number
+        ySceneryPosition: number,
+        animationToolName: string,
+        animationTargetName: string
     ) {
         super()
 
@@ -49,6 +53,15 @@ class Planet extends Group {
         this.rotation.y = this.rotation.y + Math.PI
 
         this.canClick = true
+
+        this.animationToolName = animationToolName
+        this.animationTargetName = animationTargetName
+
+        EventBus.on(GLEvents.UPDATE_ANIMATION_MIXER, (deltaTime) => {
+            if (this.animationMixer) {
+                this.animationMixer.update(deltaTime)
+            }
+        })
 
         // TODO : Is there no other solution than passing scene & renderer through all objects so that Bubble has access to it ?
         // TODO : Detect the change on this.isComplete pour dispose la Bulle
@@ -120,41 +133,39 @@ class Planet extends Group {
     }
 
     setupScenery() {
-        if (this.scenery) {
-            EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER, true)
-            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
+        if (this.scenery && this.animationToolName && this.animationTargetName) {
+            EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, true)
 
-            this.animationManager = new AnimationMixer(this.scenery.scene)
-            this.sceneryAnimation = this.animationManager.clipAction(this.scenery.animations[0])
+            this.animationMixer = new AnimationMixer(this.scenery.scene)
+
+            const animation = this.scenery.animations[0]
+            this.sceneryAnimation = this.animationMixer.clipAction(animation)
             this.sceneryAnimation.setLoop(LoopOnce, 1)
 
             this.scenery.scene.traverse((child: any) => {
-                if (child.name === 'flowerbandana') {
+                if (child.name === this.animationToolName) {
                     this.animationTool = child
                 }
-                if (child.name === 'gun') {
+                if (child.name === this.animationTargetName) {
                     this.animationTarget = child
-                    console.log("GUN", this.animationTarget)
                 }
             })
 
             if (this.animationTool && this.animationTarget) {
-                console.log(this.animationTarget)
-                this.interactionManager.add(this.animationTool)
-                this.interactionManager.add(this.animationTarget)
-
                 // NOTE : We indicate that scissors are an interactive & draggable object$
-                this.scene.dragControls.transformGroup = true
+                if (this.scene.draggableObjects.length) {
+                    this.scene.draggableObjects.shift()
+                }
                 this.scene.draggableObjects.push(this.animationTool) // Draggable
-                this.highlightManager.add(this.animationTool) // Highlighted
+                this.scene.dragControls.transformGroup = true
+                
+                this.highlightManager.outlinePass.selectedObjects = [this.animationTool]
 
-                this.animationTool.addEventListener('mouseover', (e: any) => {
-                    // NOTE : We will able to fire an event to Custom Cursor 
-                    document.body.style.cursor = 'pointer';
-                })
+                this.scene.dragControls.addEventListener('dragstart', this.onDragStart.bind(this))
+                this.scene.dragControls.addEventListener('dragend', this.onDragEnd.bind(this))
 
-                this.scene.dragControls.addEventListener('dragstart', this.onDragStart)
-                this.scene.dragControls.addEventListener('dragend', this.onDragEnd)
+                this.interactionManager.add(this.animationTarget)
+                // this.interactionManager.add(this.animationTool)
             } else {
                 console.error("Tool or Target undefined : ", this.animationTool, this.animationTarget)
             }
@@ -163,33 +174,39 @@ class Planet extends Group {
 
     // NOTE : A function in the AnimationManager that takes an animation as param ? 
     launchAnimation() {
-        console.log("ANIM LO")
-        this.sceneryAnimation!.play()
-        this.sceneryAnimation!.clampWhenFinished = true
+        if (this.sceneryAnimation) {
+            EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, true)
+
+            this.sceneryAnimation.play()
+            this.sceneryAnimation.clampWhenFinished = true
+
+            if (this.animationMixer) {
+                this.animationMixer.addEventListener('finished', () => {
+                    EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, false)
+                    EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
+                })
+            }
+        }
     }
 
     toggleTargetState() {
         this.isAboveTarget = !this.isAboveTarget
-        console.log(this.isAboveTarget ? "LE FUSI LO" : "PA LE FUSI LO")
-    }
-
-    onDragStart() {
-        console.log(this.animationTarget)
-        console.log("DRAG")
-        this.animationTarget.addEventListener('mouseover', this.toggleTargetState)
-        this.animationTarget.addEventListener('mouseout', this.toggleTargetState)
-    }
-
-    onDragEnd() {
-        console.log("PU DRAG")
-        this.animationTarget.removeEventListener('mouseover', this.toggleTargetState)
-        this.animationTarget.removeEventListener('mouseout', this.toggleTargetState)
 
         if (this.isAboveTarget) {
             // NOTE : Should be there that we make possible to open the PlanetModal displaying course once animation is over
             this.animationTool.visible = false
             this.launchAnimation()
         }
+    }
+
+    onDragStart() {
+        this.animationTarget.addEventListener('mouseover', this.toggleTargetState.bind(this))
+        this.animationTarget.addEventListener('mouseout', this.toggleTargetState.bind(this))
+    }
+
+    onDragEnd() {
+        this.animationTarget.removeEventListener('mouseover', this.toggleTargetState.bind(this))
+        this.animationTarget.removeEventListener('mouseout', this.toggleTargetState.bind(this))
     }
 
     listenEvents () {

@@ -61,6 +61,8 @@ class System extends Group {
             let objectModel: GLTF|undefined
             let sceneryModel: GLTF|undefined
             let ySceneryPosition: number = 0
+            let sceneryAnimationTool: string = ""
+            let sceneryAnimationTarget: string = ""
 
             if (planetInfos.hasOwnProperty('object')) {
                 objectModel = this.loadingManager.getGLTFByName(planetInfos.object.name)
@@ -68,9 +70,11 @@ class System extends Group {
             if (planetInfos.hasOwnProperty('scenery')) {
                 sceneryModel = this.loadingManager.getGLTFByName(planetInfos.scenery.name)
                 ySceneryPosition = planetInfos.scenery.yPosition
+                sceneryAnimationTool = planetInfos.scenery.interaction.tool
+                sceneryAnimationTarget = planetInfos.scenery.interaction.target
             }
 
-            const planet = new Planet(gl.scene, planetInfos.name, objectModel, sceneryModel, planetInfos.initialPosition, ySceneryPosition)
+            const planet = new Planet(gl.scene, planetInfos.name, objectModel, sceneryModel, planetInfos.initialPosition, ySceneryPosition, sceneryAnimationTool, sceneryAnimationTarget)
             this.add(planet)
         }  
     }
