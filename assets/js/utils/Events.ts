@@ -8,7 +8,7 @@ export const GLEvents = {
     CLICK_PLANET: 'gl:click_planet',
     MOUSE_OVER_PLANET: 'gl:mouse_over_planet',
     MOUSE_OUT_PLANET: 'gl:mouse_out_planet',
-    TOGGLE_ORBIT_CONTROLS: 'gl:toggle_orbit_controls'
+    TOGGLE_ORBIT_CONTROLS: 'gl:toggle_orbit_controls',
 }
 
 export const UIEvents = {

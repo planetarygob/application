@@ -121,25 +121,25 @@ class Planet extends Group {
 
     setupScenery() {
         if (this.scenery) {
-            EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER, true)
-            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
+            // EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER, true)
+            // EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
 
             this.animationManager = new AnimationMixer(this.scenery.scene)
             this.sceneryAnimation = this.animationManager.clipAction(this.scenery.animations[0])
             this.sceneryAnimation.setLoop(LoopOnce, 1)
+            console.log("ANIM", this.sceneryAnimation)
 
             this.scenery.scene.traverse((child: any) => {
+                console.log(child.name)
                 if (child.name === 'flowerbandana') {
                     this.animationTool = child
                 }
                 if (child.name === 'gun') {
                     this.animationTarget = child
-                    console.log("GUN", this.animationTarget)
                 }
             })
 
             if (this.animationTool && this.animationTarget) {
-                console.log(this.animationTarget)
                 this.interactionManager.add(this.animationTool)
                 this.interactionManager.add(this.animationTarget)
 
@@ -148,13 +148,15 @@ class Planet extends Group {
                 this.scene.draggableObjects.push(this.animationTool) // Draggable
                 this.highlightManager.add(this.animationTool) // Highlighted
 
+                // NOTE : Not needed, draggable gives cursor pointer, but might need for CustomCursor
+                console.log("TOOL", this.animationTool)
                 this.animationTool.addEventListener('mouseover', (e: any) => {
                     // NOTE : We will able to fire an event to Custom Cursor 
                     document.body.style.cursor = 'pointer';
                 })
 
-                this.scene.dragControls.addEventListener('dragstart', this.onDragStart)
-                this.scene.dragControls.addEventListener('dragend', this.onDragEnd)
+                this.scene.dragControls.addEventListener('dragstart', this.onDragStart.bind(this))
+                this.scene.dragControls.addEventListener('dragend', this.onDragEnd.bind(this))
             } else {
                 console.error("Tool or Target undefined : ", this.animationTool, this.animationTarget)
             }
@@ -163,7 +165,7 @@ class Planet extends Group {
 
     // NOTE : A function in the AnimationManager that takes an animation as param ? 
     launchAnimation() {
-        console.log("ANIM LO")
+        console.log("ANIM LO", this)
         this.sceneryAnimation!.play()
         this.sceneryAnimation!.clampWhenFinished = true
     }
@@ -174,16 +176,15 @@ class Planet extends Group {
     }
 
     onDragStart() {
-        console.log(this.animationTarget)
-        console.log("DRAG")
-        this.animationTarget.addEventListener('mouseover', this.toggleTargetState)
-        this.animationTarget.addEventListener('mouseout', this.toggleTargetState)
+        console.log("DRAG ", this.animationTarget)
+        this.animationTarget.addEventListener('mouseover', this.toggleTargetState.bind(this))
+        this.animationTarget.addEventListener('mouseout', this.toggleTargetState.bind(this))
     }
 
     onDragEnd() {
-        console.log("PU DRAG")
-        this.animationTarget.removeEventListener('mouseover', this.toggleTargetState)
-        this.animationTarget.removeEventListener('mouseout', this.toggleTargetState)
+        console.log("PU DRAG ", this.animationTarget)
+        this.animationTarget.removeEventListener('mouseover', this.toggleTargetState.bind(this))
+        this.animationTarget.removeEventListener('mouseout', this.toggleTargetState.bind(this))
 
         if (this.isAboveTarget) {
             // NOTE : Should be there that we make possible to open the PlanetModal displaying course once animation is over
@@ -217,16 +218,18 @@ class Planet extends Group {
 
     update(elapsedTime: number) {
         if (this.object && this.object.scene.visible) {
+            const angle = elapsedTime * 2
+
             if (this.isComplete) {
                 // TODO : Talk with designers to be more precise about the movement we want the Bubbles to achieve
                 // TODO: improve orbit movement
                 this.position.set(
-                    this.initialPosition.x * Math.cos(elapsedTime),
-                    Math.sin( elapsedTime ) * .3,
-                    this.initialPosition.z * Math.sin(elapsedTime),
+                    (this.initialPosition.x -2) * Math.cos(elapsedTime),
+                    (this.initialPosition.y - 2) * Math.sin(elapsedTime),
+                    (this.initialPosition.z - 2) * Math.sin(elapsedTime),
                 )
             } else {
-                const angle = elapsedTime * 2
+                
                 // TODO : Use initial position of Bubble / Planet instead of 0. Keep in mind it will be related to System coordinates & not Scene
                 this.position.set(
                     this.initialPosition.x,
