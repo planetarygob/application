@@ -71,7 +71,7 @@ class Scene extends TScene {
     }
 
     onAllModelsLoaded () {
-        console.log('onAllModelsLoaded')
+        EventBus.emit(UIEvents.TOGGLE_LOADER)
         for (let systemInfos of JSONSystems) {
             const system = new System(systemInfos.name, new Vector3(systemInfos.initialPosition.x, systemInfos.initialPosition.y, systemInfos.initialPosition.z), systemInfos.teasing.title, systemInfos.teasing.description, systemInfos.navPosition)
 
@@ -259,14 +259,16 @@ class Scene extends TScene {
     }
 
     onLoading (xhr: ProgressEvent<EventTarget>) {
-
+        console.log((xhr.loaded/xhr.total)*100)
+        EventBus.emit(UIEvents.UPDATE_LOADER, {
+            progress: xhr.loaded/xhr.total
+        })
     }
     
     onModelLoaded (gltf: GLTF) {
         const sceneCopy = gltf.scene.clone()
         sceneCopy.scale.set(5, 5, 5)
         gltf.scene = sceneCopy
-        console.log('gltf name', gltf.userData.name);
     }
     
 }
