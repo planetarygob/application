@@ -123,21 +123,21 @@ class Planet extends Group {
     setupScenery() {
         if (this.scenery) {
             this.animationManager = new AnimationMixer(this.scenery.scene)
-            this.sceneryAnimation = this.animationManager.clipAction(this.scenery.scene.animations[0])
+            this.sceneryAnimation = this.animationManager.clipAction(this.scenery.animations[0])
             this.sceneryAnimation.setLoop(LoopOnce, 1)
 
-            // TODO : Might be a good a option that this.scenery is already scenery.scene, so we're not obliged to write this.scenery.scene
             this.scenery.scene.traverse((child: any) => {
                 if (child.name === 'flowerbandana') {
                     this.animationTool = child
                 }
                 if (child.name === 'gun') {
                     this.animationTarget = child
+                    console.log("GUN", this.animationTarget)
                 }
             })
 
             if (this.animationTool && this.animationTarget) {
-
+                console.log(this.animationTarget)
                 this.interactionManager.add(this.animationTool)
                 this.interactionManager.add(this.animationTarget)
 
@@ -146,13 +146,13 @@ class Planet extends Group {
                 this.scene.draggableObjects.push(this.animationTool) // Draggable
                 this.highlightManager.add(this.animationTool) // Highlighted
 
-                // this.animationTool.addEventListener('mouseover', (e: any) => {
-                //     // NOTE : We will able to fire an event to Custom Cursor 
-                //     document.body.style.cursor = 'pointer';
-                // })
+                this.animationTool.addEventListener('mouseover', (e: any) => {
+                    // NOTE : We will able to fire an event to Custom Cursor 
+                    document.body.style.cursor = 'pointer';
+                })
 
-                // this.scene.dragControls.addEventListener('dragstart', this.onDragStart)
-                // this.scene.dragControls.addEventListener('dragend', this.onDragEnd)
+                this.scene.dragControls.addEventListener('dragstart', this.onDragStart)
+                this.scene.dragControls.addEventListener('dragend', this.onDragEnd)
             } else {
                 console.error("Tool or Target undefined : ", this.animationTool, this.animationTarget)
             }
@@ -161,6 +161,7 @@ class Planet extends Group {
 
     // NOTE : A function in the AnimationManager that takes an animation as param ? 
     launchAnimation() {
+        console.log("ANIM LO")
         this.sceneryAnimation!.play()
         this.sceneryAnimation!.clampWhenFinished = true
     }
@@ -171,13 +172,16 @@ class Planet extends Group {
     }
 
     onDragStart() {
-        // this.animationTarget.addEventListener('mouseover', this.toggleTargetState)
-        // this.animationTarget.addEventListener('mouseout', this.toggleTargetState)
+        console.log(this.animationTarget)
+        console.log("DRAG")
+        this.animationTarget.addEventListener('mouseover', this.toggleTargetState)
+        this.animationTarget.addEventListener('mouseout', this.toggleTargetState)
     }
 
     onDragEnd() {
-        // this.animationTarget.removeEventListener('mouseover', this.toggleTargetState)
-        // this.animationTarget.removeEventListener('mouseout', this.toggleTargetState)
+        console.log("PU DRAG")
+        this.animationTarget.removeEventListener('mouseover', this.toggleTargetState)
+        this.animationTarget.removeEventListener('mouseout', this.toggleTargetState)
 
         if (this.isAboveTarget) {
             // NOTE : Should be there that we make possible to open the PlanetModal displaying course once animation is over

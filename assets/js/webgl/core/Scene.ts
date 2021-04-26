@@ -56,7 +56,7 @@ class Scene extends TScene {
 
         this.controls = new Controls(this.camera, this.canvas)
         this.draggableObjects = []
-        this.dragControls = new DragControls(this.draggableObjects, this.camera, this.renderer)
+        this.dragControls = new DragControls(this.draggableObjects, this.camera, this.renderer.domElement)
         // TODO: fire only on world change
         // this.controls.addEventListener('change', () => {
         //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
