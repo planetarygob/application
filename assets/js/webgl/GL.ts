@@ -22,6 +22,7 @@ class GL {
     size: Size
     canvas: HTMLCanvasElement
     isInteractionManagerRequired: boolean
+    isHighlighterManagerRequired: boolean
 
     constructor() {
         Stats.showPanel(0)
@@ -45,6 +46,7 @@ class GL {
         this.scene = new Scene(this.canvas, this.size)
 
         this.isInteractionManagerRequired = false
+        this.isHighlighterManagerRequired = false
 
         this.clock = new Clock()
 
@@ -69,6 +71,11 @@ class GL {
         EventBus.on<boolean>(GLEvents.UPDATE_INTERACTION_MANAGER, (required) => {
             if (required !== undefined) {
                 this.isInteractionManagerRequired = required
+            }
+        })
+        EventBus.on<boolean>(GLEvents.UPDATE_HIGHLIGHT_MANAGER, (required) => {
+            if (required !== undefined) {
+                this.isHighlighterManagerRequired = required
             }
         })
     }  
@@ -110,6 +117,14 @@ class GL {
             EventBus.emit(GLEvents.UPDATE, {
                 elapsedTime: this.clock.getElapsedTime() 
             })
+        }
+
+        if (this.isHighlighterManagerRequired) {
+            EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER)
+        }
+
+        if (this.isInteractionManagerRequired) {
+            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER)
         }
 
         // Tracker.update(this.scene.renderer.render)

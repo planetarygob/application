@@ -58,12 +58,7 @@ class Planet extends Group {
         if (object) {
             this.object = object
             this.object.scene.scale.set(0.015, 0.015, 0.015)
-<<<<<<< HEAD
-            this.object.scene.position.y = -0.25
-
-=======
             this.object.scene.position.y = -0.5
->>>>>>> dev
             this.add(object.scene);
         }
 
@@ -126,6 +121,9 @@ class Planet extends Group {
 
     setupScenery() {
         if (this.scenery) {
+            EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER, true)
+            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
+
             this.animationManager = new AnimationMixer(this.scenery.scene)
             this.sceneryAnimation = this.animationManager.clipAction(this.scenery.animations[0])
             this.sceneryAnimation.setLoop(LoopOnce, 1)

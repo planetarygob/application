@@ -4,6 +4,8 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
 import { WebGLRenderer, PerspectiveCamera, Vector2, Object3D } from 'three';
+import { GLEvents } from '../Events';
+import EventBus from '../EventBus';
 
 class HighlightManager {
     private static instance: HighlightManager
@@ -24,6 +26,8 @@ class HighlightManager {
         this.shaderPass = new ShaderPass(FXAAShader);
         this.shaderPass.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
         this.composer.addPass(this.shaderPass);
+
+        EventBus.on(GLEvents.UPDATE_HIGHLIGHT_MANAGER, () => this.update())
     }
 
     public static getInstance (renderer: WebGLRenderer, scene: THREE.Scene, camera: PerspectiveCamera): HighlightManager {
@@ -38,7 +42,7 @@ class HighlightManager {
         this.outlinePass.selectedObjects.push(object)
     }
 
-    render () {
+    update () {
         if (this.composer) {
             this.composer.render()
         }

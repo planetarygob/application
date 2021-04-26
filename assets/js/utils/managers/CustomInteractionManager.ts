@@ -1,5 +1,7 @@
 import { InteractionManager } from "three.interactive"
 import { WebGLRenderer, PerspectiveCamera, Object3D, Mesh } from "three";
+import EventBus from "../EventBus";
+import { GLEvents } from "../Events";
 
 class CustomInteractionManager {
     private static instance: CustomInteractionManager
@@ -7,6 +9,7 @@ class CustomInteractionManager {
 
     constructor (renderer: WebGLRenderer, camera: PerspectiveCamera) {
         this.interactionManager = new InteractionManager(renderer, camera, renderer.domElement)
+        EventBus.on(GLEvents.UPDATE_INTERACTION_MANAGER, () => this.update())
     }
 
     public static getInstance (renderer: WebGLRenderer, camera: PerspectiveCamera): CustomInteractionManager {
