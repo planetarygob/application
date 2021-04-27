@@ -47,6 +47,7 @@
                 style="margin-top: 5px" />
             <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
+        <loader />
         <planet-modal
             v-if="selectedPlanetInfos && selectedPlanetInfos.modalContent"
             :is-displayed.sync="displayModal"
@@ -74,7 +75,6 @@ import System from '../assets/js/webgl/custom/System'
 import PlanetModal from '../components/PlanetModal.vue'
 import PlanetDialog from '../components/PlanetDialog.vue'
 import Tracker from '../components/Tracker.vue'
-import { CustomLoadingManager } from '../assets/js/utils/managers/CustomLoadingManager'
 
 
 import {
@@ -87,6 +87,7 @@ import {
     AnimationMixer
 } from 'three'
 import { gsap, TweenLite } from 'gsap'
+import Loader from '~/components/Loader.vue'
 
 export default {
     components: {
@@ -94,7 +95,8 @@ export default {
         Tracker,
         SvgIcon,
         PlanetModal,
-        PlanetDialog
+        PlanetDialog,
+        Loader
     },
     
     data: () => ({
@@ -115,11 +117,13 @@ export default {
         EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
             this.displayDialog = newValue
         })
+        EventBus.on<boolean>(UIEvents.SHOW_PLANET_MODAL, (newValue) => {
+            this.displayModal = newValue
+        })
     },
 
     methods: {
         discoverSystem () {
-            console.log('this.selectedSystem.name', this.selectedSystem.name);
             if (this.selectedSystem.name === 'mode') {
                 this.showSystemTexts = false
                 this.discoveringSystem = true

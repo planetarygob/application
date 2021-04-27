@@ -43,7 +43,19 @@ export default {
   modules: [
   ],
 
+  vue: {
+    config: {
+      productionTip: false,
+      devtools: true
+    }
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    analyze: true,
+    // ou
+    analyze: {
+      analyzerMode: 'static'
+    }
   }
 }

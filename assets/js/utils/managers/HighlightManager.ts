@@ -3,7 +3,9 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
-import { WebGLRenderer, PerspectiveCamera, Vector2 } from 'three';
+import { WebGLRenderer, PerspectiveCamera, Vector2, Object3D } from 'three';
+import { GLEvents } from '../Events';
+import EventBus from '../EventBus';
 
 class HighlightManager {
     private static instance: HighlightManager
@@ -34,9 +36,13 @@ class HighlightManager {
         return HighlightManager.instance;
     }
 
-    render () {
+    add(object: Object3D) {
+        this.outlinePass.selectedObjects.push(object)
+    }
+
+    update () {
         if (this.composer) {
-            this.composer.render()
+            this.composer.render(1/60)
         }
     }
 

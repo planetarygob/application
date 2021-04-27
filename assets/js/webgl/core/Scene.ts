@@ -7,7 +7,9 @@ import {
     BufferAttribute, 
     Points,
     AmbientLight,
-    DirectionalLight
+    DirectionalLight,
+    AnimationMixer,
+    Mesh
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
@@ -21,6 +23,7 @@ import Sky from '../custom/Sky'
 import JSONSystems from '../../../datas/themes.json'
 import System from '../custom/System'
 import AnimationManager from '../../utils/managers/AnimationManager'
+import DragControls from './DragControls'
 
 interface Size {
     width: number
@@ -33,6 +36,8 @@ class Scene extends TScene {
     animationManager: AnimationManager
     camera: Camera
     controls: Controls
+    dragControls: DragControls
+    draggableObjects: Array<any>
     isFirstZoomLaunched: Boolean
     canvas: HTMLCanvasElement
     size: Size
@@ -52,15 +57,17 @@ class Scene extends TScene {
         this.renderer.render(this, this.camera)
 
         this.controls = new Controls(this.camera, this.canvas)
-        // todo: fire only on world change
+        this.draggableObjects = []
+        this.dragControls = new DragControls(this.draggableObjects, this.camera, this.renderer.domElement)
+        // TODO: fire only on world change
         // this.controls.addEventListener('change', () => {
         //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         // })
 
         this.systems = []
 
-        this.loadingManager = CustomLoadingManager.getInstance(this.renderer, this)
-        this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded)
+        this.loadingManager = CustomLoadingManager.getInstance(this.renderer)
+        this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded.bind(this))
 
         this.animationManager = AnimationManager.getInstance(this.camera, this.controls)
         
@@ -71,7 +78,7 @@ class Scene extends TScene {
     }
 
     onAllModelsLoaded () {
-        console.log('onAllModelsLoaded')
+        EventBus.emit(UIEvents.TOGGLE_LOADER)
         for (let systemInfos of JSONSystems) {
             const system = new System(systemInfos.name, new Vector3(systemInfos.initialPosition.x, systemInfos.initialPosition.y, systemInfos.initialPosition.z), systemInfos.teasing.title, systemInfos.teasing.description, systemInfos.navPosition)
 
@@ -115,12 +122,10 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.SHOW_SYSTEM_TEXTS, true)
             } else if (this.selectedSystem) {
                 this.triggerPlanets(true)
-                // EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, true)
                 this.controls.enableRotate = true
             }
         })
         EventBus.on(AnimationEvents.PLANET_ZOOM_FINISHED, () => {
-            // EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER, false)
             this.triggerScenery(true)
             if (this.selectedSystem) {
                 this.selectedSystem.triggerSun(false)
@@ -142,16 +147,16 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
             }
         })
-        EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
-            if (selectedPlanet) {
-                this.animationManager.hoverPlanet(selectedPlanet)
-            }
-        })
-        EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
-            if (selectedPlanet) {
-                this.animationManager.outPlanet(selectedPlanet)
-            }
-        })
+        // EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
+        //     if (selectedPlanet) {
+        //         this.animationManager.hoverPlanet(selectedPlanet)
+        //     }
+        // })
+        // EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
+        //     if (selectedPlanet) {
+        //         this.animationManager.outPlanet(selectedPlanet)
+        //     }
+        // })
 
         // BACK EVENTS
         EventBus.on(AnimationEvents.BACK, () => {
@@ -252,7 +257,9 @@ class Scene extends TScene {
         directionalLight2.position.set(-2, 4, 4)
         directionalLight2.castShadow = true
       
-        this.add(ambientLight, directionalLight1, directionalLight2)
+        // this.add(ambientLight)
+        // this.add(directionalLight1)
+        // this.add(directionalLight2)
     }
 
     onError (error: ErrorEvent) {
@@ -260,14 +267,17 @@ class Scene extends TScene {
     }
 
     onLoading (xhr: ProgressEvent<EventTarget>) {
-
+        
     }
     
     onModelLoaded (gltf: GLTF) {
-        const sceneCopy = gltf.scene.clone()
-        sceneCopy.scale.set(5, 5, 5)
-        gltf.scene = sceneCopy
-        console.log('gltf name', gltf.userData.name);
+        // TODO : variable prend plus 1
+        this.loadingManager.loadedModels += 1
+        const progress = 100 / 16 * this.loadingManager.loadedModels
+
+        EventBus.emit(UIEvents.UPDATE_LOADER, {
+            progress: progress
+        })
     }
     
 }

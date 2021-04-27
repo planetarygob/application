@@ -35,13 +35,15 @@
                     <p v-html="content.paragraphs[2]" />
                 </div>
             </div>
-            <button @click="$emit('update:is-displayed', false)">Terminer la lecture</button>
+            <button @click="close()">Terminer la lecture</button>
         </div>
         <div class="ui-gradient ui-gradient--bot"></div>
     </section>
 </template>
 
 <script lang="ts">
+import EventBus from '../assets/js/utils/EventBus'
+import { AnimationEvents } from '../assets/js/utils/Events'
 
 export default {
     props: {
@@ -52,6 +54,13 @@ export default {
         content: {
             type: Object,
             default: () => {}
+        }
+    },
+
+    methods: {
+        close () {
+            this.$emit('update:is-displayed', false)
+            EventBus.emit(AnimationEvents.BACK)
         }
     }
 }

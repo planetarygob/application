@@ -1,9 +1,6 @@
-import { PMREMGenerator, WebGLRenderer, Scene } from "three";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import { WebGLRenderer } from "three";
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import JSONSystems from '../../../datas/themes.json'
 
@@ -11,25 +8,22 @@ export class CustomLoadingManager {
     private static instance: CustomLoadingManager
     loader: GLTFLoader
     modelsLoaded = new Map()
+    loadedModels: number // NOTE : Helping on getting an overall tracking of the loading
 
-    constructor (renderer: WebGLRenderer, scene: Scene) {
-        const environment = new RoomEnvironment();
-        const pmremGenerator = new PMREMGenerator(renderer);
-
-        scene.environment = pmremGenerator.fromScene(environment).texture;
-
+    constructor (renderer: WebGLRenderer) {
         const ktx2Loader = new KTX2Loader()
             .setTranscoderPath('js/libs/basis/')
             .detectSupport(renderer);
 
+        this.loadedModels = 0
         this.loader = new GLTFLoader().setPath('https://florianblandin.fr/assets/');
         this.loader.setKTX2Loader(ktx2Loader);
         this.loader.setMeshoptDecoder(MeshoptDecoder);
     }
 
-    static getInstance(renderer: WebGLRenderer, scene: Scene): CustomLoadingManager {
+    static getInstance(renderer: WebGLRenderer): CustomLoadingManager {
         if (!CustomLoadingManager.instance) {
-            CustomLoadingManager.instance = new CustomLoadingManager(renderer, scene)
+            CustomLoadingManager.instance = new CustomLoadingManager(renderer)
         }
         return CustomLoadingManager.instance
     }

@@ -12,13 +12,12 @@ class Sun extends Object3D {
         
         this.name = name
 
-        this.add(model.scene.children[0].clone())
+        this.add(model.scene.clone())
         this.scale.set(0.05, 0.05, 0.05)
         this.rotation.y = this.rotation.y + Math.PI
         this.visible = false
 
         if (this.name === 'quiz_sun') {
-            console.log('quiz ok', );
             this.illuminateQuiz(model)
         }
         
