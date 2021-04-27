@@ -14,6 +14,7 @@ class Renderer extends TRenderer {
         this.toneMapping = ACESFilmicToneMapping;
         this.toneMappingExposure = 1;
         this.outputEncoding = sRGBEncoding;
+        this.setClearColor(0x130B24, 1);
     }
 }
 
