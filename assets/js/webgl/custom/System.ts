@@ -4,6 +4,10 @@ import Sun from "./Sun"
 import { CustomLoadingManager } from "../../utils/managers/CustomLoadingManager"
 import GL from "../GL"
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader"
+import PlanetObject from "./PlanetObject"
+import PlanetScenery from "./PlanetScenery"
+import SceneryInteraction from "./SceneryInteraction"
+import AnimationObject from "./AnimationObject"
 
 class System extends Group {
     name: string
@@ -36,7 +40,7 @@ class System extends Group {
 
         const gl = GL.getInstance()
 
-        this.loadingManager = CustomLoadingManager.getInstance(gl.scene.renderer, gl.scene)
+        this.loadingManager = CustomLoadingManager.getInstance(gl.scene.renderer)
         const systemInfos = this.loadingManager.getGLTFInfos(this.name)
 
         this.createSun(systemInfos)
@@ -52,29 +56,30 @@ class System extends Group {
         this.add(sun)
     }
 
-    createPlanets (systemInfos: any,gl: GL) { 
+    createPlanets (systemInfos: any, gl: GL) { 
         if (!systemInfos.hasOwnProperty('planets')) {
             return
         }
 
         for (let planetInfos of systemInfos.planets) {
-            let objectModel: GLTF|undefined
-            let sceneryModel: GLTF|undefined
-            let ySceneryPosition: number = 0
-            let sceneryAnimationTool: string = ""
-            let sceneryAnimationTarget: string = ""
+            let object: PlanetObject|undefined
+            let scenery: PlanetScenery|undefined
 
             if (planetInfos.hasOwnProperty('object')) {
-                objectModel = this.loadingManager.getGLTFByName(planetInfos.object.name)
-            }
-            if (planetInfos.hasOwnProperty('scenery')) {
-                sceneryModel = this.loadingManager.getGLTFByName(planetInfos.scenery.name)
-                ySceneryPosition = planetInfos.scenery.yPosition
-                sceneryAnimationTool = planetInfos.scenery.interaction.tool
-                sceneryAnimationTarget = planetInfos.scenery.interaction.target
+                const objectModel = this.loadingManager.getGLTFByName(planetInfos.object.name)
+                object = new PlanetObject(planetInfos.object.name, objectModel)
             }
 
-            const planet = new Planet(gl.scene, planetInfos.name, objectModel, sceneryModel, planetInfos.initialPosition, ySceneryPosition, sceneryAnimationTool, sceneryAnimationTarget)
+            if (planetInfos.hasOwnProperty('scenery')) {
+                const sceneryModel = this.loadingManager.getGLTFByName(planetInfos.scenery.name)
+                const animationTool = new AnimationObject(planetInfos.scenery.interaction.tool, null)
+                const animationTarget = new AnimationObject(planetInfos.scenery.interaction.target, null)
+                const sceneryInteraction = new SceneryInteraction(animationTool, animationTarget)
+                scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, sceneryInteraction)
+            }
+
+            const planet = new Planet(gl.scene, planetInfos.name, object, scenery, planetInfos.initialPosition)
+
             this.add(planet)
         }  
     }

@@ -80,7 +80,7 @@
         "scenery": {
           "name":"mode_scenery_skirt",
           "type": "scenery",
-          "url": "scenery_planet_skirt--animation--chara.glb",
+          "url": "scenery_planet_skirt_baked.glb",
           "model": null,
           "yPosition": 0,
           "interaction": {
@@ -301,8 +301,8 @@
     "name": "quiz",
     "type": "system",
     "teasing": {
-      "title": "QUIZ",
-      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia voluptate eveniet, ipsa eius velit reprehenderit minus deserunt quos exercitationem a qui est, dolores atque labore quod vel cum dicta."
+      "title": "LA STATION SPACIALE",
+      "description": "Après à ton exploration, rejoins la station spatiale pour faire le compte rendu de ta mission à tout l’équipage. Un quiz te sera donné afin de récolter les données que tu as découvert au sein des systèmes. L’équipage et toi, pourrez échanger sur vos découvertes."
     },
     "navPosition": 2,
     "initialPosition":{

@@ -76,7 +76,6 @@ import System from '../assets/js/webgl/custom/System'
 import PlanetModal from '../components/PlanetModal.vue'
 import PlanetDialog from '../components/PlanetDialog.vue'
 import Tracker from '../components/Tracker.vue'
-import { CustomLoadingManager } from '../assets/js/utils/managers/CustomLoadingManager'
 
 
 import {
@@ -126,7 +125,6 @@ export default {
 
     methods: {
         discoverSystem () {
-            console.log('this.selectedSystem.name', this.selectedSystem.name);
             if (this.selectedSystem.name === 'mode') {
                 this.showSystemTexts = false
                 this.discoveringSystem = true
