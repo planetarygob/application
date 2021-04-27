@@ -278,10 +278,6 @@ class Scene extends TScene {
         EventBus.emit(UIEvents.UPDATE_LOADER, {
             progress: progress
         })
-
-        const sceneCopy = gltf.scene.clone()
-        sceneCopy.scale.set(5, 5, 5)
-        gltf.scene = sceneCopy
     }
     
 }
