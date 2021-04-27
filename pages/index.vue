@@ -48,11 +48,12 @@
             <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
         <loader />
-        <planet-modal
+        <!-- <planet-modal
             v-if="selectedPlanetInfos && selectedPlanetInfos.modalContent"
             :is-displayed.sync="displayModal"
             :content="selectedPlanetInfos.modalContent"
-             />
+             /> -->
+        <planet-modal />
         <planet-dialog
             v-if="selectedPlanetInfos && selectedPlanetInfos.dialogContent"
             :is-displayed.sync="displayDialog"

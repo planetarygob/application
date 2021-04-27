@@ -259,7 +259,7 @@ class Scene extends TScene {
       
         // this.add(ambientLight)
         // this.add(directionalLight1)
-        this.add(directionalLight2)
+        // this.add(directionalLight2)
     }
 
     onError (error: ErrorEvent) {
