@@ -52,7 +52,7 @@ class Scene extends TScene {
         this.renderer.render(this, this.camera)
 
         this.controls = new Controls(this.camera, this.canvas)
-        // todo: fire only on world change
+        // TODO: fire only on world change
         // this.controls.addEventListener('change', () => {
         //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         // })
@@ -60,7 +60,7 @@ class Scene extends TScene {
         this.systems = []
 
         this.loadingManager = CustomLoadingManager.getInstance(this.renderer, this)
-        this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded)
+        this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded.bind(this))
 
         this.animationManager = AnimationManager.getInstance(this.camera, this.controls)
         
@@ -259,14 +259,18 @@ class Scene extends TScene {
     }
 
     onLoading (xhr: ProgressEvent<EventTarget>) {
-        // TODO : Need to work on that number
-        console.log((xhr.loaded/xhr.total)*100)
-        EventBus.emit(UIEvents.UPDATE_LOADER, {
-            progress: xhr.loaded/xhr.total
-        })
+        
     }
     
     onModelLoaded (gltf: GLTF) {
+        // TODO : variable prend plus 1
+        this.loadingManager.loadedModels += 1
+        const progress = 100 / 16 * this.loadingManager.loadedModels
+
+        EventBus.emit(UIEvents.UPDATE_LOADER, {
+            progress: progress
+        })
+
         const sceneCopy = gltf.scene.clone()
         sceneCopy.scale.set(5, 5, 5)
         gltf.scene = sceneCopy

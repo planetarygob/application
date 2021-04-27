@@ -1,7 +1,7 @@
 <template>
     <div v-if="isDisplayed" class="overlay">
         <div class="container">
-            <p>Loading</p>
+            <p id="progressNumber">0%</p>
             <div class="progress-bar-wrapper">
                 <div id="progressBar"></div>
             </div>
@@ -29,8 +29,22 @@ export default {
         updateLoader(progress: any) {
             gsap.to(document.querySelector('#progressBar'), {
                 duration: 0.5,
-                scaleX: progress,
+                scaleX: progress/100,
             })
+
+            const progressNumber = document.querySelector('#progressNumber')
+
+            if (progressNumber) {
+                gsap.from(progressNumber, {
+                    snap: { textContent: 1 },
+                    stagger: {
+                        each: 1.0,
+                        onUpdate: function() {
+                            progressNumber.innerHTML = Math.round(progress) + '%'
+                        },
+                    }
+                })
+            }            
         },
         dismissLoader() {
             gsap.to(document.querySelector('.overlay'), {
@@ -51,6 +65,7 @@ export default {
 <style scoped>
     .overlay {
         position: absolute;
+        z-index: 3;
         top: 0;
         left: 0;
         width: 100%;

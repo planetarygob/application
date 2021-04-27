@@ -11,6 +11,7 @@ export class CustomLoadingManager {
     private static instance: CustomLoadingManager
     loader: GLTFLoader
     modelsLoaded = new Map()
+    loadedModels: number // NOTE : Helping on getting an overall tracking of the loading
 
     constructor (renderer: WebGLRenderer, scene: Scene) {
         const environment = new RoomEnvironment();
@@ -22,6 +23,7 @@ export class CustomLoadingManager {
             .setTranscoderPath('js/libs/basis/')
             .detectSupport(renderer);
 
+        this.loadedModels = 0
         this.loader = new GLTFLoader().setPath('https://florianblandin.fr/assets/');
         this.loader.setKTX2Loader(ktx2Loader);
         this.loader.setMeshoptDecoder(MeshoptDecoder);
