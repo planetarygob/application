@@ -1,5 +1,7 @@
 import { InteractionManager } from "three.interactive"
 import { WebGLRenderer, PerspectiveCamera, Object3D, Mesh } from "three";
+import EventBus from "../EventBus";
+import { GLEvents } from "../Events";
 
 class CustomInteractionManager {
     private static instance: CustomInteractionManager
