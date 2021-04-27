@@ -217,7 +217,7 @@ class Scene extends TScene {
 
     handleBackground () {
         const sky = new Sky(this.canvas.width,this.canvas.height)
-        this.add(sky.mesh)
+        // this.add(sky.mesh)
 
         this.addBackgroundStars()
     }
@@ -271,6 +271,7 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
+        console.log('gltf name', gltf.userData.name);
         // TODO : variable prend plus 1
         this.loadingManager.loadedModels += 1
         const progress = 100 / 16 * this.loadingManager.loadedModels
