@@ -33,14 +33,15 @@ export default {
             })
         },
         dismissLoader() {
-
             gsap.to(document.querySelector('.overlay'), {
                 duration: 1,
                 opacity: 0,
                 onComplete() {
-                    this.isDisplayed = false
+                    // TODO : Dunno why yet but setting display to false here doesn't work
                 }
             })
+            this.isDisplayed = false
+            console.log(this.isDisplayed)
         }
     }
 }

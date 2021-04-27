@@ -259,6 +259,7 @@ class Scene extends TScene {
     }
 
     onLoading (xhr: ProgressEvent<EventTarget>) {
+        // TODO : Need to work on that number
         console.log((xhr.loaded/xhr.total)*100)
         EventBus.emit(UIEvents.UPDATE_LOADER, {
             progress: xhr.loaded/xhr.total
