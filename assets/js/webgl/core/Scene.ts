@@ -66,7 +66,7 @@ class Scene extends TScene {
 
         this.systems = []
 
-        this.loadingManager = CustomLoadingManager.getInstance(this.renderer, this)
+        this.loadingManager = CustomLoadingManager.getInstance(this.renderer)
         this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded.bind(this))
 
         this.animationManager = AnimationManager.getInstance(this.camera, this.controls)
@@ -259,7 +259,7 @@ class Scene extends TScene {
       
         // this.add(ambientLight)
         // this.add(directionalLight1)
-        this.add(directionalLight2)
+        // this.add(directionalLight2)
     }
 
     onError (error: ErrorEvent) {

@@ -1,8 +1,9 @@
 import { AnimationAction, AnimationClip, AnimationMixer, Group, LoopOnce, Object3D, Vector3 } from "three";
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import EventBus from "../../utils/EventBus";
 import { GLEvents, UIEvents } from "../../utils/Events";
 import Scene from "../core/Scene";
+import PlanetScenery from './PlanetScenery'
+import PlanetObject from './PlanetObject'
 import Bubble from "./Bubble";
 import CustomInteractionManager from "../../utils/managers/CustomInteractionManager";
 import HighlightManager from "../../utils/managers/HighlightManager";
@@ -10,16 +11,13 @@ import HighlightManager from "../../utils/managers/HighlightManager";
 class Planet extends Group {
     name: string
     bubble: Bubble
-    object: GLTF|undefined
-    scenery: GLTF|undefined
-    animationTool: any
-    animationToolName: string
-    animationTarget: any
-    animationTargetName: string
+    object: PlanetObject|undefined
+    scenery: PlanetScenery|undefined
     isComplete: boolean
     initialPosition: Vector3
     scene: Scene
     canClick: boolean
+
     interactionManager: CustomInteractionManager
     highlightManager: HighlightManager
     animationMixer?: AnimationMixer 
@@ -29,17 +27,16 @@ class Planet extends Group {
     constructor(
         scene: Scene,
         name: string,
-        object: GLTF|undefined,
-        scenery: GLTF|undefined,
-        initialPosition: Vector3,
-        ySceneryPosition: number,
-        animationToolName: string,
-        animationTargetName: string
+        object: PlanetObject|undefined,
+        scenery: PlanetScenery|undefined,
+        initialPosition: Vector3
     ) {
         super()
 
         this.name = name
         this.scene = scene
+        this.object = object
+        this.scenery = scenery
 
         // TODO : We should but both managers in the scene & do this.scene.interactionManager
         this.interactionManager = CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera)
@@ -54,9 +51,6 @@ class Planet extends Group {
 
         this.canClick = true
 
-        this.animationToolName = animationToolName
-        this.animationTargetName = animationTargetName
-
         EventBus.on(GLEvents.UPDATE_ANIMATION_MIXER, (deltaTime) => {
             if (this.animationMixer) {
                 this.animationMixer.update(deltaTime)
@@ -69,19 +63,11 @@ class Planet extends Group {
         this.add(this.bubble.mesh)
                 
         if (object) {
-            this.object = object
-            this.object.scene.scale.set(0.015, 0.015, 0.015)
-            this.object.scene.position.y = -0.5
-            this.add(object.scene);
+            this.add(object.model.scene)
         }
 
         if (scenery) {
-            this.scenery = scenery
-            this.scenery.scene.visible = false
-            this.scenery.scene.position.y = ySceneryPosition
-            this.scenery.scene.scale.set(0.005, 0.005, 0.005)
-
-            this.add(scenery.scene)
+            this.add(scenery.model.scene)
         }
 
         this.visible = false
@@ -94,7 +80,7 @@ class Planet extends Group {
         this.isComplete = true
         this.canClick = false
         if (this.scenery) {
-            this.remove(this.scenery.scene)
+            this.remove(this.scenery.model.scene)
             this.scenery = undefined
         }
         this.interactionManager.remove(this)
@@ -114,18 +100,18 @@ class Planet extends Group {
 
     triggerObject (visible: boolean) {
         if (this.object && this.scenery) {
-            this.object.scene.visible = visible
-            this.scenery.scene.visible = !visible
-            this.object.scene.scale.set(0.015, 0.015, 0.015)
+            this.object.model.scene.visible = visible
+            this.scenery.model.scene.visible = !visible
+            this.object.model.scene.scale.set(0.015, 0.015, 0.015)
             this.listenEvents()
         }
     }
 
     triggerScenery (visible: boolean) {
         if (this.scenery && this.object) {
-            this.object.scene.visible = !visible
-            this.scenery.scene.visible = visible
-            this.scenery.scene.scale.set(0.04, 0.04, 0.04)
+            this.object.model.scene.visible = !visible
+            this.scenery.model.scene.visible = visible
+            this.scenery.model.scene.scale.set(0.04, 0.04, 0.04)
             this.removeBubble()
             this.removeEvents()
             this.setupScenery()
@@ -133,43 +119,34 @@ class Planet extends Group {
     }
 
     setupScenery() {
-        if (this.scenery && this.animationToolName && this.animationTargetName) {
+        if (this.scenery && this.scenery.interaction.animationTool.model && this.scenery.interaction.animationTarget.model) {
             EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, true)
 
-            this.animationMixer = new AnimationMixer(this.scenery.scene)
+            this.animationMixer = new AnimationMixer(this.scenery.model.scene)
 
-            const animation = this.scenery.animations[0]
-            this.sceneryAnimation = this.animationMixer.clipAction(animation)
-            this.sceneryAnimation.setLoop(LoopOnce, 1)
-            console.log("ANIM", this.sceneryAnimation)
+            if (this.scenery.model.animations.length) {
+                const animation = this.scenery.model.animations[0]
+                this.sceneryAnimation = this.animationMixer.clipAction(animation)
+                this.sceneryAnimation.setLoop(LoopOnce, 1)
+                console.log("ANIM", this.sceneryAnimation)
 
-            this.scenery.scene.traverse((child: any) => {
-                if (child.name === this.animationToolName) {
-                    this.animationTool = child
-                }
-                if (child.name === this.animationTargetName) {
-                    this.animationTarget = child
-                }
-            })
-
-            if (this.animationTool && this.animationTarget) {
                 // NOTE : We indicate that scissors are an interactive & draggable object$
                 if (this.scene.draggableObjects.length) {
                     this.scene.draggableObjects.shift()
                 }
-                this.scene.draggableObjects.push(this.animationTool) // Draggable
+                this.scene.draggableObjects.push(this.scenery.interaction.animationTool.model) // Draggable
                 this.scene.dragControls.transformGroup = true
                 
-                this.highlightManager.outlinePass.selectedObjects = [this.animationTool]
+                this.highlightManager.outlinePass.selectedObjects = [this.scenery.interaction.animationTool.model]
 
                 this.scene.dragControls.addEventListener('dragstart', this.onDragStart.bind(this))
                 this.scene.dragControls.addEventListener('dragend', this.onDragEnd.bind(this))
 
-                this.interactionManager.add(this.animationTarget)
+                this.interactionManager.add(this.scenery.interaction.animationTarget.model)
                 // this.interactionManager.add(this.animationTool)
-            } else {
-                console.error("Tool or Target undefined : ", this.animationTool, this.animationTarget)
             }
+        } else {
+            console.error("Tool or Target undefined")
         }
     }
 
@@ -193,21 +170,25 @@ class Planet extends Group {
     toggleTargetState() {
         this.isAboveTarget = !this.isAboveTarget
 
-        if (this.isAboveTarget) {
+        if (this.isAboveTarget && this.scenery && this.scenery.interaction.animationTool.model) {
             // NOTE : Should be there that we make possible to open the PlanetModal displaying course once animation is over
-            this.animationTool.visible = false
+            this.scenery.interaction.animationTool.model.visible = false
             this.launchAnimation()
         }
     }
 
     onDragStart() {
-        this.animationTarget.addEventListener('mouseover', this.toggleTargetState.bind(this))
-        this.animationTarget.addEventListener('mouseout', this.toggleTargetState.bind(this))
+        if (this.scenery && this.scenery.interaction.animationTarget.model) {
+            this.scenery.interaction.animationTarget.model.addEventListener('mouseover', this.toggleTargetState.bind(this))
+            this.scenery.interaction.animationTarget.model.addEventListener('mouseout', this.toggleTargetState.bind(this))
+        }   
     }
 
     onDragEnd() {
-        this.animationTarget.removeEventListener('mouseover', this.toggleTargetState.bind(this))
-        this.animationTarget.removeEventListener('mouseout', this.toggleTargetState.bind(this))
+        if (this.scenery && this.scenery.interaction.animationTarget.model) {
+            this.scenery.interaction.animationTarget.model.removeEventListener('mouseover', this.toggleTargetState.bind(this))
+            this.scenery.interaction.animationTarget.model.removeEventListener('mouseout', this.toggleTargetState.bind(this))
+        }
     }
 
     listenEvents () {
@@ -234,7 +215,7 @@ class Planet extends Group {
     }
 
     update(elapsedTime: number) {
-        if (this.object && this.object.scene.visible) {
+        if (this.object && this.object.model.scene.visible) {
             const angle = elapsedTime * 2
 
             if (this.isComplete) {

@@ -80,7 +80,7 @@
         "scenery": {
           "name":"mode_scenery_skirt",
           "type": "scenery",
-          "url": "scenery_planet_skirt--animation--chara.glb",
+          "url": "scenery_planet_skirt_baked.glb",
           "model": null,
           "yPosition": 0,
           "interaction": {
