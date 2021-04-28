@@ -128,9 +128,9 @@ class AnimationManager {
 
         gsap.to(this.camera.position, {
             duration: 2,
-            x: planet.initialPosition.x,
-            y: planet.initialPosition.y + 3,
-            z: planet.initialPosition.z - 6,
+            x: planet.infos.initialPosition.x,
+            y: planet.infos.initialPosition.y + 3,
+            z: planet.infos.initialPosition.z - 6,
             onUpdate: function () {
                 self.camera.updateProjectionMatrix();
             }
@@ -139,9 +139,9 @@ class AnimationManager {
         let timeline = gsap.timeline()
         timeline.to(this.controls.target, {
             duration: 2,
-            x: planet.initialPosition.x,
-            y: planet.initialPosition.y,
-            z: planet.initialPosition.z,
+            x: planet.infos.initialPosition.x,
+            y: planet.infos.initialPosition.y,
+            z: planet.infos.initialPosition.z,
             onUpdate: function () {
                 self.controls.update()
             }
@@ -156,7 +156,7 @@ class AnimationManager {
             z: 0
         }).call(() => {EventBus.emit(AnimationEvents.PLANET_ZOOM_FINISHED)}, [], "-=1.5")
 
-        this.controls.target.set(planet.initialPosition.x, planet.initialPosition.y, planet.initialPosition.z)
+        this.controls.target.set(planet.infos.initialPosition.x, planet.infos.initialPosition.y, planet.infos.initialPosition.z)
     }
 
     hoverPlanet (planet: Planet) {

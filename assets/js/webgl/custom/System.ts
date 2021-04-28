@@ -78,7 +78,7 @@ class System extends Group {
                 scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, sceneryInteraction)
             }
 
-            const planet = new Planet(gl.scene, planetInfos.name, object, scenery, planetInfos.initialPosition)
+            const planet = new Planet(gl.scene, planetInfos.name, object, scenery, planetInfos)
 
             this.add(planet)
         }  

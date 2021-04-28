@@ -14,7 +14,7 @@ class Planet extends Group {
     object: PlanetObject|undefined
     scenery: PlanetScenery|undefined
     isComplete: boolean
-    initialPosition: Vector3
+    infos: any
     scene: Scene
     canClick: boolean
 
@@ -29,7 +29,7 @@ class Planet extends Group {
         name: string,
         object: PlanetObject|undefined,
         scenery: PlanetScenery|undefined,
-        initialPosition: Vector3
+        infos: any
     ) {
         super()
 
@@ -43,8 +43,9 @@ class Planet extends Group {
         this.highlightManager = HighlightManager.getInstance(this.scene.renderer, this.scene, this.scene.camera)
         this.isAboveTarget = false
 
-        this.initialPosition = initialPosition
-        this.position.set(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z)
+        this.infos = infos
+
+        this.position.set(this.infos.initialPosition.x, this.infos.initialPosition.y, this.infos.initialPosition.z)
         this.isComplete = false
 
         this.rotation.y = this.rotation.y + Math.PI
@@ -216,23 +217,23 @@ class Planet extends Group {
 
     update(elapsedTime: number) {
         if (this.object && this.object.model.scene.visible) {
-            const angle = elapsedTime * 2
+            const angle = elapsedTime * this.infos.orbitSpeed
 
             if (this.isComplete) {
                 // TODO : Talk with designers to be more precise about the movement we want the Bubbles to achieve
                 // TODO: improve orbit movement
                 this.position.set(
-                    (this.initialPosition.x -2) * Math.cos(elapsedTime),
-                    (this.initialPosition.y - 2) * Math.sin(elapsedTime),
-                    (this.initialPosition.z - 2) * Math.sin(elapsedTime),
+                    this.infos.orbitRange * Math.cos(angle),
+                    1,
+                    this.infos.orbitRange * Math.sin(angle),
                 )
             } else {
                 
                 // TODO : Use initial position of Bubble / Planet instead of 0. Keep in mind it will be related to System coordinates & not Scene
                 this.position.set(
-                    this.initialPosition.x,
-                    this.initialPosition.y + Math.sin(angle),
-                    this.initialPosition.z,
+                    this.infos.initialPosition.x,
+                    this.infos.initialPosition.y + Math.sin(elapsedTime * this.infos.floatFactor),
+                    this.infos.initialPosition.z,
                 )
             }
         }

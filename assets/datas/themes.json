@@ -23,7 +23,9 @@
       {
         "name": "mode_planet_skirt",
         "type": "planet",
-        "orbit": 2,
+        "orbitRange": 10,
+        "orbitSpeed": 1,
+        "floatFactor": 0.6125,
         "initialPosition":{
           "x": 12,
           "y": -2,
@@ -93,7 +95,9 @@
       {
         "name": "mode_planet_hippie",
         "type": "planet",
-        "orbit": 3,
+        "orbitRange": 14,
+        "orbitSpeed": 0.5,
+        "floatFactor": 0.5,
         "initialPosition":{
           "x": -8,
           "y": -5,
@@ -163,7 +167,9 @@
       {
         "name": "mode_planet_rock",
         "type": "planet",
-        "orbit": 4,
+        "orbitRange": 18,
+        "orbitSpeed": 0.75,
+        "floatFactor": 0.75,
         "initialPosition":{
           "x": -9,
           "y": 8,

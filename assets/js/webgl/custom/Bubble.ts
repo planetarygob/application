@@ -20,6 +20,7 @@ import Renderer from '../core/Renderer'
 import BubbleCamera from './BubbleCamera'
 import { BubbleData } from '../data/BubbleData'
 import Scene from '../core/Scene'
+import { getRandomIntInclusive } from '../../utils/Math'
 
 class Bubble extends Object3D {
 
@@ -103,7 +104,7 @@ class Bubble extends Object3D {
             shader.uniforms = {
                 ...shader.uniforms,
                 uTime: { value: 0 },
-                uSpeed: { value: BubbleData.speed },
+                uSpeed: { value: BubbleData.speed + getRandomIntInclusive(-0.5, 0.5) },
                 uNoiseDensity: { value: BubbleData.density },
                 uNoiseStrength: { value: BubbleData.strength }
             }
@@ -135,7 +136,7 @@ class Bubble extends Object3D {
     update( elapsedTime: number ) {
         if ( this.shader ) {
             this.shader.uniforms.uTime.value = elapsedTime
-            this.shader.uniforms.uSpeed.value = BubbleData.speed
+            this.shader.uniforms.uSpeed.value = BubbleData.speed + getRandomIntInclusive(-0.5, 0.5)
             this.shader.uniforms.uNoiseDensity.value = BubbleData.density
             this.shader.uniforms.uNoiseStrength.value = BubbleData.strength
             this.mesh.material.transmission = BubbleData.transmission
