@@ -23,41 +23,42 @@
       {
         "name": "mode_planet_skirt",
         "type": "planet",
+        "orbit": 2,
         "initialPosition":{
           "x": 12,
           "y": -2,
           "z": -4
         },
         "modalContent": {
-          "title": "LA MINIJUPE",
+          "titles": [
+            "La minijupe",
+            "Mary Quant",
+            "Libération de la femme"
+          ],
           "paragraphs": [
             "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br></br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br></br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
             "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
-            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+            "Après la Première Guerre mondiale, les femmes revendiquent clairement un désir de liberté et cherchent à s’affirmer dans la société. Les progrès de la mode vont très vite améliorer leurs conditions. </br></br> Les années 1960 marquent en effet l’arrivée en masse des femmes sur le marché du travail, et de plus en plus dans des métiers dits masculins. La mode doit donc être accessible, confortable, et libérer physiquement les femmes. Mary Quant commence à vouloir raccourcir les jupes au-dessus des genoux pour \"permettre aux femmes de courir après un bus\".",
+            "Avec ces jupes “mini”, en référence à la Mini Cooper, les femmes peuvent désormais marcher sans entrave, courir après le bus et aller danser après une journée de travail. </br></br> Le fait de porter cette courte jupe est vu comme un symbole de liberté pour les femmes, qui osent désormais montrer leurs jambes, avec moins de pudeur. Celles-ci ont une volonté de montrer qu’elles peuvent s'habiller comme elles veulent et qu’elles souhaitent être plus indépendantes.  \"Maintenant, c'est la femme qui décide.\""
           ],
+          "headerImage": {
+            "alt": "wfef",
+            "url": "https://florianblandin.fr/assets/images/skirt/img-bg.jpg"
+          },
+          "pannelImage": {
+            "alt": "wfef",
+            "url": "https://florianblandin.fr/assets/images/skirt/img-pannel.jpg"
+          },
           "images": [
             {
-              "name": "wfef",
-              "type": "large",
-              "url": "ewfrgewf"
-            },
-            {
-              "name": "wfef",
-              "type": "small",
-              "url": "ewfrgewf"
-            },
-            {
-              "name": "wfef",
-              "type": "small",
-              "url": "ewfrgewf"
+              "alt": "wfef",
+              "url": "https://florianblandin.fr/assets/images/skirt/img-1.jpg"
             }
           ],
-          "videos": [
-            {
-              "name": "wefwg",
-              "url": "wefw"
-            }
-          ]
+          "video": {
+            "name": "wefwg",
+            "url": "https://www.youtube.com/embed/Y11sqIDlQLI"
+          }
         },
         "dialogContent": {
           "position": {
@@ -92,41 +93,42 @@
       {
         "name": "mode_planet_hippie",
         "type": "planet",
+        "orbit": 3,
         "initialPosition":{
           "x": -8,
           "y": -5,
           "z": -6
         },
         "modalContent": {
-          "title": "LE MOUVEMENT HIPPIE",
-          "paragraphs": [
-            "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br></br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br></br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
-            "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
-            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+          "titles": [
+            "Le mouvement hippie",
+            "Le peace & love",
+            "La liberté sexuelle"
           ],
+          "paragraphs": [
+            "Né dans les années 1960 aux États-Unis avant de se diffuser dans le reste du monde occidental, le mouvement hippie était un mouvement social caractérisé par un refus de la société de consommation, un rejet profond des valeurs de la société de l’époque et par la lutte contre la guerre du Vietnam. </br></br> Les hippies étaient principalement des jeunes nés lors du « baby boom » d’après-guerre. Ces derniers souhaitaient une évasion vers un monde nouveau globalement meilleur et prônaient l’égalité, l’émancipation,  le refus de l’autorité, le pacifisme, le retour à la « nature » et la « liberté sexuelle ». </br></br> Ils ont choqué, ils ont provoqué, ils ont ouvert l'esprit à une société qui fermait les yeux, ils ont fait changer leur époque. Car plus qu’une mode ou simple décoration, ce mouvement libertaire prétendument apolitique, a permis une libération considérable au niveau des moeurs et valeurs de l'époque.",
+            "Le \"Peace and Love\" est initialement le logo du pacifisme et de la non-violence, l'emblème des opposants à l'armement nucléaire. Mais il serra utilisé plus tard par les hippie, l'origine du symbole correspondant parfaitement a leurs idéaux.",
+            "Les hippies ont incontestablement fait évoluer les mentalités concernant la sexualité. Ils font s'effondrer les valeurs morales enracinées dans la religion, et marquent ainsi la fin du patriarcat et de la censure. Le sexe ne doit pas être un tabou considéré comme sale ou pêché et le corps n’est pas quelque chose que l’on doit cacher. </br></br> Leurs liberté sexuelle est un véritable moyen de communication au profit de leur révolte. Le mot d’ordre était « Free Love », que l’on retrouve dans l’appellation du « Summer of Love », rassemblement à la suite duquel le mode de vie du mouvement hippie commencent à se diffuser",
+            "D'autre part, les hippies aident à la libération des moeurs par rapport aux homosexuels. En effet les hippies considéraient l'homosexualité comme une expérience, et non comme un tabou. C'est d'ailleurs à cette époque que la première Gay Pride a lieu, au coeur de New York. Ainsi les hippies ont permis aux homosexuels d'affirmer leur différence, et de cette manière, ils se sont ensuite battus pour une meilleure intégration au sein de la société, dans le but de changer l'opinion commune. A l'heure actuelle, plus d'une dizaine de pays d'Europe reconnaissent l'union de deux personnes du même sexe."
+          ],
+          "headerImage": {
+            "alt": "wfef",
+            "url": "https://florianblandin.fr/assets/images/hippie/img-bg.jpg"
+          },
+          "pannelImage": {
+            "alt": "wfef",
+            "url": "https://florianblandin.fr/assets/images/hippie/img-pannel.jpg"
+          },
           "images": [
             {
-              "name": "wfef",
-              "type": "large",
-              "url": "ewfrgewf"
-            },
-            {
-              "name": "wfef",
-              "type": "small",
-              "url": "ewfrgewf"
-            },
-            {
-              "name": "wfef",
-              "type": "small",
-              "url": "ewfrgewf"
+              "alt": "wfef",
+              "url": "https://florianblandin.fr/assets/images/hippie/img-1.jpg"
             }
           ],
-          "videos": [
-            {
-              "name": "wefwg",
-              "url": "wefw"
-            }
-          ]
+          "video": {
+            "name": "wefwg",
+            "url": "https://www.youtube.com/embed/CITZdc2c3Lw"
+          }
         },
         "dialogContent": {
           "position": {
@@ -161,41 +163,42 @@
       {
         "name": "mode_planet_rock",
         "type": "planet",
+        "orbit": 4,
         "initialPosition":{
           "x": -9,
           "y": 8,
           "z": 8
         },
         "modalContent": {
-          "title": "LE ROCK",
-          "paragraphs": [
-            "Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br></br> Si aujourd'hui on la croise sans qu'elle ne fasse sourciller, il n'en n'a pas toujours été ainsi. Lorsqu'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s'il séduit la jeunesse s'attire rapidement les foudres des plus conservateurs. </br></br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu'à cette époque, les femmes portaient des jupes longues et que le comble de l'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.",
-            "Elle s'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu'elle vend et d'appeler sa création \"mini-jupe\" en référence, dit-on, à la voiture Mini dont elle raffole.",
-            "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor."
+          "titles": [
+            "Le rock'n'roll",
+            "Engagement et constestation",
+            "Évolution des moeurs"
           ],
+          "paragraphs": [
+            "Devenu populaire dès la fin des années 50, le rock'n'roll est un genre musical issues du blues, du jazz et de la musique country. </br></br> Caractérisé par des instruments comme la guitare, la basse et la batterie, le rock a donné naissance à de nombreux genres musicaux, qui ont fait le succès de beaucoup de groupes. Ainsi, The Beatles ou The Rolling Stones sont devenus deux des groupes britanniques les plus populaires. À la fin des années 1960, le rock s'associe à la politique et à la critique de la société. </br></br> Depuis sa création et jusqu'à nos jours, le rock a toujours eu une place importante dans la culture musicale occidentale. Beaucoup d'artistes contemporains le pratiquent, en le fusionnant avec d'autres genres comme la musique électronique.",
+            "À partir des années 1960, le rock devient contestataire : de plus en plus de textes de chansons dénoncent la guerre froide ou la guerre du Viêt Nam par exemple. Le rock devient alors un genre musical à la fois artistique et engagé politiquement. C’est avec Bob Dylan que les paroles prennent une tournure à la fois plus poétique et plus engagée",
+            "Le mouvement est porté par la presse et la radio (Salut les copains) dans un monde en reconstruction. Les gens ont envie de légèreté et d'amusement ! A ce moment précis, d'importantes innovations technologiques voient le jour : nouveaux modèles de guitare, d'amplificateurs, de microphones, sans compter l'invention du 45 tours. La miniaturisation des transistors et l’invention du « pick-up », permettent aux adolescents d’écouter le « hit-parade » dans l’intimité de leur chambre. </br></br> Au même moment, dans une société américaine alors profondemment raciste, quelques artistes réussissent un exploit inimaginable : celui de fusionner la musique blanche (country) et la musique noire (gospel, blues, rhythm&blues) !",
+            "En bravant tous les interdits de leur époque et en favorisant les rapprochements entre communautés, ils permettent une conséquente évolution des moeurs. Le rock devient alors une révolte contre la société. </br></br> Le nom de ces valeureux pionniers ? Elvis Presley, Little Richard, Chuck Berry, Jerry Lee Lewis, Bill Haley, Buddy Holly, Eddie Cochran, Gene Vincent, Johnny Cash, Roy Orbison, Carl Perkins, Fats Domino... </br></br> Ils sont très vite imités par quelques européens tout aussi téméraires : The Beatles, The Rolling Stones, The Who, Tommy Steele, Eddy Mitchell, Johnny Hallyday..."
+          ],
+          "headerImage": {
+            "alt": "wfef",
+            "url": "https://florianblandin.fr/assets/images/rock/img-bg.jpg"
+          },
+          "pannelImage": {
+            "alt": "wfef",
+            "url": "https://florianblandin.fr/assets/images/rock/img-pannel.jpg"
+          },
           "images": [
             {
-              "name": "wfef",
-              "type": "large",
-              "url": "ewfrgewf"
-            },
-            {
-              "name": "wfef",
-              "type": "small",
-              "url": "ewfrgewf"
-            },
-            {
-              "name": "wfef",
-              "type": "small",
-              "url": "ewfrgewf"
+              "alt": "wfef",
+              "url": "https://florianblandin.fr/assets/images/rock/img-1.jpg"
             }
           ],
-          "videos": [
-            {
-              "name": "wefwg",
-              "url": "wefw"
-            }
-          ]
+          "video": {
+            "name": "wefwg",
+            "url": "https://www.youtube.com/embed/ViyCOJlXOPI"
+          }
         },
         "dialogContent": {
           "position": {

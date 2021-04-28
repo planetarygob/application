@@ -55,7 +55,6 @@ export default {
                 }
             })
             this.isDisplayed = false
-            console.log(this.isDisplayed)
         }
     }
 }

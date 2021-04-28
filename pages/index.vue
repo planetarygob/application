@@ -48,46 +48,29 @@
             <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
         <loader />
-        <!-- <planet-modal
+        <planet-modal
             v-if="selectedPlanetInfos && selectedPlanetInfos.modalContent"
             :is-displayed.sync="displayModal"
             :content="selectedPlanetInfos.modalContent"
-             /> -->
-        <planet-modal />
+        />
         <planet-dialog
             v-if="selectedPlanetInfos && selectedPlanetInfos.dialogContent"
             :is-displayed.sync="displayDialog"
             :content="selectedPlanetInfos.dialogContent" />
         <web-gl />
-        <tracker />
     </div>
 </template>
 
 <script lang="ts">
 
 import WebGl from '../components/WebGL.vue'
-import GL from '../assets/js/webgl/GL'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import SvgIcon from '../components/SvgIcon.vue'
-import Planet from '../assets/js/webgl/custom/Planet'
 import EventBus from '../assets/js/utils/EventBus'
 import { UIEvents, GLEvents, AnimationEvents } from '../assets/js/utils/Events'
 import System from '../assets/js/webgl/custom/System'
 import PlanetModal from '../components/PlanetModal.vue'
 import PlanetDialog from '../components/PlanetDialog.vue'
 import Tracker from '../components/Tracker.vue'
-
-
-import {
-    PerspectiveCamera,
-    Clock,
-    Object3D,
-    PointLight,
-    CatmullRomCurve3,
-    Vector3,
-    AnimationMixer
-} from 'three'
-import { gsap, TweenLite } from 'gsap'
 import Loader from '~/components/Loader.vue'
 
 export default {
@@ -148,9 +131,7 @@ export default {
 </script>
 
 <style scoped>
-
-button:disabled {
-    opacity: 0.5;
-}
-
+    button:disabled {
+        opacity: 0.5;
+    }
 </style>

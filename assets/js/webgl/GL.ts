@@ -27,7 +27,8 @@ class GL {
     constructor() {
         Stats.showPanel(0)
         document.body.appendChild(Stats.dom)
-        initGUI()
+
+        this.canvas = document.querySelector('.webgl') as HTMLCanvasElement
 
         this.size = {
             width: window.innerWidth,
@@ -35,22 +36,13 @@ class GL {
             ratio: window.innerWidth / window.innerHeight
         }
 
-        this.canvas = document.querySelector('.webgl') as HTMLCanvasElement
-        if (this.canvas) {
-            this.canvas.width = this.size.width
-            this.canvas.height = this.size.height
-        } else {
-            console.log("No canvas")
-        }
-
         this.scene = new Scene(this.canvas, this.size)
-        
+
         this.clock = new Clock()
 
         this.isAnimationMixerRequired = false
 
         this.listenEvents()
-
         this.animate()
     }
 
@@ -74,13 +66,13 @@ class GL {
     }  
     
     resize() {
-        this.size.width = window.innerWidth;
-        this.size.height = window.innerHeight;
+        this.size.width = window.innerWidth
+        this.size.height = window.innerHeight
 
         this.scene.camera.aspect = this.size.width / this.size.height
-        this.scene.renderer.setSize(this.size.width, this.size.height)
-
         this.scene.camera.updateProjectionMatrix()
+
+        this.scene.renderer.setSize(this.size.width, this.size.height)
     }
 
     // ---------------- LIFECYCLE

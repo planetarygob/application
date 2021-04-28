@@ -52,14 +52,15 @@ class Scene extends TScene {
         this.size = size
         this.canvas = canvas
 
-        this.renderer = new Renderer({ canvas: this.canvas }, this.size.width, this.size.height)
         this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
+        this.renderer = new Renderer({ canvas: this.canvas }, this.size.width, this.size.height)
         this.renderer.render(this, this.camera)
 
         this.controls = new Controls(this.camera, this.canvas)
         this.draggableObjects = []
         this.dragControls = new DragControls(this.draggableObjects, this.camera, this.renderer.domElement)
-        // TODO: fire only on world change
+
+        // TODO: Fire only on world change
         // this.controls.addEventListener('change', () => {
         //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
         // })
@@ -271,8 +272,7 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
-        console.log('gltf name', gltf.userData.name);
-        // TODO : variable prend plus 1
+        // console.log('gltf name', gltf.userData.name);
         this.loadingManager.loadedModels += 1
         const progress = 100 / 16 * this.loadingManager.loadedModels
 

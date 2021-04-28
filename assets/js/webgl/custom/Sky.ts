@@ -9,8 +9,6 @@ class Sky extends Object3D {
 
     constructor(width: number, height: number) {
         super()
-        
-        this.GUI()
 
         // TODO : maybe set a maximum dezoom on camera of the scene to avoid texture to be too tiny
 
@@ -30,18 +28,7 @@ class Sky extends Object3D {
 
         this.mesh = new Mesh(geometry, material)
     }
-
-    // ---------------- INITIALIZATION
-
-    GUI() {
-        const skyFolder = GUI.addFolder('Sky')
-        // skyFolder.add(this.userData, 'speed', 0, 2.5, 0.1)
-        // skyFolder.add(this.userData, 'density', 0, 2.5, 0.1)
-    }
     
-    /**
-     * Turns out all you need to do is set an update flag. You don't need to build a new material etc.
-     */
     updateSkySphere() {
         // this.mesh.material.map.needsUpdate = true;
     }

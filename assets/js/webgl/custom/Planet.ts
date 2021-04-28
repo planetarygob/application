@@ -128,7 +128,6 @@ class Planet extends Group {
                 const animation = this.scenery.model.animations[0]
                 this.sceneryAnimation = this.animationMixer.clipAction(animation)
                 this.sceneryAnimation.setLoop(LoopOnce, 1)
-                console.log("ANIM", this.sceneryAnimation)
 
                 // NOTE : We indicate that scissors are an interactive & draggable object$
                 if (this.scene.draggableObjects.length) {
@@ -160,6 +159,7 @@ class Planet extends Group {
 
             if (this.animationMixer) {
                 this.animationMixer.addEventListener('finished', () => {
+                    console.log("MODAL LO")
                     EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, false)
                     EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
                 })

@@ -10,11 +10,11 @@ class Renderer extends TRenderer {
         super(canvas)
 
         this.setSize(width, height)
-        this.setPixelRatio(window.devicePixelRatio);
-        this.toneMapping = ACESFilmicToneMapping;
-        this.toneMappingExposure = 1;
-        this.outputEncoding = sRGBEncoding;
-        this.setClearColor(0x130B24, 1);
+        this.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+        this.toneMapping = ACESFilmicToneMapping
+        this.toneMappingExposure = 1
+        this.outputEncoding = sRGBEncoding
+        this.setClearColor(0x130B24, 1)
     }
 }
 

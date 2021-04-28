@@ -42,34 +42,42 @@
 </template> -->
 
 <template>
-    <section>
+    <section v-if="isDisplayed && content">
         <div class="wrapper">
             <div 
                 class="img img--header"
-                v-bind:style="{ backgroundImage: 'url(https://florianblandin.fr/assets/images/mode_jupe_big_1.jpg )'}">
+                v-if="content.headerImage"
+                v-bind:style="{ backgroundImage: `${ 'url(' + content.headerImage.url + ')' }`  }">
             </div>
             
-            
-            <div class="container">
+            <div class="container container--regular">
                 <div class="text-content">
-                    <h2>La minijupe</h2>
-                    <p v-html="'Née dans les années 1960, la mini-jupe est devenue en France un symbole stylistique célébrant une femme affranchie des codes vestimentaires conservateurs. </br></br> Si aujourd\'hui on la croise sans qu\'elle ne fasse sourciller, il n\'en a pas toujours été ainsi. Lorsqu\'elle débarque sur le sol français en 1964, la mini-jupe est un OMNI (objet mode non-identifié) qui, s\'il séduit la jeunesse s\'attire rapidement les foudres des plus conservateurs. </br></br> Pour bien comprendre le bouleversement occasionné par ce petit bout de tissu, il faut rappeler qu\'à cette époque, les femmes portaient des jupes longues et que le comble de l\'indécence était de laisser apparaître un genou. Dans cette ère ultra-conservatrice, une femme a pourtant osé braver les interdits.'" />
+                    <h2 v-if="content.titles">{{ content.titles[0] }}</h2>
+                    <p v-if="content.paragraphs" v-html="content.paragraphs[0]" />
                 </div>
-                <img class="" src="https://florianblandin.fr/assets/images/mode_jupe_small_1.jpg" alt="">
+                <img v-if="content.images" class="mt-56" :src="content.images[0].url" alt="">
             </div>
-            <div class="container">
-                <!-- TODO: Upload video on FTP to easily customize -->
-                <iframe class="video" src="https://www.youtube.com/embed/EztpFM3wjqU?controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <div class="text-content">
-                    <p v-html="'Elle s\'appelle Mary Quant. Elle est britannique et styliste de profession. Pour séduire les clientes de sa boutique, la jeune femme décide de raccourcir les jupes qu\'elle vend et d\'appeler sa création mini-jupe en référence, dit-on, à la voiture Mini dont elle raffole.'" />
-                </div>
-            </div>
-            <div class="container">
-                
-                <div class="text-content">
-                    <p v-html="'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua dolor.'" />
+
+            <div class="container container--large">
+                <iframe v-if="content.video" class="video" :src="content.video.url + 'controls=0'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="text-content ml-32 my-auto">
+                    <h2 v-if="content.titles">{{ content.titles[1] }}</h2>
+                    <p v-if="content.paragraphs" v-html="content.paragraphs[1]" />
                 </div>
             </div>
+
+            <img v-if="content.pannelImage" class="img--pannel" :src="content.pannelImage.url" alt="">
+           
+            <div class="container container--regular flex items-end">
+                <div class="text-content">
+                    <h2 v-if="content.titles">{{ content.titles[2] }}</h2>
+                    <p v-if="content.paragraphs" v-html="content.paragraphs[2]" />
+                </div>
+                <div class="text-content">
+                    <p v-if="content.paragraphs" v-html="content.paragraphs[3]" />
+                </div>
+            </div>
+
             <button @click="close()">Terminer la lecture</button>
         </div>
         <div class="ui-gradient ui-gradient--bot"></div>
@@ -84,7 +92,7 @@ export default {
     props: {
         isDisplayed: {
             type: Boolean,
-            default: true
+            default: false
         },
         content: {
             type: Object,
@@ -93,7 +101,7 @@ export default {
     },
 
     methods: {
-        close () {
+        close() {
             this.$emit('update:is-displayed', false)
             EventBus.emit(AnimationEvents.BACK)
         }
@@ -109,17 +117,19 @@ export default {
         left: 0;
         width: 100%;
         height: 100%;
-        background: #26272b;
+        background: #0F0A1F;
         color: white;
         overflow-y: scroll;
     }
 
     .ui-gradient {
         position: sticky;
+        z-index: 2;
         left: 0;
-        background: linear-gradient(#26272b, #9198e500);
+        background: linear-gradient(#0F0A1F, #ffffff00);
         width: 100%;
         height: 10rem;
+        pointer-events: none;
     }
 
     .ui-gradient--top {
@@ -146,33 +156,36 @@ export default {
         margin: 8rem auto;
     }
 
+    .container--regular {
+        max-width: 1000px;
+    }
+
+    .container--large {
+        max-width: 1220px;
+    }
+
+    .container--noym {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
     h2 {
         position: relative;
         z-index: 1;
         font-weight: bold;
         text-transform: uppercase;
-        font-size: 32px;
+        font-size: 36px;
+        margin-bottom: 3rem;
     }
 
     .text-content {
+        height: fit-content;
         width: calc(50% - 2rem);
-        margin-left: 6rem;
     }
 
     .text-content > p {
+        margin-top: auto;
         margin-bottom: 1rem;
-    }
-
-    .img-content {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        width: calc(50% - 2rem);
-    }
-
-    .img {
-        width: 50px;
-        height: 50px;
     }
 
     .img--header {
@@ -181,21 +194,16 @@ export default {
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         background-repeat: no-repeat;
         background-size: cover;
         background-position: right;
     }
 
-    .img--large {
-        width: 100%;
-        height: calc(100%/3*2 - 1rem);
-    }
-    
-    .img--small {
-        width: calc(50% - .5rem);
-        height: calc(100%/3);
-        align-self: flex-end;
+    .img--pannel {
+        max-width: none;
+        width: calc(100% + 8rem);
+        transform: translateX(-4rem);
     }
 
     .video {
@@ -205,6 +213,8 @@ export default {
     }
 
     button {
+        position: relative;
+        z-index: 1;
         text-transform: uppercase;
         font-weight: bold;
         padding: .5rem 2rem;
@@ -213,9 +223,5 @@ export default {
         margin: auto;
         width: fit-content;
         display: block;
-    }
-
-    p {
-        max-width: 55%;
     }
 </style>
