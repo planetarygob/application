@@ -247,7 +247,7 @@
     },
     "navPosition": 1,
     "initialPosition":{
-      "x": -75,
+      "x": -60,
       "y": 8,
       "z": 35
     },
@@ -335,7 +335,7 @@
     },
     "navPosition": 3,
     "initialPosition":{
-      "x": 75,
+      "x": 60,
       "y": 8,
       "z": 35
     },
