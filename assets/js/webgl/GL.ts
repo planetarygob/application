@@ -1,9 +1,8 @@
 import Scene from './core/Scene'
 import { 
-    Clock, AnimationMixer
+    Clock
 } from 'three'
 import Stats from '../utils/dev/Stats'
-import CustomInteractionManager from '../utils/managers/CustomInteractionManager'
 import EventBus from '../utils/EventBus'
 import { GLEvents } from '../utils/Events'
 import { initGUI } from '../utils/dev/GUIFolders'
@@ -22,7 +21,6 @@ class GL {
     size: Size
     canvas: HTMLCanvasElement
     isAnimationMixerRequired: boolean
-    mixer?: AnimationMixer | null
 
     constructor() {
         Stats.showPanel(0)
@@ -92,9 +90,10 @@ class GL {
             EventBus.emit(GLEvents.UPDATE, {
                 elapsedTime: this.clock.getElapsedTime() 
             })
-            if (this.isAnimationMixerRequired) {
-                EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
-            }
+        }
+
+        if (this.isAnimationMixerRequired) {
+            EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
         }
 
         this.scene.renderer.render(this.scene, this.scene.camera)

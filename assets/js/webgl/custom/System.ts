@@ -8,6 +8,7 @@ import PlanetObject from "./PlanetObject"
 import PlanetScenery from "./PlanetScenery"
 import SceneryInteraction from "./SceneryInteraction"
 import AnimationObject from "./AnimationObject"
+import GLTFAnimation from "./GLTFAnimation"
 
 class System extends Group {
     name: string
@@ -74,8 +75,12 @@ class System extends Group {
                 const sceneryModel = this.loadingManager.getGLTFByName(planetInfos.scenery.name)
                 const animationTool = new AnimationObject(planetInfos.scenery.interaction.tool, null)
                 const animationTarget = new AnimationObject(planetInfos.scenery.interaction.target, null)
-                const sceneryInteraction = new SceneryInteraction(animationTool, animationTarget)
-                scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, sceneryInteraction)
+                let animation: GLTFAnimation|null = null
+                if (sceneryModel.animations.length) {
+                    animation = new GLTFAnimation(null, sceneryModel.animations[0], null, null, animationTool, animationTarget)
+                }
+                
+                scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, animation)
             }
 
             const planet = new Planet(gl.scene, planetInfos.name, object, scenery, planetInfos)

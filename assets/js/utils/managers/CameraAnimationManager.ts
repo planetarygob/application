@@ -6,10 +6,9 @@ import { gsap } from 'gsap'
 import Camera from "../../webgl/core/Camera";
 import Controls from "../../webgl/core/Controls";
 import Planet from "../../webgl/custom/Planet";
-import { PlaneGeometry } from "three";
 
-class AnimationManager {
-    private static instance: AnimationManager
+class CameraAnimationManager {
+    private static instance: CameraAnimationManager
     camera: Camera
     controls: Controls
     timeline: gsap.core.Timeline
@@ -23,12 +22,12 @@ class AnimationManager {
         this.isFirstZoomLaunched = false
     }
 
-    public static getInstance (camera: Camera, controls: Controls): AnimationManager {
-        if (!AnimationManager.instance) {
-            AnimationManager.instance = new AnimationManager(camera, controls);
+    public static getInstance (camera: Camera, controls: Controls): CameraAnimationManager {
+        if (!CameraAnimationManager.instance) {
+            CameraAnimationManager.instance = new CameraAnimationManager(camera, controls);
         }
  
-        return AnimationManager.instance;
+        return CameraAnimationManager.instance;
     }
 
     launchBigBangAnimation (system: System) {
@@ -284,4 +283,4 @@ class AnimationManager {
     }
 }
 
-export default AnimationManager
+export default CameraAnimationManager
