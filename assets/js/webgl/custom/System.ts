@@ -57,7 +57,7 @@ class System extends Group {
         this.add(sun)
     }
 
-    createPlanets (systemInfos: any, gl: GL) { 
+    createPlanets (systemInfos: any, gl: GL) {
         if (!systemInfos.hasOwnProperty('planets')) {
             return
         }

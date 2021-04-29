@@ -1,5 +1,5 @@
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader"
-import { AnimationAction, AnimationMixer, AnimationClip } from "three"
+import { AnimationAction, AnimationMixer, AnimationClip, Vector3 } from "three"
 import AnimationObject from "./AnimationObject"
 import EventBus from "../../utils/EventBus"
 import { GLEvents, UIEvents } from "../../utils/Events"
@@ -13,6 +13,7 @@ class GLTFAnimation {
     animationTool: AnimationObject
     animationTarget: AnimationObject
     isAboveTarget: boolean
+    toolShouldFlotate: boolean
 
     constructor (
         model: GLTF|null,
@@ -30,6 +31,17 @@ class GLTFAnimation {
         this.animationTarget = animationTarget
 
         this.isAboveTarget = false
+        this.toolShouldFlotate = true
+    }
+
+    updateToolScale (elapsedTime: number, initialScale: Vector3) {
+        if (this.animationTool.model && this.toolShouldFlotate) {
+            this.animationTool.model.scale.set(
+                initialScale.x + Math.sin(elapsedTime * 2) / 8,
+                initialScale.y + Math.sin(elapsedTime * 2) / 8,
+                initialScale.z + Math.sin(elapsedTime * 2) / 8
+            )
+        }
     }
 
     // NOTE : A function in the AnimationManager that takes an animation as param ? 
@@ -40,6 +52,8 @@ class GLTFAnimation {
             this.action.play()
             this.action.clampWhenFinished = true
 
+            scene.highlightManager.outlinePass.selectedObjects.shift()
+
             if (scene.animationMixer) {
                 scene.animationMixer.addEventListener('finished', () => {
                     EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, false)
@@ -49,27 +63,39 @@ class GLTFAnimation {
         }
     }
 
-    toggleTargetState (scene: Scene) {
-        this.isAboveTarget = !this.isAboveTarget
-
-        if (this.isAboveTarget && this.animationTool.model) {
-            // NOTE : Should be there that we make possible to open the PlanetModal displaying course once animation is over
-            this.animationTool.model.visible = false
-            this.launchAnimation(scene)
-        }
-    }
-
     onDragStart (scene: Scene) {
         if (this.animationTarget.model) {
-            this.animationTarget.model.addEventListener('mouseover', this.toggleTargetState.bind(this, scene))
-            this.animationTarget.model.addEventListener('mouseout', this.toggleTargetState.bind(this, scene))
+            this.toolShouldFlotate = false
+            scene.highlightManager.outlinePass.selectedObjects.shift()
+            scene.highlightManager.outlinePass.selectedObjects.push(this.animationTarget.model)
+
+            EventBus.emit(GLEvents.INTERACTION_MANAGER_REQUIRED, true)
+
+            this.animationTarget.model.addEventListener('mouseover', () => {
+                if (!this.isAboveTarget) {
+                    this.isAboveTarget = true
+                }
+            })
+            this.animationTarget.model.addEventListener('mouseout', () => {
+                if (this.isAboveTarget) {
+                    this.isAboveTarget = false
+                }
+            })
         }   
     }
 
     onDragEnd (scene: Scene) {
-        if (this.animationTarget.model) {
-            this.animationTarget.model.removeEventListener('mouseover', this.toggleTargetState.bind(this, scene))
-            this.animationTarget.model.removeEventListener('mouseout', this.toggleTargetState.bind(this, scene))
+        if (this.animationTarget.model && this.animationTool.model) {
+            scene.highlightManager.outlinePass.selectedObjects.shift()
+            scene.highlightManager.outlinePass.selectedObjects.push(this.animationTool.model)
+
+            if (this.isAboveTarget && this.animationTool.model) {
+                EventBus.emit(GLEvents.INTERACTION_MANAGER_REQUIRED, false)
+                this.animationTool.model.visible = false
+                this.launchAnimation(scene)
+                this.animationTarget.model.removeEventListener('mouseover', () => {})
+                this.animationTarget.model.removeEventListener('mouseout', () => {})
+            }
         }
     }
 }
