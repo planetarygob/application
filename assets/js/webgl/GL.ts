@@ -102,7 +102,7 @@ class GL {
     render() {
         if (this.clock) {
             EventBus.emit(GLEvents.UPDATE, this.clock.getElapsedTime())
-            EventBus.emit(GLEvents.UPDATE_TOOL_FLOTATION, this.clock.getElapsedTime())
+            EventBus.emit(GLEvents.UPDATE_TOOL_SCALE, this.clock.getElapsedTime())
         }
 
         if (this.isAnimationMixerRequired) {

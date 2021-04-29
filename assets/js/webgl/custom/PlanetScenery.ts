@@ -61,16 +61,16 @@ class PlanetScenery {
 
             EventBus.on<number>(GLEvents.UPDATE_TOOL_SCALE, (elapsedTime) => {
                 if (elapsedTime !== undefined) {
-                    this.animation!.updateToolScale(elapsedTime, initialScale)
+                    this.animation!.updateToolScaleAnimation(elapsedTime, initialScale)
                 }
             })
 
-            scene.highlightManager.outlinePass.selectedObjects.push(this.animation.animationTool.model)
+            scene.dragControls.activate()
 
+            // TODO: custom cursor
             scene.dragControls.addEventListener('hoveron', (e) => {
                 setTimeout(() => {
                     scene.renderer.domElement.style.cursor = 'grab'
-                    document.body.style.cursor = 'grab'
                 }, 1)
             })
 
@@ -79,9 +79,9 @@ class PlanetScenery {
             })
 
             scene.dragControls.addEventListener('dragstart', (e) => {
+                console.log('dragstart', );
                 setTimeout(() => {
                     scene.renderer.domElement.style.cursor = 'grabbing'
-                    document.body.style.cursor = 'grabbing'
                 }, 1)
                 this.animation!.onDragStart(scene)
             })
@@ -90,6 +90,7 @@ class PlanetScenery {
                 this.animation!.onDragEnd(scene)
             })
 
+            scene.highlightManager.add(this.animation.animationTool.model)
             scene.interactionManager.add(this.animation.animationTarget.model)
             scene.interactionManager.add(this.animation.animationTool.model)
         } else {

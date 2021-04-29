@@ -13,7 +13,7 @@ class GLTFAnimation {
     animationTool: AnimationObject
     animationTarget: AnimationObject
     isAboveTarget: boolean
-    toolShouldFlotate: boolean
+    toolShouldScale: boolean
 
     constructor (
         model: GLTF|null,
@@ -31,11 +31,11 @@ class GLTFAnimation {
         this.animationTarget = animationTarget
 
         this.isAboveTarget = false
-        this.toolShouldFlotate = true
+        this.toolShouldScale = true
     }
 
-    updateToolScale (elapsedTime: number, initialScale: Vector3) {
-        if (this.animationTool.model && this.toolShouldFlotate) {
+    updateToolScaleAnimation (elapsedTime: number, initialScale: Vector3) {
+        if (this.animationTool.model && this.toolShouldScale) {
             this.animationTool.model.scale.set(
                 initialScale.x + Math.sin(elapsedTime * 2) / 8,
                 initialScale.y + Math.sin(elapsedTime * 2) / 8,
@@ -44,7 +44,6 @@ class GLTFAnimation {
         }
     }
 
-    // NOTE : A function in the AnimationManager that takes an animation as param ? 
     launchAnimation (scene: Scene) {
         if (this.action) {
             EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, true)
@@ -52,12 +51,13 @@ class GLTFAnimation {
             this.action.play()
             this.action.clampWhenFinished = true
 
-            scene.highlightManager.outlinePass.selectedObjects.shift()
+            scene.highlightManager.empty()
 
             if (scene.animationMixer) {
                 scene.animationMixer.addEventListener('finished', () => {
                     EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, false)
                     EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
+                    scene.dragControls.deactivate()
                 })
             }
         }
@@ -65,9 +65,9 @@ class GLTFAnimation {
 
     onDragStart (scene: Scene) {
         if (this.animationTarget.model) {
-            this.toolShouldFlotate = false
-            scene.highlightManager.outlinePass.selectedObjects.shift()
-            scene.highlightManager.outlinePass.selectedObjects.push(this.animationTarget.model)
+            this.toolShouldScale = false
+            scene.highlightManager.empty()
+            scene.highlightManager.add(this.animationTarget.model)
 
             EventBus.emit(GLEvents.INTERACTION_MANAGER_REQUIRED, true)
 
@@ -86,8 +86,8 @@ class GLTFAnimation {
 
     onDragEnd (scene: Scene) {
         if (this.animationTarget.model && this.animationTool.model) {
-            scene.highlightManager.outlinePass.selectedObjects.shift()
-            scene.highlightManager.outlinePass.selectedObjects.push(this.animationTool.model)
+            scene.highlightManager.empty()
+            scene.highlightManager.add(this.animationTool.model)
 
             if (this.isAboveTarget && this.animationTool.model) {
                 EventBus.emit(GLEvents.INTERACTION_MANAGER_REQUIRED, false)

@@ -38,6 +38,10 @@ class HighlightManager {
         this.outlinePass.selectedObjects.push(object)
     }
 
+    empty () {
+        this.outlinePass.selectedObjects = []
+    }
+
     update () {
         if (this.composer) {
             // TODO improve delta time
