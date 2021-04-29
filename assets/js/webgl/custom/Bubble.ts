@@ -57,7 +57,11 @@ class Bubble extends Object3D {
         // NOTE : We set bubbles on a different layer, only visible to main PerspectiveCamera to avoid infinite light reflection on envMap from CubeCameras
         this.mesh.layers.set( 1 )
 
-        EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
+        EventBus.on<number>(GLEvents.UPDATE, (elapsedTime) => {
+            if (elapsedTime !== undefined) {
+                this.update(elapsedTime)
+            }
+        })
     }
 
     // ---------------- METHODS

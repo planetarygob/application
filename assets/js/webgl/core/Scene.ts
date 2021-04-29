@@ -22,6 +22,7 @@ import System from '../custom/System'
 import CameraAnimationManager from '../../utils/managers/CameraAnimationManager'
 import DragControls from './DragControls'
 import CustomInteractionManager from '../../utils/managers/CustomInteractionManager'
+import HighlightManager from '../../utils/managers/HighlightManager'
 
 interface Size {
     width: number
@@ -33,6 +34,7 @@ class Scene extends TScene {
     loadingManager: CustomLoadingManager
     cameraAnimationManager: CameraAnimationManager
     interactionManager: CustomInteractionManager
+    highlightManager: HighlightManager
     animationMixer?: AnimationMixer
     camera: Camera
     controls: Controls
@@ -71,6 +73,8 @@ class Scene extends TScene {
         this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded.bind(this))
 
         this.interactionManager = CustomInteractionManager.getInstance(this.renderer, this.camera)
+
+        this.highlightManager = HighlightManager.getInstance(this.renderer, this, this.camera)
 
         this.cameraAnimationManager = CameraAnimationManager.getInstance(this.camera, this.controls)
         
@@ -174,6 +178,7 @@ class Scene extends TScene {
                 this.selectedPlanet.complete()
                 this.selectedPlanet = undefined
                 this.selectedSystem.triggerSun(true)
+                EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, false)
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
                 this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {

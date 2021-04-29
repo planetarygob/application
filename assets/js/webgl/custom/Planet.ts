@@ -52,7 +52,11 @@ class Planet extends Group {
 
         this.visible = false
 
-        EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
+        EventBus.on<number>(GLEvents.UPDATE, (elapsedTime) => {
+            if (elapsedTime !== undefined) {
+                this.update(elapsedTime)
+            }
+        })
         EventBus.on(GLEvents.CLICK, () => { this.isComplete ? this.isComplete = false : this.isComplete = true })
     }
 
@@ -63,7 +67,6 @@ class Planet extends Group {
             this.remove(this.scenery.model.scene)
             this.scenery = undefined
         }
-        this.scene.interactionManager.remove(this)
         // this.removeEvents()
     }
 
@@ -105,6 +108,7 @@ class Planet extends Group {
             if (this.canClick) {
                 this.canClick = false
                 EventBus.emit(GLEvents.CLICK_PLANET, this)
+                this.removeEvents()
             }
         })
         this.addEventListener('mouseover', () => {
@@ -116,6 +120,7 @@ class Planet extends Group {
     }
 
     removeEvents () {
+        this.scene.interactionManager.remove(this)
         this.removeEventListener('click', () => {})
         this.removeEventListener('mouseover', () => {})
         this.removeEventListener('mouseout', () => {})
