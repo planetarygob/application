@@ -5,8 +5,6 @@ import Scene from "../core/Scene";
 import PlanetScenery from './PlanetScenery'
 import PlanetObject from './PlanetObject'
 import Bubble from "./Bubble";
-import CustomInteractionManager from "../../utils/managers/CustomInteractionManager";
-import HighlightManager from "../../utils/managers/HighlightManager";
 
 class Planet extends Group {
     name: string
@@ -17,12 +15,6 @@ class Planet extends Group {
     infos: any
     scene: Scene
     canClick: boolean
-
-    interactionManager: CustomInteractionManager
-    highlightManager: HighlightManager
-    animationMixer?: AnimationMixer 
-    sceneryAnimation?: AnimationAction
-    isAboveTarget: boolean
 
     constructor(
         scene: Scene,
@@ -37,26 +29,13 @@ class Planet extends Group {
         this.scene = scene
         this.object = object
         this.scenery = scenery
-
-        // TODO : We should but both managers in the scene & do this.scene.interactionManager
-        this.interactionManager = CustomInteractionManager.getInstance(this.scene.renderer, this.scene.camera)
-        this.highlightManager = HighlightManager.getInstance(this.scene.renderer, this.scene, this.scene.camera)
-        this.isAboveTarget = false
-
         this.infos = infos
-
         this.position.set(this.infos.initialPosition.x, this.infos.initialPosition.y, this.infos.initialPosition.z)
         this.isComplete = false
 
         this.rotation.y = this.rotation.y + Math.PI
 
         this.canClick = true
-
-        EventBus.on(GLEvents.UPDATE_ANIMATION_MIXER, (deltaTime) => {
-            if (this.animationMixer) {
-                this.animationMixer.update(deltaTime)
-            }
-        })
 
         // TODO : Is there no other solution than passing scene & renderer through all objects so that Bubble has access to it ?
         // TODO : Detect the change on this.isComplete pour dispose la Bulle
@@ -84,7 +63,7 @@ class Planet extends Group {
             this.remove(this.scenery.model.scene)
             this.scenery = undefined
         }
-        this.interactionManager.remove(this)
+        this.scene.interactionManager.remove(this)
         // this.removeEvents()
     }
 
@@ -115,85 +94,12 @@ class Planet extends Group {
             this.scenery.model.scene.scale.set(0.04, 0.04, 0.04)
             this.removeBubble()
             this.removeEvents()
-            this.setupScenery()
-        }
-    }
-
-    setupScenery() {
-        if (this.scenery && this.scenery.interaction.animationTool.model && this.scenery.interaction.animationTarget.model) {
-            EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, true)
-
-            this.animationMixer = new AnimationMixer(this.scenery.model.scene)
-
-            if (this.scenery.model.animations.length) {
-                const animation = this.scenery.model.animations[0]
-                this.sceneryAnimation = this.animationMixer.clipAction(animation)
-                this.sceneryAnimation.setLoop(LoopOnce, 1)
-
-                // NOTE : We indicate that scissors are an interactive & draggable object$
-                if (this.scene.draggableObjects.length) {
-                    this.scene.draggableObjects.shift()
-                }
-                this.scene.draggableObjects.push(this.scenery.interaction.animationTool.model) // Draggable
-                this.scene.dragControls.transformGroup = true
-                
-                this.highlightManager.outlinePass.selectedObjects = [this.scenery.interaction.animationTool.model]
-
-                this.scene.dragControls.addEventListener('dragstart', this.onDragStart.bind(this))
-                this.scene.dragControls.addEventListener('dragend', this.onDragEnd.bind(this))
-
-                this.interactionManager.add(this.scenery.interaction.animationTarget.model)
-                // this.interactionManager.add(this.animationTool)
-            }
-        } else {
-            console.error("Tool or Target undefined")
-        }
-    }
-
-    // NOTE : A function in the AnimationManager that takes an animation as param ? 
-    launchAnimation() {
-        if (this.sceneryAnimation) {
-            EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, true)
-
-            this.sceneryAnimation.play()
-            this.sceneryAnimation.clampWhenFinished = true
-
-            if (this.animationMixer) {
-                this.animationMixer.addEventListener('finished', () => {
-                    console.log("MODAL LO")
-                    EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, false)
-                    EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
-                })
-            }
-        }
-    }
-
-    toggleTargetState() {
-        this.isAboveTarget = !this.isAboveTarget
-
-        if (this.isAboveTarget && this.scenery && this.scenery.interaction.animationTool.model) {
-            // NOTE : Should be there that we make possible to open the PlanetModal displaying course once animation is over
-            this.scenery.interaction.animationTool.model.visible = false
-            this.launchAnimation()
-        }
-    }
-
-    onDragStart() {
-        if (this.scenery && this.scenery.interaction.animationTarget.model) {
-            this.scenery.interaction.animationTarget.model.addEventListener('mouseover', this.toggleTargetState.bind(this))
-            this.scenery.interaction.animationTarget.model.addEventListener('mouseout', this.toggleTargetState.bind(this))
-        }   
-    }
-
-    onDragEnd() {
-        if (this.scenery && this.scenery.interaction.animationTarget.model) {
-            this.scenery.interaction.animationTarget.model.removeEventListener('mouseover', this.toggleTargetState.bind(this))
-            this.scenery.interaction.animationTarget.model.removeEventListener('mouseout', this.toggleTargetState.bind(this))
+            this.scenery.setupScenery(this.scene)
         }
     }
 
     listenEvents () {
-        this.interactionManager.add(this)
+        this.scene.interactionManager.add(this)
 
         this.addEventListener('click', () => {
             if (this.canClick) {

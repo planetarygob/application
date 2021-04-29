@@ -6,10 +6,7 @@ import {
     BufferGeometry, 
     BufferAttribute, 
     Points,
-    AmbientLight,
-    DirectionalLight,
-    AnimationMixer,
-    Mesh
+    AnimationMixer
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
@@ -22,8 +19,9 @@ import Renderer from './Renderer'
 import Sky from '../custom/Sky'
 import JSONSystems from '../../../datas/themes.json'
 import System from '../custom/System'
-import AnimationManager from '../../utils/managers/AnimationManager'
+import CameraAnimationManager from '../../utils/managers/CameraAnimationManager'
 import DragControls from './DragControls'
+import CustomInteractionManager from '../../utils/managers/CustomInteractionManager'
 
 interface Size {
     width: number
@@ -33,7 +31,9 @@ interface Size {
 
 class Scene extends TScene {
     loadingManager: CustomLoadingManager
-    animationManager: AnimationManager
+    cameraAnimationManager: CameraAnimationManager
+    interactionManager: CustomInteractionManager
+    animationMixer?: AnimationMixer
     camera: Camera
     controls: Controls
     dragControls: DragControls
@@ -70,12 +70,19 @@ class Scene extends TScene {
         this.loadingManager = CustomLoadingManager.getInstance(this.renderer)
         this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded.bind(this))
 
-        this.animationManager = AnimationManager.getInstance(this.camera, this.controls)
+        this.interactionManager = CustomInteractionManager.getInstance(this.renderer, this.camera)
+
+        this.cameraAnimationManager = CameraAnimationManager.getInstance(this.camera, this.controls)
         
         this.isFirstZoomLaunched = false
 
         this.handleBackground()
-        this.createLights()
+
+        EventBus.on(GLEvents.UPDATE_ANIMATION_MIXER, (deltaTime) => {
+            if (this.animationMixer) {
+                this.animationMixer.update(deltaTime)
+            }
+        })
     }
 
     onAllModelsLoaded () {
@@ -85,7 +92,7 @@ class Scene extends TScene {
 
             this.systems.push(system)
 
-            this.animationManager.launchBigBangAnimation(system)
+            this.cameraAnimationManager.launchBigBangAnimation(system)
 
             this.add(system)
         }
@@ -98,13 +105,13 @@ class Scene extends TScene {
         EventBus.on(AnimationEvents.PREVIOUS_SYSTEM, () => {
             if (this.systems && this.systems.length) {
                 // false = previous
-                this.animationManager.slideToAnotherSystem(false, this.systems)
+                this.cameraAnimationManager.slideToAnotherSystem(false, this.systems)
             }
         })
         EventBus.on(AnimationEvents.NEXT_SYSTEM, () => {
             if (this.systems && this.systems.length) {
                 // true = next
-                this.animationManager.slideToAnotherSystem(true, this.systems)
+                this.cameraAnimationManager.slideToAnotherSystem(true, this.systems)
             }
         })
 
@@ -113,7 +120,7 @@ class Scene extends TScene {
             if (selectedSystem) {
                 this.selectedSystem = selectedSystem
                 this.triggerSystems(false, true)
-                this.animationManager.discoverSystem(selectedSystem)
+                this.cameraAnimationManager.discoverSystem(selectedSystem)
             }
         })
 
@@ -134,7 +141,7 @@ class Scene extends TScene {
             this.triggerPlanets(false, true)
             this.controls.enableRotate = false
             if (this.selectedPlanet) {
-                this.animationManager.showSceneryAnimation(this.selectedPlanet)
+                this.cameraAnimationManager.showSceneryAnimation(this.selectedPlanet)
             }
         })
 
@@ -142,7 +149,7 @@ class Scene extends TScene {
         EventBus.on<Planet>(GLEvents.CLICK_PLANET, (selectedPlanet) => {
             console.log('CLICK_PLANET', );
             if (selectedPlanet) {
-                this.animationManager.discoverPlanet(selectedPlanet)
+                this.cameraAnimationManager.discoverPlanet(selectedPlanet)
                 this.selectedPlanet = selectedPlanet
                 const selectedPlanetInfos = this.loadingManager.getGLTFInfos(this.selectedPlanet.name)
                 EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
@@ -168,11 +175,11 @@ class Scene extends TScene {
                 this.selectedPlanet = undefined
                 this.selectedSystem.triggerSun(true)
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
-                this.animationManager.backOnSystemDiscoveredView(this.selectedSystem)
+                this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {
                 this.triggerSystems(true, true)
                 this.triggerPlanets(false)
-                this.animationManager.backOnSystemsChoiceView(this.selectedSystem)
+                this.cameraAnimationManager.backOnSystemsChoiceView(this.selectedSystem)
             }
         })
     }
@@ -246,21 +253,6 @@ class Scene extends TScene {
 
         const particles = new Points(particlesGeometry, particlesMaterial)
         this.add(particles)
-    }
-
-    createLights() {
-        const ambientLight = new AmbientLight(0xaa54f0, 1)
-      
-        const directionalLight1 = new DirectionalLight(0xffffff, 1)
-        directionalLight1.position.set(-2, 2, 5)
-      
-        const directionalLight2 = new DirectionalLight(0xfff000, 1)
-        directionalLight2.position.set(-2, 4, 4)
-        directionalLight2.castShadow = true
-      
-        // this.add(ambientLight)
-        // this.add(directionalLight1)
-        // this.add(directionalLight2)
     }
 
     onError (error: ErrorEvent) {
