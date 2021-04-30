@@ -56,6 +56,7 @@ class GLTFAnimation {
             if (scene.animationMixer) {
                 scene.animationMixer.addEventListener('finished', () => {
                     EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, false)
+                    EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
                     EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
                     scene.dragControls.deactivate()
                 })

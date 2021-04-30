@@ -64,8 +64,8 @@
 </template>
 
 <script lang="ts">
-import EventBus from '../assets/js/utils/EventBus'
-import { AnimationEvents } from '../assets/js/utils/Events'
+import EventBus from '../../assets/js/utils/EventBus'
+import { AnimationEvents } from '../../assets/js/utils/Events'
 
 export default {
     props: {

@@ -128,7 +128,7 @@ class CameraAnimationManager {
         gsap.to(this.camera.position, {
             duration: 2,
             x: planet.infos.initialPosition.x,
-            y: planet.infos.initialPosition.y + 0.5,
+            y: planet.infos.initialPosition.y + 1,
             z: planet.infos.initialPosition.z - 6,
             onUpdate: function () {
                 self.camera.updateProjectionMatrix();
@@ -183,6 +183,7 @@ class CameraAnimationManager {
     showScenery (planet: Planet) {
         if (planet && planet.scenery) {
             let sceneryTimeline = gsap.timeline({onComplete: () => {
+                console.log('onComplete 1', );
                 EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, true)
             }})
 
@@ -205,8 +206,13 @@ class CameraAnimationManager {
         gsap.timeline().to(this.camera.position, {
             duration: 2,
             x: this.camera.position.x,
-            y: this.camera.position.y + 1.5,
-            z: this.camera.position.z + 1
+            y: this.camera.position.y + 2,
+            z: this.camera.position.z + 1.5
+        })
+        
+        gsap.timeline().to(this.camera.rotation, {
+            duration: 2,
+            x: this.camera.rotation.x + 0.5
         })
     }
 

@@ -16,7 +16,7 @@ class PlanetScenery {
         model: GLTF,
         yPosition: number,
         animation: GLTFAnimation|null
-    ) { 
+    ) {
         this.name = name
         this.model = model
         this.yPosition = yPosition
@@ -40,8 +40,6 @@ class PlanetScenery {
     setupSceneryInteraction (scene: Scene) {
         if (this.animation && this.animation.animationTool.model && this.animation.animationTarget.model) {
             EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, true)
-
-            scene.cameraAnimationManager.sceneryInteractionZoom()
 
             scene.animationMixer = new AnimationMixer(this.model.scene)
 
@@ -80,7 +78,6 @@ class PlanetScenery {
             })
 
             scene.dragControls.addEventListener('dragstart', (e) => {
-                console.log('dragstart', );
                 setTimeout(() => {
                     scene.renderer.domElement.style.cursor = 'grabbing'
                 }, 1)

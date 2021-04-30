@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts">
-import EventBus from '../assets/js/utils/EventBus'
-import { UIEvents, GLEvents } from '../assets/js/utils/Events'
+import EventBus from '../../assets/js/utils/EventBus'
+import { UIEvents, GLEvents, AnimationEvents } from '../../assets/js/utils/Events'
 
 export default {
     props: {

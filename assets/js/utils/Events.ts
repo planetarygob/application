@@ -25,7 +25,8 @@ export const UIEvents = {
     SELECTED_PLANET_INFOS: 'ui:selected_planet_infos',
     UPDATE_LOADER: 'ui:update_loader',
     TOGGLE_LOADER: 'ui:toggle_loader',
-    RESET_PLANET_DIALOG: 'ui:reset_planet_dialog'
+    RESET_PLANET_DIALOG: 'ui:reset_planet_dialog',
+    SHOW_SCENERY_INTERACTION_INSTRUCTION: 'ui:show_scenery_interaction_instruction'
 }
 
 export const AnimationEvents = {
