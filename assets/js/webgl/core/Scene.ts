@@ -55,7 +55,7 @@ class Scene extends TScene {
         this.canvas = canvas
 
         this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
-        this.renderer = new Renderer({ canvas: this.canvas }, this.size.width, this.size.height)
+        this.renderer = new Renderer({ canvas: this.canvas, antialias: true }, this.size.width, this.size.height)
         this.renderer.render(this, this.camera)
 
         this.controls = new Controls(this.camera, this.canvas)
