@@ -145,7 +145,7 @@ class Scene extends TScene {
             this.triggerPlanets(false, true)
             this.controls.enableRotate = false
             if (this.selectedPlanet) {
-                this.cameraAnimationManager.showSceneryAnimation(this.selectedPlanet)
+                this.cameraAnimationManager.showScenery(this.selectedPlanet)
             }
         })
 

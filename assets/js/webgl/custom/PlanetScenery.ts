@@ -23,7 +23,6 @@ class PlanetScenery {
         this.animation = animation
 
         this.model.scene.visible = false
-        this.model.scene.position.y = this.yPosition
         this.model.scene.scale.set(0.005, 0.005, 0.005)
 
         if (this.animation) {

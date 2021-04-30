@@ -85,7 +85,7 @@
           "type": "scenery",
           "url": "scenery_planet_skirt_baked.glb",
           "model": null,
-          "yPosition": 0,
+          "yPosition": -3,
           "interaction": {
             "tool": "scissors",
             "target": "skirt"
@@ -157,7 +157,7 @@
           "type": "scenery",
           "url": "scenery_planet_hippie.glb",
           "model": null,
-          "yPosition": 2.630,
+          "yPosition": -4,
           "interaction": {
             "tool": "flowerbandana",
             "target": "brasgauche"
@@ -229,7 +229,7 @@
           "type": "scenery",
           "url": "scenery_planet_rock.glb",
           "model": null,
-          "yPosition": 0.58,
+          "yPosition": 7,
           "interaction": {
             "tool": "",
             "target": ""
