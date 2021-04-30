@@ -183,7 +183,6 @@ class CameraAnimationManager {
     showScenery (planet: Planet) {
         if (planet && planet.scenery) {
             let sceneryTimeline = gsap.timeline({onComplete: () => {
-                console.log('onComplete 1', );
                 EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, true)
             }})
 
@@ -226,7 +225,10 @@ class CameraAnimationManager {
         
         gsap.timeline().to(this.camera.rotation, {
             duration: 2,
-            x: this.camera.rotation.x - 0.5
+            x: this.camera.rotation.x - 0.5,
+            onComplete: () => {
+                EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, true)
+            }
         })
     }
 
