@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import EventBus from '../assets/js/utils/EventBus'
-import { UIEvents } from '../assets/js/utils/Events'
+import { UIEvents, GLEvents } from '../assets/js/utils/Events'
 
 export default {
     props: {
@@ -55,6 +55,7 @@ export default {
     methods: {
         updateCurrentStep () {
             if (this.currentStep + 1 > this.maxStep) {
+                EventBus.emit(GLEvents.SETUP_SCENERY_INTERACTION)
                 this.$emit('update:is-displayed', false)
                 this.isFinished = true
             }

@@ -97,7 +97,11 @@ class Planet extends Group {
             this.scenery.model.scene.scale.set(0.04, 0.04, 0.04)
             this.removeBubble()
             this.removeEvents()
-            this.scenery.setupScenery(this.scene)
+            EventBus.on(GLEvents.SETUP_SCENERY_INTERACTION, () => {
+                if (this.scenery) {
+                    this.scenery.setupSceneryInteraction(this.scene)
+                }
+            })
         }
     }
 

@@ -14,6 +14,7 @@ export const GLEvents = {
     MOUSE_OVER_PLANET: 'gl:mouse_over_planet',
     MOUSE_OUT_PLANET: 'gl:mouse_out_planet',
     TOGGLE_ORBIT_CONTROLS: 'gl:toggle_orbit_controls',
+    SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction'
 }
 
 export const UIEvents = {

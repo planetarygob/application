@@ -37,9 +37,11 @@ class PlanetScenery {
         }
     }
 
-    setupScenery (scene: Scene) {
+    setupSceneryInteraction (scene: Scene) {
         if (this.animation && this.animation.animationTool.model && this.animation.animationTarget.model) {
             EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, true)
+
+            scene.cameraAnimationManager.sceneryInteractionZoom()
 
             scene.animationMixer = new AnimationMixer(this.model.scene)
 
