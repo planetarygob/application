@@ -1,6 +1,6 @@
 import { AnimationAction, AnimationClip, AnimationMixer, Group, LoopOnce, Object3D, Vector3 } from "three";
 import EventBus from "../../utils/EventBus";
-import { GLEvents, UIEvents } from "../../utils/Events";
+import { GLEvents, UIEvents, AnimationEvents } from "../../utils/Events";
 import Scene from "../core/Scene";
 import PlanetScenery from './PlanetScenery'
 import PlanetObject from './PlanetObject'
@@ -97,7 +97,13 @@ class Planet extends Group {
             this.scenery.model.scene.scale.set(0.04, 0.04, 0.04)
             this.removeBubble()
             this.removeEvents()
-            this.scenery.setupScenery(this.scene)
+            EventBus.on(GLEvents.SETUP_SCENERY_INTERACTION, () => {
+                if (this.scenery) {
+                    this.scene.cameraAnimationManager.sceneryInteractionZoom()
+                    EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, true)
+                    this.scenery.setupSceneryInteraction(this.scene)
+                }
+            })
         }
     }
 

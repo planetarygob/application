@@ -14,6 +14,7 @@ export const GLEvents = {
     MOUSE_OVER_PLANET: 'gl:mouse_over_planet',
     MOUSE_OUT_PLANET: 'gl:mouse_out_planet',
     TOGGLE_ORBIT_CONTROLS: 'gl:toggle_orbit_controls',
+    SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction'
 }
 
 export const UIEvents = {
@@ -24,7 +25,8 @@ export const UIEvents = {
     SELECTED_PLANET_INFOS: 'ui:selected_planet_infos',
     UPDATE_LOADER: 'ui:update_loader',
     TOGGLE_LOADER: 'ui:toggle_loader',
-    RESET_PLANET_DIALOG: 'ui:reset_planet_dialog'
+    RESET_PLANET_DIALOG: 'ui:reset_planet_dialog',
+    SHOW_SCENERY_INTERACTION_INSTRUCTION: 'ui:show_scenery_interaction_instruction'
 }
 
 export const AnimationEvents = {
