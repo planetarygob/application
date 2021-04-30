@@ -6,7 +6,13 @@ import {
     BufferGeometry, 
     BufferAttribute, 
     Points,
-    AnimationMixer
+    AnimationMixer,
+    PlaneGeometry,
+    Mesh,
+    MeshLambertMaterial,
+    MeshBasicMaterial,
+    Color,
+    BoxBufferGeometry
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
@@ -22,6 +28,7 @@ import System from '../custom/System'
 import CameraAnimationManager from '../../utils/managers/CameraAnimationManager'
 import DragControls from './DragControls'
 import CustomInteractionManager from '../../utils/managers/CustomInteractionManager'
+import BlurManager from '../../utils/managers/BlurManager'
 
 interface Size {
     width: number
@@ -33,6 +40,7 @@ class Scene extends TScene {
     loadingManager: CustomLoadingManager
     cameraAnimationManager: CameraAnimationManager
     interactionManager: CustomInteractionManager
+    blurManager: BlurManager
     animationMixer?: AnimationMixer
     camera: Camera
     controls: Controls
@@ -72,6 +80,8 @@ class Scene extends TScene {
 
         this.interactionManager = CustomInteractionManager.getInstance(this.renderer, this.camera)
 
+        this.blurManager = new BlurManager(this)
+
         this.cameraAnimationManager = CameraAnimationManager.getInstance(this.camera, this.controls)
         
         this.isFirstZoomLaunched = false
@@ -93,7 +103,6 @@ class Scene extends TScene {
             this.systems.push(system)
 
             this.cameraAnimationManager.launchBigBangAnimation(system)
-
             this.add(system)
         }
 
@@ -129,6 +138,9 @@ class Scene extends TScene {
             if (isFirstZoom) {
                 EventBus.emit(UIEvents.SHOW_SYSTEM_TEXTS, true)
             } else if (this.selectedSystem) {
+                // TODO : Animate aperture to 0 with a logarithm as easing to have a smooth transition
+                this.blurManager.isEnabled = false
+                console.log(this.blurManager.isEnabled)
                 this.triggerPlanets(true)
                 this.controls.enableRotate = true
             }

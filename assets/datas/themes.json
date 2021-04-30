@@ -242,8 +242,8 @@
     "name": "hobbies",
     "type": "system",
     "teasing": {
-      "title": "TECHNOLOGIE",
-      "description": "La période des années 60 à 80 a apporté d'énormes bouleversements technologiques. De l'électroménager à l'astronomie en passant par l'informatique, découvre à travers 5 planètes les innovations qui ont fait évoluer nos modes de vie."
+      "title": "LOISIR",
+      "description": "Partir en vacances, faire du sport, regarder la télé... Tous ces loisirs n'existaient pas avant les années 60 ! A travers 4 planètes, découvre comment les loisirs se sont développés et ce qui a profondément changé dans la société de l'époque."
     },
     "navPosition": 1,
     "initialPosition":{
@@ -330,8 +330,8 @@
     "name": "techno",
     "type": "system",
     "teasing": {
-      "title": "LOISIR",
-      "description": "Partir en vacances, faire du sport, regarder la télé... Tous ces loisirs n'existaient pas avant les années 60 ! A travers 4 planètes, découvre comment les loisirs se sont développés et ce qui a profondément changé dans la société de l'époque."
+      "title": "TECHNOLOGIE",
+      "description": "La période des années 60 à 80 a apporté d'énormes bouleversements technologiques. De l'électroménager à l'astronomie en passant par l'informatique, découvre à travers 5 planètes les innovations qui ont fait évoluer nos modes de vie."
     },
     "navPosition": 3,
     "initialPosition":{
