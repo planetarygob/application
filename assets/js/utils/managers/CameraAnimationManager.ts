@@ -216,6 +216,20 @@ class CameraAnimationManager {
         })
     }
 
+    sceneryInteractionDezoom () {
+        gsap.timeline().to(this.camera.position, {
+            duration: 2,
+            x: this.camera.position.x,
+            y: this.camera.position.y - 2,
+            z: this.camera.position.z - 1.5
+        })
+        
+        gsap.timeline().to(this.camera.rotation, {
+            duration: 2,
+            x: this.camera.rotation.x - 0.5
+        })
+    }
+
     slideToAnotherSystem (next: boolean, systems: Array<System>) {
         for (let system of systems) {
             system.navPosition = this.getFuturePosition(next, system.navPosition, systems.length)
