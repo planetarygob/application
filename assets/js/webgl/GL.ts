@@ -5,10 +5,6 @@ import {
 import Stats from '../utils/dev/Stats'
 import EventBus from '../utils/EventBus'
 import { GLEvents } from '../utils/Events'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
-import GUI from '../utils/dev/GUI'
 
 interface Size {
     width: number
@@ -23,6 +19,8 @@ class GL {
     size: Size
     canvas: HTMLCanvasElement
     isAnimationMixerRequired: boolean
+    isHighlightManagerRequired: boolean
+    isInteractionManagerRequired: boolean
 
     constructor() {
 
@@ -42,6 +40,8 @@ class GL {
         this.clock = new Clock()
 
         this.isAnimationMixerRequired = false
+        this.isHighlightManagerRequired = false
+        this.isInteractionManagerRequired = false
 
         this.listenEvents()
 
@@ -63,6 +63,16 @@ class GL {
         EventBus.on<boolean>(GLEvents.ANIMATION_MIXER_REQUIRED, (required) => {
             if (required !== undefined) {
                 this.isAnimationMixerRequired = required
+            }
+        })
+        EventBus.on<boolean>(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, (required) => {
+            if (required !== undefined) {
+                this.isHighlightManagerRequired = required
+            }
+        })
+        EventBus.on<boolean>(GLEvents.INTERACTION_MANAGER_REQUIRED, (required) => {
+            if (required !== undefined) {
+                this.isInteractionManagerRequired = required
             }
         })
     }  
@@ -93,13 +103,18 @@ class GL {
 
     render() {
         this.scene.renderer.render(this.scene, this.scene.camera)
-        // ------------------------------ BLUR
 
-        // ------------------------------
         if (this.clock) {
-            EventBus.emit(GLEvents.UPDATE, {
-                elapsedTime: this.clock.getElapsedTime() 
-            })
+            EventBus.emit(GLEvents.UPDATE, this.clock.getElapsedTime())
+            EventBus.emit(GLEvents.UPDATE_TOOL_SCALE, this.clock.getElapsedTime())
+        }
+
+        if (this.isHighlightManagerRequired) {
+            EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER)
+        }
+
+        if (this.isInteractionManagerRequired) {
+            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER)
         }
 
         if (this.isAnimationMixerRequired) {

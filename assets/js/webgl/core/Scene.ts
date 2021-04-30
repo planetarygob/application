@@ -6,13 +6,7 @@ import {
     BufferGeometry, 
     BufferAttribute, 
     Points,
-    AnimationMixer,
-    PlaneGeometry,
-    Mesh,
-    MeshLambertMaterial,
-    MeshBasicMaterial,
-    Color,
-    BoxBufferGeometry
+    AnimationMixer
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
@@ -29,6 +23,7 @@ import CameraAnimationManager from '../../utils/managers/CameraAnimationManager'
 import DragControls from './DragControls'
 import CustomInteractionManager from '../../utils/managers/CustomInteractionManager'
 import BlurManager from '../../utils/managers/BlurManager'
+import HighlightManager from '../../utils/managers/HighlightManager'
 
 interface Size {
     width: number
@@ -41,6 +36,7 @@ class Scene extends TScene {
     cameraAnimationManager: CameraAnimationManager
     interactionManager: CustomInteractionManager
     blurManager: BlurManager
+    highlightManager: HighlightManager
     animationMixer?: AnimationMixer
     camera: Camera
     controls: Controls
@@ -61,7 +57,7 @@ class Scene extends TScene {
         this.canvas = canvas
 
         this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
-        this.renderer = new Renderer({ canvas: this.canvas }, this.size.width, this.size.height)
+        this.renderer = new Renderer({ canvas: this.canvas, antialias: true }, this.size.width, this.size.height)
         this.renderer.render(this, this.camera)
 
         this.controls = new Controls(this.camera, this.canvas)
@@ -81,6 +77,7 @@ class Scene extends TScene {
         this.interactionManager = CustomInteractionManager.getInstance(this.renderer, this.camera)
 
         this.blurManager = new BlurManager(this)
+        this.highlightManager = HighlightManager.getInstance(this.renderer, this, this.camera)
 
         this.cameraAnimationManager = CameraAnimationManager.getInstance(this.camera, this.controls)
         
@@ -153,7 +150,7 @@ class Scene extends TScene {
             this.triggerPlanets(false, true)
             this.controls.enableRotate = false
             if (this.selectedPlanet) {
-                this.cameraAnimationManager.showSceneryAnimation(this.selectedPlanet)
+                this.cameraAnimationManager.showScenery(this.selectedPlanet)
             }
         })
 
@@ -186,6 +183,7 @@ class Scene extends TScene {
                 this.selectedPlanet.complete()
                 this.selectedPlanet = undefined
                 this.selectedSystem.triggerSun(true)
+                EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, false)
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
                 this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {

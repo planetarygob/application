@@ -1,22 +1,22 @@
 <template>
     <article 
-        v-if="isDisplayed && !isFinished && content"
+        v-if="isDisplayed && !content.isFinished"
         class="rounded-lg flex flex-col items-center max-w-sm"
         :style="'top:' + content.position.top + '; left: ' + content.position.left">
         <p 
-            v-if="content.paragraphs"
-            v-html="content.paragraphs[currentStep]" />
+            v-if="content.parts[currentStep].paragraphs"
+            v-html="content.parts[currentStep].paragraphs[currentParagraphStep]" />
         <button
-            @click="updateCurrentStep()"
+            @click="updateCurrentParagraphStep()"
             class="mt-5 w-32 bg-#26272b text-white font-bold hover:text-black hover:bg-white hover:border-black py-2 px-4 border border-white rounded-full">
-            {{ !isLastStep ? 'SUITE' : 'C\'EST PARTI' }}
+            {{ !isLastParagraphStep ? 'SUITE' : 'C\'EST PARTI' }}
         </button>
     </article>
 </template>
 
 <script lang="ts">
-import EventBus from '../assets/js/utils/EventBus'
-import { UIEvents } from '../assets/js/utils/Events'
+import EventBus from '../../assets/js/utils/EventBus'
+import { UIEvents, GLEvents, AnimationEvents } from '../../assets/js/utils/Events'
 
 export default {
     props: {
@@ -32,34 +32,49 @@ export default {
 
     data: () => ({
         currentStep: 0,
+        currentParagraphStep: 0,
         isFinished: false
     }),
 
     mounted () {
         EventBus.on<boolean>(UIEvents.RESET_PLANET_DIALOG, () => {
             this.currentStep = 0
-            this.isFinished = false
+            this.currentParagraphStep = 0
+            this.content.isFinished = false
         })
     },
 
     computed: {
         maxStep () {
-            return this.content.paragraphs.length - 1
+            return this.content.parts.length - 1
         },
 
-        isLastStep () {
-            return this.currentStep === this.maxStep
+        maxParagraphStep () {
+            return this.content.parts[this.currentStep].paragraphs.length - 1
+        },
+
+        isLastParagraphStep () {
+            return this.currentParagraphStep === this.maxParagraphStep
         }
     },
 
     methods: {
-        updateCurrentStep () {
-            if (this.currentStep + 1 > this.maxStep) {
+        updateCurrentParagraphStep () {
+            if (this.currentParagraphStep + 1 > this.maxParagraphStep) {
+                if (this.currentStep + 1 > this.maxStep) {
+                    this.content.isFinished = true
+                    EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
+                    this.$emit('update:is-displayed', false)
+                    return
+                }
+                this.currentStep++
+                this.currentParagraphStep = 0
+                EventBus.emit(GLEvents.SETUP_SCENERY_INTERACTION)
                 this.$emit('update:is-displayed', false)
-                this.isFinished = true
+                return
             }
 
-            this.currentStep++
+            this.currentParagraphStep++
         }
     }
 

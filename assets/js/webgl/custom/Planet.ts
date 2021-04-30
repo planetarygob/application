@@ -1,6 +1,6 @@
 import { AnimationAction, AnimationClip, AnimationMixer, Group, LoopOnce, Object3D, Vector3 } from "three";
 import EventBus from "../../utils/EventBus";
-import { GLEvents, UIEvents } from "../../utils/Events";
+import { GLEvents, UIEvents, AnimationEvents } from "../../utils/Events";
 import Scene from "../core/Scene";
 import PlanetScenery from './PlanetScenery'
 import PlanetObject from './PlanetObject'
@@ -52,7 +52,11 @@ class Planet extends Group {
 
         this.visible = false
 
-        EventBus.on(GLEvents.UPDATE, (e: any) => this.update(e.elapsedTime))
+        EventBus.on<number>(GLEvents.UPDATE, (elapsedTime) => {
+            if (elapsedTime !== undefined) {
+                this.update(elapsedTime)
+            }
+        })
         EventBus.on(GLEvents.CLICK, () => { this.isComplete ? this.isComplete = false : this.isComplete = true })
     }
 
@@ -63,7 +67,6 @@ class Planet extends Group {
             this.remove(this.scenery.model.scene)
             this.scenery = undefined
         }
-        this.scene.interactionManager.remove(this)
         // this.removeEvents()
     }
 
@@ -94,7 +97,13 @@ class Planet extends Group {
             this.scenery.model.scene.scale.set(0.04, 0.04, 0.04)
             this.removeBubble()
             this.removeEvents()
-            this.scenery.setupScenery(this.scene)
+            EventBus.on(GLEvents.SETUP_SCENERY_INTERACTION, () => {
+                if (this.scenery) {
+                    this.scene.cameraAnimationManager.sceneryInteractionZoom()
+                    EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, true)
+                    this.scenery.setupSceneryInteraction(this.scene)
+                }
+            })
         }
     }
 
@@ -105,6 +114,7 @@ class Planet extends Group {
             if (this.canClick) {
                 this.canClick = false
                 EventBus.emit(GLEvents.CLICK_PLANET, this)
+                this.removeEvents()
             }
         })
         this.addEventListener('mouseover', () => {
@@ -116,6 +126,7 @@ class Planet extends Group {
     }
 
     removeEvents () {
+        this.scene.interactionManager.remove(this)
         this.removeEventListener('click', () => {})
         this.removeEventListener('mouseover', () => {})
         this.removeEventListener('mouseout', () => {})

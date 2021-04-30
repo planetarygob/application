@@ -128,7 +128,7 @@ class CameraAnimationManager {
         gsap.to(this.camera.position, {
             duration: 2,
             x: planet.infos.initialPosition.x,
-            y: planet.infos.initialPosition.y + 3,
+            y: planet.infos.initialPosition.y + 1,
             z: planet.infos.initialPosition.z - 6,
             onUpdate: function () {
                 self.camera.updateProjectionMatrix();
@@ -180,7 +180,7 @@ class CameraAnimationManager {
         })
     }
 
-    showSceneryAnimation (planet: Planet) {
+    showScenery (planet: Planet) {
         if (planet && planet.scenery) {
             let sceneryTimeline = gsap.timeline({onComplete: () => {
                 EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, true)
@@ -192,7 +192,44 @@ class CameraAnimationManager {
                 y: 1,
                 z: 1
             })
+
+            gsap.timeline().to(planet.position, {
+                x: planet.infos.initialPosition.x,
+                y: planet.scenery.yPosition,
+                z: planet.infos.initialPosition.z,
+            })
         }
+    }
+
+    sceneryInteractionZoom () {
+        gsap.timeline().to(this.camera.position, {
+            duration: 2,
+            x: this.camera.position.x,
+            y: this.camera.position.y + 2,
+            z: this.camera.position.z + 1.5
+        })
+        
+        gsap.timeline().to(this.camera.rotation, {
+            duration: 2,
+            x: this.camera.rotation.x + 0.5
+        })
+    }
+
+    sceneryInteractionDezoom () {
+        gsap.timeline().to(this.camera.position, {
+            duration: 2,
+            x: this.camera.position.x,
+            y: this.camera.position.y - 2,
+            z: this.camera.position.z - 1.5
+        })
+        
+        gsap.timeline().to(this.camera.rotation, {
+            duration: 2,
+            x: this.camera.rotation.x - 0.5,
+            onComplete: () => {
+                EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, true)
+            }
+        })
     }
 
     slideToAnotherSystem (next: boolean, systems: Array<System>) {

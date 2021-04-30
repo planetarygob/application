@@ -67,11 +67,23 @@
             "top": "5px",
             "left": "60%"
           },
-          "paragraphs": [
-            "Bienvenue dans mon atelier de couture !",
-            "Je me présente, je suis Mary Quant couturière. Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
-            "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
-            "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+          "isFinished": false,
+          "parts": [
+            {
+              "paragraphs": [
+                "Bonjour Mathieu !<br>Bienvenue dans mon atelier de couture.",
+                "Je me présente, je suis Mary Quant couturière. <br>Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
+                "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
+                "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+              ],
+              "action": "C'est parti"
+            },
+            {
+              "paragraphs": [
+                "Whoa Mathieu, c’est mini j’adore ! Merci. <br>Regarde, avec cette nouvelle jupe, les femmes vont enfin pouvoir être libre !"
+              ],
+              "action": "Découvrir"
+            }
           ]
         },
         "object": {
@@ -85,8 +97,9 @@
           "type": "scenery",
           "url": "scenery_planet_skirt_baked.glb",
           "model": null,
-          "yPosition": 0,
+          "yPosition": -2.5,
           "interaction": {
+            "instruction": "Coupe la jupe afin de créer le nouveau model",
             "tool": "scissors",
             "target": "skirt"
           }
@@ -139,11 +152,23 @@
             "top": "5px",
             "left": "60%"
           },
-          "paragraphs": [
-            "Bienvenue dans mon univers Hippie !",
-            "Je me présente, je suis Mary Quant couturière. Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
-            "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
-            "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+          "isFinished": false,
+          "parts": [
+            {
+              "paragraphs": [
+                "Bonjour Mathieu !<br>Bienvenue dans mon univers Hippie.",
+                "Je me présente, je suis Mary Quant couturière. <br>Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
+                "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
+                "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+              ],
+              "action": "C'est parti"
+            },
+            {
+              "paragraphs": [
+                "Whoa Mathieu, c’est mini j’adore ! Merci. <br>Regarde, avec cette nouvelle jupe, les femmes vont enfin pouvoir être libre !"
+              ],
+              "action": "Découvrir"
+            }
           ]
         },
         "object": {
@@ -157,10 +182,11 @@
           "type": "scenery",
           "url": "scenery_planet_hippie.glb",
           "model": null,
-          "yPosition": 2.630,
+          "yPosition": -3.5,
           "interaction": {
+            "instruction": "Glisse la fleur dans le pistolet",
             "tool": "flowerbandana",
-            "target": "gun"
+            "target": "brasgauche"
           }
         }
       },
@@ -211,11 +237,23 @@
             "top": "5px",
             "left": "60%"
           },
-          "paragraphs": [
-            "Bienvenue dans mon univers Rock !",
-            "Je me présente, je suis Mary Quant couturière. Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
-            "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
-            "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+          "isFinished": false,
+          "parts": [
+            {
+              "paragraphs": [
+                "Bonjour Mathieu !<br>Bienvenue dans mon univers rock.",
+                "Je me présente, je suis Mary Quant couturière. <br>Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
+                "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
+                "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+              ],
+              "action": "C'est parti"
+            },
+            {
+              "paragraphs": [
+                "Whoa Mathieu, c’est mini j’adore ! Merci. <br>Regarde, avec cette nouvelle jupe, les femmes vont enfin pouvoir être libre !"
+              ],
+              "action": "Découvrir"
+            }
           ]
         },
         "object": {
@@ -229,8 +267,9 @@
           "type": "scenery",
           "url": "scenery_planet_rock.glb",
           "model": null,
-          "yPosition": 0.58,
+          "yPosition": 7.5,
           "interaction": {
+            "instruction": "...",
             "tool": "",
             "target": ""
           }
