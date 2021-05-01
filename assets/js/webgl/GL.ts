@@ -102,6 +102,7 @@ class GL {
             EventBus.emit(GLEvents.UPDATE_TOOL_SCALE, this.clock.getElapsedTime())
         }
 
+        // TODO: deltaTime instead 1/60
         EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
 
         if (this.isHighlightManagerRequired) {
