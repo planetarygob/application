@@ -22,6 +22,7 @@ import System from '../custom/System'
 import CameraAnimationManager from '../../utils/managers/CameraAnimationManager'
 import DragControls from './DragControls'
 import CustomInteractionManager from '../../utils/managers/CustomInteractionManager'
+import BlurManager from '../../utils/managers/BlurManager'
 import HighlightManager from '../../utils/managers/HighlightManager'
 
 interface Size {
@@ -34,6 +35,7 @@ class Scene extends TScene {
     loadingManager: CustomLoadingManager
     cameraAnimationManager: CameraAnimationManager
     interactionManager: CustomInteractionManager
+    blurManager: BlurManager
     highlightManager: HighlightManager
     animationMixer?: AnimationMixer
     camera: Camera
@@ -74,6 +76,7 @@ class Scene extends TScene {
 
         this.interactionManager = CustomInteractionManager.getInstance(this.renderer, this.camera)
 
+        this.blurManager = new BlurManager(this)
         this.highlightManager = HighlightManager.getInstance(this.renderer, this, this.camera)
 
         this.cameraAnimationManager = CameraAnimationManager.getInstance(this.camera, this.controls)
@@ -97,7 +100,6 @@ class Scene extends TScene {
             this.systems.push(system)
 
             this.cameraAnimationManager.launchBigBangAnimation(system)
-
             this.add(system)
         }
 
@@ -133,6 +135,9 @@ class Scene extends TScene {
             if (isFirstZoom) {
                 EventBus.emit(UIEvents.SHOW_SYSTEM_TEXTS, true)
             } else if (this.selectedSystem) {
+                // TODO : Animate aperture to 0 with a logarithm as easing to have a smooth transition
+                this.blurManager.isEnabled = false
+                console.log(this.blurManager.isEnabled)
                 this.triggerPlanets(true)
                 this.controls.enableRotate = true
             }

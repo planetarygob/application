@@ -9,11 +9,13 @@ export const GLEvents = {
     HIGHLIGHT_MANAGER_REQUIRED: 'gl:highlight_manager_required',
     INTERACTION_MANAGER_REQUIRED: 'gl:interaction_manager_required',
     CLICK : 'gl:click',
+    RESIZE : 'gl:resize',
     SELECTED_SYSTEM: 'gl:selected_system',
     CLICK_PLANET: 'gl:click_planet',
     MOUSE_OVER_PLANET: 'gl:mouse_over_planet',
     MOUSE_OUT_PLANET: 'gl:mouse_out_planet',
     TOGGLE_ORBIT_CONTROLS: 'gl:toggle_orbit_controls',
+    TOGGLE_BLUR : 'gl:toggle_blur',
     SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction'
 }
 

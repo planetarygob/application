@@ -1,5 +1,6 @@
 <template>
     <div class="relative">
+        <div class="filter"></div>
         <template v-if="selectedSystem && showSystemTexts">
             <div
                 class="container flex flex-col justify-center p-8 w-3/12 absolute text-white mx-auto"
@@ -162,4 +163,14 @@ export default {
     button:disabled {
         opacity: 0.5;
     }
+
+    /* .filter {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 20%;
+        background: rgba(255, 0, 0, 0.048);
+        backdrop-filter: blur(10px);
+    } */
 </style>
