@@ -8,9 +8,9 @@
     },
     "navPosition": 0,
     "initialPosition": {
-      "x":0,
-      "y":0,
-      "z":0
+      "x": 0,
+      "y": 0,
+      "z": 0
     },
     "sun": {
       "name": "mode_sun",
