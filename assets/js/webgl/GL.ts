@@ -104,18 +104,12 @@ class GL {
 
         EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
 
-        this.scene.renderer.render(this.scene, this.scene.camera)
-
         if (this.isHighlightManagerRequired) {
             EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER)
         }
 
         if (this.isInteractionManagerRequired) {
             EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER)
-        }
-
-        if (this.isAnimationMixerRequired) {
-            EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
         }
     }
 }
