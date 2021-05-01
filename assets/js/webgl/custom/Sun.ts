@@ -1,5 +1,7 @@
-import { Group, Vector3, Object3D, Mesh } from "three"
+import { Group, Vector3, Object3D, Mesh, AnimationMixer, LoopOnce, LoopRepeat } from "three"
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader"
+import EventBus from "../../utils/EventBus"
+import { GLEvents } from "../../utils/Events"
 
 class Sun extends Object3D {
     name: string
@@ -12,7 +14,9 @@ class Sun extends Object3D {
         
         this.name = name
 
-        this.add(model.scene.clone())
+        this.launchAnimation(model)
+
+        this.add(model.scene)
         this.scale.set(0.05, 0.05, 0.05)
         this.rotation.y = this.rotation.y + Math.PI
         this.visible = false
@@ -21,6 +25,18 @@ class Sun extends Object3D {
             this.illuminateQuiz(model)
         }
         
+    }
+
+    launchAnimation (model: GLTF) {
+        if (model.animations.length) {
+            const animationMixer = new AnimationMixer(model.scene)
+            const action = animationMixer.clipAction(model.animations[0])
+            action.play()
+
+            EventBus.on(GLEvents.UPDATE_ANIMATION_MIXER, (deltaTime) => {
+                animationMixer.update(deltaTime)
+            })
+        }
     }
 
     illuminateQuiz(model: GLTF) {

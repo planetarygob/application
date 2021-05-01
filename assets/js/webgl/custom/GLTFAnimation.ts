@@ -46,8 +46,6 @@ class GLTFAnimation {
 
     launchAnimation (scene: Scene) {
         if (this.action) {
-            EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, true)
-
             this.action.play()
             this.action.clampWhenFinished = true
 
@@ -55,7 +53,6 @@ class GLTFAnimation {
 
             if (scene.animationMixer) {
                 scene.animationMixer.addEventListener('finished', () => {
-                    EventBus.emit(GLEvents.ANIMATION_MIXER_REQUIRED, false)
                     EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
                     scene.cameraAnimationManager.sceneryInteractionDezoom()
                     // EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)

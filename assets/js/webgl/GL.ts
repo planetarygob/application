@@ -20,7 +20,6 @@ class GL {
     clock: Clock
     size: Size
     canvas: HTMLCanvasElement
-    isAnimationMixerRequired: boolean
     isHighlightManagerRequired: boolean
     isInteractionManagerRequired: boolean
 
@@ -40,7 +39,6 @@ class GL {
 
         this.clock = new Clock()
 
-        this.isAnimationMixerRequired = false
         this.isHighlightManagerRequired = false
         this.isInteractionManagerRequired = false
 
@@ -60,11 +58,6 @@ class GL {
 
     listenEvents() {
         window.addEventListener('resize', this.resize.bind(this))
-        EventBus.on<boolean>(GLEvents.ANIMATION_MIXER_REQUIRED, (required) => {
-            if (required !== undefined) {
-                this.isAnimationMixerRequired = required
-            }
-        })
         EventBus.on<boolean>(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, (required) => {
             if (required !== undefined) {
                 this.isHighlightManagerRequired = required
@@ -105,9 +98,7 @@ class GL {
             EventBus.emit(GLEvents.UPDATE_TOOL_SCALE, this.clock.getElapsedTime())
         }
 
-        if (this.isAnimationMixerRequired) {
-            EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
-        }
+        EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
 
         this.scene.renderer.render(this.scene, this.scene.camera)
 
