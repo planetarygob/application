@@ -6,6 +6,7 @@ import { gsap } from 'gsap'
 import Camera from "../../webgl/core/Camera";
 import Controls from "../../webgl/core/Controls";
 import Planet from "../../webgl/custom/Planet";
+import BlurManager from "./BlurManager";
 
 class CameraAnimationManager {
     private static instance: CameraAnimationManager
@@ -120,6 +121,17 @@ class CameraAnimationManager {
         }).call(() => EventBus.emit(AnimationEvents.SYSTEM_ZOOM_FINISHED, false), [], "-=1")
 
         this.controls.target.set(selectedSystem.initialPosition.x, selectedSystem.initialPosition.y, selectedSystem.initialPosition.z)
+    }
+
+    showBlur (blurManager: BlurManager) {
+        gsap.timeline().fromTo(blurManager.postprocessing.bokeh.uniforms.maxblur, {value: 0}, {value: 0.007, duration: 5});
+    }
+
+    hideBlur (blurManager: BlurManager) {
+        const blurTimeline = gsap.timeline({onComplete: () => {
+            blurManager.isEnabled = false
+        }})
+        blurTimeline.fromTo(blurManager.postprocessing.bokeh.uniforms.maxblur, {value: 0.007}, {value: 0, duration: 5});
     }
 
     discoverPlanet (planet: Planet) {

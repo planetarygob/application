@@ -8,16 +8,17 @@
     },
     "navPosition": 0,
     "initialPosition": {
-      "x":0,
-      "y":0,
-      "z":0
+      "x": 0,
+      "y": 0,
+      "z": 0
     },
     "sun": {
       "name": "mode_sun",
       "type": "sun",
       "url": "sun_mode.glb",
       "model": null,
-      "light": null
+      "light": null,
+      "floatFactor": 1.2
     },
     "planets": [
       {
@@ -295,7 +296,8 @@
       "type": "sun",
       "url": "sun_hobbies.glb",
       "model":null,
-      "light":null
+      "light":null,
+      "floatFactor": 1.4
     },
     "planets": [
       {
@@ -362,7 +364,8 @@
       "name":"quiz_sun",
       "type": "sun",
       "url": "satellite.glb",
-      "model":null
+      "model":null,
+      "floatFactor": 0.6
     }
   },
   {
@@ -383,7 +386,8 @@
       "type": "sun",
       "url": "sun_techno.glb",
       "model":null,
-      "light":null
+      "light":null,
+      "floatFactor": 1.3
     },
     "planets": [
       {

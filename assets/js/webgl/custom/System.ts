@@ -53,7 +53,7 @@ class System extends Group {
         const sunInfos = systemInfos.sun
         const sunModel = this.loadingManager.getGLTFByName(sunInfos.name)
 
-        const sun = new Sun(sunInfos.name, sunModel)
+        const sun = new Sun(sunInfos.name, sunModel, sunInfos.floatFactor)
         this.add(sun)
     }
 

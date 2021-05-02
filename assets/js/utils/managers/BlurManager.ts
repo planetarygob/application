@@ -5,6 +5,7 @@ import Scene from "../../webgl/core/Scene"
 import GUI from "../dev/GUI"
 import EventBus from "../EventBus"
 import { GLEvents } from "../Events"
+import { sRGBEncoding } from "three"
 
 class BlurManager {
     scene: Scene
@@ -21,16 +22,16 @@ class BlurManager {
         this.postprocessing = {}
         this.effectController = {
             focus: 20,
-            aperture: 10,
-            maxblur: 0.01
+            aperture: 30,
+            maxblur: 0.007
         }
 
         this.init()
         this.matChanger()
 
         // TODO : Remove once it's ok
-        GUI.add( this.effectController, "focus", 0, 40, 0.01 ).onChange( this.matChanger.bind(this) )
-        GUI.add( this.effectController, "aperture", 0, 10, 0.01 ).onChange( this.matChanger.bind(this) )
+        GUI.add( this.effectController, "focus", 0, 100, 0.01 ).onChange( this.matChanger.bind(this) )
+        GUI.add( this.effectController, "aperture", 0, 100, 0.01 ).onChange( this.matChanger.bind(this) )
         GUI.add( this.effectController, "maxblur", 0.0, 0.01, 0.001 ).onChange( this.matChanger.bind(this) )
 
         EventBus.on(GLEvents.UPDATE, this.update.bind(this))
@@ -54,6 +55,9 @@ class BlurManager {
         composer.addPass( bokehPass )
 
         this.postprocessing.composer = composer
+        this.postprocessing.composer.renderTarget1.texture.encoding = sRGBEncoding
+        this.postprocessing.composer.renderTarget2.texture.encoding = sRGBEncoding
+
         this.postprocessing.bokeh = bokehPass
     }
 

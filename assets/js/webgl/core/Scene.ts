@@ -127,6 +127,7 @@ class Scene extends TScene {
                 this.selectedSystem = selectedSystem
                 this.triggerSystems(false, true)
                 this.cameraAnimationManager.discoverSystem(selectedSystem)
+                this.cameraAnimationManager.hideBlur(this.blurManager)
             }
         })
 
@@ -135,9 +136,6 @@ class Scene extends TScene {
             if (isFirstZoom) {
                 EventBus.emit(UIEvents.SHOW_SYSTEM_TEXTS, true)
             } else if (this.selectedSystem) {
-                // TODO : Animate aperture to 0 with a logarithm as easing to have a smooth transition
-                this.blurManager.isEnabled = false
-                console.log(this.blurManager.isEnabled)
                 this.triggerPlanets(true)
                 this.controls.enableRotate = true
             }
@@ -187,6 +185,8 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
                 this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {
+                this.blurManager.isEnabled = true
+                this.cameraAnimationManager.showBlur(this.blurManager)
                 this.triggerSystems(true, true)
                 this.triggerPlanets(false)
                 this.cameraAnimationManager.backOnSystemsChoiceView(this.selectedSystem)
@@ -250,7 +250,7 @@ class Scene extends TScene {
 
         // Geometry
         const particlesGeometry = new BufferGeometry()
-        const count = 500
+        const count = 1200
 
         const positions = new Float32Array(count * 3) // Multiply by 3 because each position is composed of 3 values (x, y, z)
 
