@@ -3,13 +3,14 @@ import GLTFAnimation from './GLTFAnimation'
 import Scene from "../core/Scene"
 import EventBus from "../../utils/EventBus"
 import { GLEvents } from "../../utils/Events"
-import { AnimationMixer, LoopOnce, Vector3 } from "three"
+import { AnimationMixer, LoopOnce, Vector3, Object3D } from "three"
 
 class PlanetScenery {
     name: string
     model: GLTF
     yPosition: number
     animation: GLTFAnimation|null
+    hiddenObjects: Array<Object3D>
 
     constructor (
         name: string,
@@ -25,6 +26,8 @@ class PlanetScenery {
         this.model.scene.visible = false
         this.model.scene.scale.set(0.005, 0.005, 0.005)
 
+        this.hiddenObjects = []
+
         if (this.animation) {
             this.model.scene.traverse((child: any) => {
                 if (child.name === this.animation!.animationTool.name) {
@@ -33,7 +36,15 @@ class PlanetScenery {
                 if (child.name === this.animation!.animationTarget.name) {
                     this.animation!.animationTarget.model = child
                 }
+
+                if (child.name === 'explosion_fleurs' || child.name === 'flowergun') {
+                    this.hiddenObjects.push(child)
+                }
             })
+        }
+
+        for (let object of this.hiddenObjects) {
+            object.visible = false
         }
     }
 
@@ -85,7 +96,7 @@ class PlanetScenery {
             })
 
             scene.dragControls.addEventListener('dragend', (e) => {
-                this.animation!.onDragEnd(scene)
+                this.animation!.onDragEnd(scene, this.hiddenObjects)
             })
 
             scene.highlightManager.add(this.animation.animationTool.model)
