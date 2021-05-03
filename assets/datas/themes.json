@@ -27,7 +27,7 @@
         "orbitRange": 10,
         "orbitSpeed": 1,
         "floatFactor": 0.6125,
-        "initialPosition":{
+        "initialPosition": {
           "x": 12,
           "y": -2,
           "z": -4
@@ -96,9 +96,20 @@
         "scenery": {
           "name":"mode_scenery_skirt",
           "type": "scenery",
-          "url": "scenery_planet_skirt_baked.glb",
+          "url": "scenery_planet_skirt_V2.glb",
           "model": null,
           "yPosition": -2.5,
+          "character": {
+            "name": "mode_scenery_skirt_character",
+            "type": "character",
+            "url": "/models/skirt/character.gltf",
+            "model": null,
+            "initialPosition": {
+              "x": 1,
+              "y": 2,
+              "z": 0.5
+            }
+          },
           "interaction": {
             "instruction": "Coupe la jupe afin de créer le nouveau model",
             "tool": "scissors",
@@ -181,9 +192,20 @@
         "scenery": {
           "name": "mode_scenery_hippie",
           "type": "scenery",
-          "url": "scenery_planet_hippie.glb",
+          "url": "scenery_planet_hippie_V2.glb",
           "model": null,
           "yPosition": -3.5,
+          "character": {
+            "name": "mode_scenery_hippie_character",
+            "type": "character",
+            "url": "/models/skirt/character.gltf",
+            "model": null,
+            "initialPosition": {
+              "x": 0.5,
+              "y": -0.7,
+              "z": 0.8
+            }
+          },
           "interaction": {
             "instruction": "Glisse la fleur dans le pistolet",
             "tool": "flowerbandana",
@@ -266,9 +288,20 @@
         "scenery": {
           "name":"mode_scenery_planet_rock",
           "type": "scenery",
-          "url": "scenery_planet_rock.glb",
+          "url": "scenery_planet_rock_V2.glb",
           "model": null,
           "yPosition": 7.5,
+          "character": {
+            "name": "mode_scenery_rock_character",
+            "type": "character",
+            "url": "/models/rock/character.gltf",
+            "model": null,
+            "initialPosition": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
           "interaction": {
             "instruction": "...",
             "tool": "",

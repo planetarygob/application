@@ -6,11 +6,14 @@ import {
     BufferGeometry, 
     BufferAttribute, 
     Points,
-    AnimationMixer
+    AnimationMixer,
+    PointLight,
+    Mesh,
+    MeshBasicMaterial
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Camera from './Camera'
 import Controls from './Controls'
 import { UIEvents, GLEvents, AnimationEvents } from '../../utils/Events'
@@ -274,9 +277,9 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
-        // console.log('gltf name', gltf.userData.name);
+        console.log('gltf name', gltf.userData.name);
         this.loadingManager.loadedModels += 1
-        const progress = 100 / 16 * this.loadingManager.loadedModels
+        const progress = 100 / 19 * this.loadingManager.loadedModels
 
         EventBus.emit(UIEvents.UPDATE_LOADER, {
             progress: progress

@@ -3,33 +3,47 @@ import GLTFAnimation from './GLTFAnimation'
 import Scene from "../core/Scene"
 import EventBus from "../../utils/EventBus"
 import { GLEvents } from "../../utils/Events"
-import { AnimationMixer, LoopOnce, Vector3, Object3D } from "three"
+import { AnimationMixer, LoopOnce, Vector3, Object3D, Group, DirectionalLight, AmbientLight, Mesh, MeshBasicMaterial } from "three"
+import SceneryCharacter from "./SceneryCharacter"
 
-class PlanetScenery {
+class PlanetScenery extends Group {
     name: string
     model: GLTF
     yPosition: number
     animation: GLTFAnimation|null
+    character: SceneryCharacter|null
     hiddenObjects: Array<Object3D>
 
     constructor (
         name: string,
         model: GLTF,
         yPosition: number,
-        animation: GLTFAnimation|null
+        animation: GLTFAnimation|null,
+        character: SceneryCharacter|null
     ) {
+        super()
+
         this.name = name
         this.model = model
         this.yPosition = yPosition
         this.animation = animation
+        this.character = character
 
         this.model.scene.visible = false
         this.model.scene.scale.set(0.005, 0.005, 0.005)
 
         this.hiddenObjects = []
 
-        if (this.animation) {
-            this.model.scene.traverse((child: any) => {
+        this.model.scene.traverse((child: any) => {
+            if (child instanceof Mesh) {
+                const prevMaterial = child.material
+                const newMaterial = new MeshBasicMaterial()
+                newMaterial.copy(prevMaterial)
+                newMaterial.map = prevMaterial.emissiveMap // Dans le cas ou il n'y a rien dans la propriété map
+                child.material = newMaterial
+            }
+
+            if (this.animation) {
                 if (child.name === this.animation!.animationTool.name) {
                     this.animation!.animationTool.model = child
                 }
@@ -40,8 +54,8 @@ class PlanetScenery {
                 if (child.name === 'explosion_fleurs' || child.name === 'flowergun') {
                     this.hiddenObjects.push(child)
                 }
-            })
-        }
+            }
+        })
 
         for (let object of this.hiddenObjects) {
             object.visible = false

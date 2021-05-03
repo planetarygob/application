@@ -9,6 +9,7 @@ import PlanetScenery from "./PlanetScenery"
 import SceneryInteraction from "./SceneryInteraction"
 import AnimationObject from "./AnimationObject"
 import GLTFAnimation from "./GLTFAnimation"
+import SceneryCharacter from "./SceneryCharacter"
 
 class System extends Group {
     name: string
@@ -46,6 +47,8 @@ class System extends Group {
 
         this.createSun(systemInfos)
         this.createPlanets(systemInfos, gl)
+
+        console.log('system', this);
     }
 
     createSun (systemInfos: any) {
@@ -73,14 +76,31 @@ class System extends Group {
 
             if (planetInfos.hasOwnProperty('scenery')) {
                 const sceneryModel = this.loadingManager.getGLTFByName(planetInfos.scenery.name)
+
                 const animationTool = new AnimationObject(planetInfos.scenery.interaction.tool, null)
                 const animationTarget = new AnimationObject(planetInfos.scenery.interaction.target, null)
+                
                 let animation: GLTFAnimation|null = null
+                let character: SceneryCharacter|null = null
+
                 if (sceneryModel.animations.length) {
                     animation = new GLTFAnimation(null, sceneryModel.animations[0], null, null, animationTool, animationTarget)
                 }
+
+                if (planetInfos.scenery.hasOwnProperty('character')) {
+                    const characterModel = this.loadingManager.getGLTFByName(planetInfos.scenery.character.name)
+                    character = new SceneryCharacter(
+                        planetInfos.scenery.character.name, 
+                        characterModel, 
+                        new Vector3(
+                            planetInfos.scenery.character.initialPosition.x, 
+                            planetInfos.scenery.character.initialPosition.y, 
+                            planetInfos.scenery.character.initialPosition.z
+                        )
+                    )
+                }
                 
-                scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, animation)
+                scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, animation, character)
             }
 
             const planet = new Planet(gl.scene, planetInfos.name, object, scenery, planetInfos)

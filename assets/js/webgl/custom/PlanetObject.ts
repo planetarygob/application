@@ -7,7 +7,7 @@ class PlanetObject {
     constructor (
         name: string,
         model: GLTF
-    ) { 
+    ) {
         this.name = name
         this.model = model
 

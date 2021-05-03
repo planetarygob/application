@@ -70,6 +70,7 @@ export default {
                 this.currentStep++
                 this.currentParagraphStep = 0
                 EventBus.emit(GLEvents.SETUP_SCENERY_INTERACTION)
+                EventBus.emit(UIEvents.RELAUNCH_ROCK_ANIMATION)
                 this.$emit('update:is-displayed', false)
                 return
             }
