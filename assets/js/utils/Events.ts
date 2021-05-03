@@ -37,5 +37,6 @@ export const AnimationEvents = {
     DISCOVER_SYSTEM: 'animation:discover_system',
     SYSTEM_ZOOM_FINISHED: 'animation:system_zoom_finished',
     PLANET_ZOOM_FINISHED: 'animation:planet_zoom_finished',
-    BACK: 'animation:back'
+    BACK: 'animation:back',
+    BACK_ON_SYSTEM_CHOICE: 'animation:back_on_system_choice',
 }

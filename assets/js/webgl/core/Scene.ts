@@ -183,12 +183,15 @@ class Scene extends TScene {
                 this.selectedSystem.triggerSun(true)
                 EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, false)
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
+                EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, false)
+                EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
                 this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {
                 this.blurManager.isEnabled = true
                 this.cameraAnimationManager.showBlur(this.blurManager)
                 this.triggerSystems(true, true)
                 this.triggerPlanets(false)
+                EventBus.emit(AnimationEvents.BACK_ON_SYSTEM_CHOICE)
                 this.cameraAnimationManager.backOnSystemsChoiceView(this.selectedSystem)
             }
         })

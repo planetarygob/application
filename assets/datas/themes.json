@@ -185,7 +185,7 @@
           "model": null,
           "yPosition": -3.5,
           "interaction": {
-            "instruction": "Glisse la fleur dans le pistolet",
+            "instruction": "Recharge le pistolet de David",
             "tool": "flowerbandana",
             "target": "brasgauche"
           }
@@ -270,7 +270,7 @@
           "model": null,
           "yPosition": 7.5,
           "interaction": {
-            "instruction": "...",
+            "instruction": "Coud le logo des Rolling Stones sur le blouson de Fred",
             "tool": "",
             "target": ""
           }
@@ -352,7 +352,7 @@
     "type": "system",
     "teasing": {
       "title": "LA STATION SPATIALE",
-      "description": "Après à ton exploration, rejoins la station spatiale pour faire le compte rendu de ta mission à tout l’équipage. Un quiz te sera donné afin de récolter les données que tu as découvert au sein des systèmes. L’équipage et toi, pourrez échanger sur vos découvertes."
+      "description": "Après ton exploration, rejoins la station spatiale pour faire le compte rendu de ta mission à tout l’équipage. Un quiz te sera donné afin de récolter les données que tu as découvert au sein des systèmes. L’équipage et toi, pourrez échanger sur vos découvertes."
     },
     "navPosition": 2,
     "initialPosition":{

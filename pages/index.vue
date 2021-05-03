@@ -10,7 +10,7 @@
                 <button
                     class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border font-bold py-2 px-4 rounded-full"
                     :class="selectedSystem.name !== 'quiz' ? 'hover:bg-white hover:text-purple-500' : ''"
-                    :disabled="selectedSystem.name === 'quiz'"
+                    :disabled="selectedSystem.name !== 'mode'"
                     @click="discoverSystem()">
                     DECOUVRIR
                 </button>
@@ -51,9 +51,9 @@
         <loader />
         <template v-if="selectedPlanetInfos">
             <planet-modal
-            v-if="selectedPlanetInfos.modalContent"
-            :is-displayed.sync="displayModal"
-            :content="selectedPlanetInfos.modalContent" />
+                v-if="selectedPlanetInfos.modalContent"
+                :is-displayed.sync="displayModal"
+                :content="selectedPlanetInfos.modalContent" />
             <planet-dialog
                 v-if="selectedPlanetInfos.dialogContent"
                 :is-displayed.sync="displayDialog"
@@ -134,6 +134,9 @@ export default {
                     this.displayInstruction = newValue
                 }
             })
+            EventBus.on(AnimationEvents.BACK_ON_SYSTEM_CHOICE, () => {
+                this.discoveringSystem = false
+            })
         },
 
         discoverSystem () {
@@ -163,14 +166,4 @@ export default {
     button:disabled {
         opacity: 0.5;
     }
-
-    /* .filter {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 20%;
-        background: rgba(255, 0, 0, 0.048);
-        backdrop-filter: blur(10px);
-    } */
 </style>
