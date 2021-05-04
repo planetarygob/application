@@ -11,7 +11,12 @@ export const SystemsData = {
             z: 35
         },
         {
-            x: 0,
+            x: -30,
+            y: 0, 
+            z: 75
+        },
+        {
+            x: 30,
             y: 0, 
             z: 75
         },

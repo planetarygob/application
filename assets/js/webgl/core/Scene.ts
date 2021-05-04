@@ -277,9 +277,9 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
-        // console.log('gltf name', gltf.userData.name);
+        console.log('gltf name', gltf.userData.name);
         this.loadingManager.loadedModels += 1
-        const progress = 100 / 16 * this.loadingManager.loadedModels
+        const progress = 100 / 17 * this.loadingManager.loadedModels
 
         EventBus.emit(UIEvents.UPDATE_LOADER, {
             progress: progress
