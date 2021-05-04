@@ -10,7 +10,7 @@
                 <button
                     class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border font-bold py-2 px-4 rounded-full"
                     :class="selectedSystem.name !== 'quiz' ? 'hover:bg-white hover:text-purple-500' : ''"
-                    :disabled="selectedSystem.name !== 'mode'"
+                    :disabled="selectedSystem.name === 'quiz'"
                     @click="discoverSystem()">
                     DECOUVRIR
                 </button>
