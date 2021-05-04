@@ -1,5 +1,6 @@
 <template>
     <div class="relative">
+        <div class="filter"></div>
         <template v-if="selectedSystem && showSystemTexts">
             <div
                 class="container flex flex-col justify-center p-8 w-3/12 absolute text-white mx-auto"
@@ -48,15 +49,19 @@
             <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
         <loader />
-        <planet-modal
-            v-if="selectedPlanetInfos && selectedPlanetInfos.modalContent"
-            :is-displayed.sync="displayModal"
-            :content="selectedPlanetInfos.modalContent"
-        />
-        <planet-dialog
-            v-if="selectedPlanetInfos && selectedPlanetInfos.dialogContent"
-            :is-displayed.sync="displayDialog"
-            :content="selectedPlanetInfos.dialogContent" />
+        <template v-if="selectedPlanetInfos">
+            <planet-modal
+                v-if="selectedPlanetInfos.modalContent"
+                :is-displayed.sync="displayModal"
+                :content="selectedPlanetInfos.modalContent" />
+            <planet-dialog
+                v-if="selectedPlanetInfos.dialogContent"
+                :is-displayed.sync="displayDialog"
+                :content="selectedPlanetInfos.dialogContent" />
+            <scenery-interaction-instruction
+                v-if="displayInstruction && selectedPlanetInfos.scenery && selectedPlanetInfos.scenery.interaction"
+                :instruction="selectedPlanetInfos.scenery.interaction.instruction" />
+        </template>
         <web-gl />
     </div>
 </template>
@@ -68,8 +73,9 @@ import SvgIcon from '../components/SvgIcon.vue'
 import EventBus from '../assets/js/utils/EventBus'
 import { UIEvents, GLEvents, AnimationEvents } from '../assets/js/utils/Events'
 import System from '../assets/js/webgl/custom/System'
-import PlanetModal from '../components/PlanetModal.vue'
-import PlanetDialog from '../components/PlanetDialog.vue'
+import PlanetModal from '../components/planet/PlanetModal.vue'
+import PlanetDialog from '../components/planet/PlanetDialog.vue'
+import SceneryInteractionInstruction from '../components/scenery/InteractionInstruction.vue'
 import Tracker from '../components/Tracker.vue'
 import Loader from '~/components/Loader.vue'
 
@@ -80,7 +86,8 @@ export default {
         SvgIcon,
         PlanetModal,
         PlanetDialog,
-        Loader
+        Loader,
+        SceneryInteractionInstruction
     },
     
     data: () => ({
@@ -89,24 +96,49 @@ export default {
         discoveringSystem: false,
         showSystemTexts: false,
         displayModal: false,
-        displayDialog: false
+        displayDialog: false,
+        displayInstruction: false
     }),
 
     mounted() {
-        EventBus.on<boolean>(UIEvents.SHOW_SYSTEM_TEXTS, (newValue) => this.showSystemTexts = newValue)
-        EventBus.on<System>(GLEvents.SELECTED_SYSTEM, (newValue) => this.selectedSystem = newValue)
-        EventBus.on(UIEvents.SELECTED_PLANET_INFOS, (newValue) => {
-            this.selectedPlanetInfos = newValue
-        })
-        EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
-            this.displayDialog = newValue
-        })
-        EventBus.on<boolean>(UIEvents.SHOW_PLANET_MODAL, (newValue) => {
-            this.displayModal = newValue
-        })
+        this.listenEvents()
     },
 
     methods: {
+        listenEvents () {
+            EventBus.on<boolean>(UIEvents.SHOW_SYSTEM_TEXTS, (newValue) => {
+                if (newValue !== undefined) {
+                    this.showSystemTexts = newValue
+                }
+            })
+            EventBus.on<System>(GLEvents.SELECTED_SYSTEM, (newValue) => {
+                if (newValue !== undefined) {
+                    this.selectedSystem = newValue
+                }
+            })
+            EventBus.on(UIEvents.SELECTED_PLANET_INFOS, (newValue) => {
+                this.selectedPlanetInfos = newValue
+            })
+            EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
+                if (newValue !== undefined) {
+                    this.displayDialog = newValue
+                }
+            })
+            EventBus.on<boolean>(UIEvents.SHOW_PLANET_MODAL, (newValue) => {
+                if (newValue !== undefined) {
+                    this.displayModal = newValue
+                }
+            })
+            EventBus.on<boolean>(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, (newValue) => {
+                if (newValue !== undefined) {
+                    this.displayInstruction = newValue
+                }
+            })
+            EventBus.on(AnimationEvents.BACK_ON_SYSTEM_CHOICE, () => {
+                this.discoveringSystem = false
+            })
+        },
+
         discoverSystem () {
             if (this.selectedSystem.name === 'mode') {
                 this.showSystemTexts = false

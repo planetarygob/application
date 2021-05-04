@@ -1,31 +1,34 @@
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
-import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
-import { WebGLRenderer, PerspectiveCamera, Vector2, Object3D } from 'three';
+import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader';
+import { WebGLRenderer, PerspectiveCamera, Vector2, Object3D, sRGBEncoding, ACESFilmicToneMapping, Color, LinearFilter, RGBAFormat, WebGLRenderTarget } from 'three';
 import { GLEvents } from '../Events';
 import EventBus from '../EventBus';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 
 class HighlightManager {
     private static instance: HighlightManager
     composer: EffectComposer|null
     outlinePass: OutlinePass
     renderPass: RenderPass|null
-    shaderPass: ShaderPass|null
 
     constructor (renderer: WebGLRenderer, scene: THREE.Scene, camera: PerspectiveCamera) {
         this.composer = new EffectComposer(renderer);
 
         this.renderPass = new RenderPass(scene, camera);
         this.composer.addPass(this.renderPass);
-
-        this.outlinePass = new OutlinePass(new Vector2(window.innerWidth, window.innerHeight ), scene, camera);
+        
+        this.outlinePass = new OutlinePass(new Vector2(window.innerWidth, window.innerHeight), scene, camera);
+        this.outlinePass.renderToScreen = true
         this.composer.addPass(this.outlinePass);
 
-        this.shaderPass = new ShaderPass(FXAAShader);
-        this.shaderPass.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
-        this.composer.addPass(this.shaderPass);
+        this.composer.renderTarget1.texture.encoding = sRGBEncoding
+        this.composer.renderTarget2.texture.encoding = sRGBEncoding
+
+        EventBus.on(GLEvents.UPDATE_HIGHLIGHT_MANAGER, () => {
+            this.update()
+        })
     }
 
     public static getInstance (renderer: WebGLRenderer, scene: THREE.Scene, camera: PerspectiveCamera): HighlightManager {
@@ -40,20 +43,22 @@ class HighlightManager {
         this.outlinePass.selectedObjects.push(object)
     }
 
+    empty () {
+        this.outlinePass.selectedObjects = []
+    }
+
     update () {
         if (this.composer) {
+            // TODO improve delta time
             this.composer.render(1/60)
         }
     }
 
     dispose () {
-        if (this.composer && this.shaderPass && this.renderPass) {
+        if (this.composer && this.renderPass) {
             this.composer.removePass(this.outlinePass)
-            this.composer.removePass(this.shaderPass)
             this.composer.removePass(this.renderPass)
             this.outlinePass.dispose()
-            this.shaderPass.material.dispose()
-            this.shaderPass = null
             this.renderPass = null
         }
         this.composer = null

@@ -1,80 +1,59 @@
-<!-- <template>
-    <section v-if="isDisplayed && content">
-        <div class="ui-gradient ui-gradient--top"></div>
-        <div class="wrapper">
-            <h2 v-if="content.title">{{ content.title }}</h2>
-            <div class="container">
-                <div 
-                    v-if="content.paragraphs"
-                    class="text-content">
-                    <p v-html="content.paragraphs[0]" />
-                </div>
-                <div
-                    v-if="content.images"
-                    class="img-content">
-                    <div
-                        v-for="(image, index) in content.images"
-                        :key="'image' + index"
-                        class="img"
-                        :class="'img--' + image.type"></div>
-                </div>
-            </div>
-            <div
-                v-if="content.videos"
-                class="container">
-                <div
-                    v-for="(video, index) in content.videos"
-                    :key="'video' + index"
-                    class="video" />
-            </div>
-            <div class="container">
-                <div class="text-content">
-                    <p v-html="content.paragraphs[1]" />
-                </div>
-                <div class="text-content">
-                    <p v-html="content.paragraphs[2]" />
-                </div>
-            </div>
-            <button @click="close()">Terminer la lecture</button>
-        </div>
-        <div class="ui-gradient ui-gradient--bot"></div>
-    </section>
-</template> -->
-
 <template>
     <section v-if="isDisplayed && content">
         <div class="wrapper">
             <div 
                 class="img img--header"
                 v-if="content.headerImage"
-                v-bind:style="{ backgroundImage: `${ 'url(' + content.headerImage.url + ')' }`  }">
+                :style="{ backgroundImage: `${ 'url(' + content.headerImage.url + ')' }`  }">
             </div>
             
             <div class="container container--regular">
                 <div class="text-content">
                     <h2 v-if="content.titles">{{ content.titles[0] }}</h2>
-                    <p v-if="content.paragraphs" v-html="content.paragraphs[0]" />
+                    <p 
+                        v-if="content.paragraphs" 
+                        v-html="content.paragraphs[0]" />
                 </div>
-                <img v-if="content.images" class="mt-56" :src="content.images[0].url" alt="">
+                <img 
+                    v-if="content.images" 
+                    class="mt-56" 
+                    :src="content.images[0].url" 
+                    alt="">
             </div>
 
             <div class="container container--large">
-                <iframe v-if="content.video" class="video" :src="content.video.url + 'controls=0'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe
+                    v-if="content.video" class="video" 
+                    :src="content.video.url + 'controls=0'" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
                 <div class="text-content ml-32 my-auto">
                     <h2 v-if="content.titles">{{ content.titles[1] }}</h2>
-                    <p v-if="content.paragraphs" v-html="content.paragraphs[1]" />
+                    <p 
+                        v-if="content.paragraphs" 
+                        v-html="content.paragraphs[1]" />
                 </div>
             </div>
 
-            <img v-if="content.pannelImage" class="img--pannel" :src="content.pannelImage.url" alt="">
+            <img 
+                v-if="content.pannelImage" 
+                :src="content.pannelImage.url" 
+                class="img--pannel" 
+                alt="">
            
             <div class="container container--regular flex items-end">
                 <div class="text-content">
                     <h2 v-if="content.titles">{{ content.titles[2] }}</h2>
-                    <p v-if="content.paragraphs" v-html="content.paragraphs[2]" />
+                    <p 
+                        v-if="content.paragraphs" 
+                        v-html="content.paragraphs[2]" />
                 </div>
                 <div class="text-content">
-                    <p v-if="content.paragraphs" v-html="content.paragraphs[3]" />
+                    <p 
+                        v-if="content.paragraphs" 
+                        v-html="content.paragraphs[3]" />
                 </div>
             </div>
 
@@ -85,8 +64,8 @@
 </template>
 
 <script lang="ts">
-import EventBus from '../assets/js/utils/EventBus'
-import { AnimationEvents } from '../assets/js/utils/Events'
+import EventBus from '../../assets/js/utils/EventBus'
+import { AnimationEvents } from '../../assets/js/utils/Events'
 
 export default {
     props: {

@@ -22,6 +22,8 @@ import System from '../custom/System'
 import CameraAnimationManager from '../../utils/managers/CameraAnimationManager'
 import DragControls from './DragControls'
 import CustomInteractionManager from '../../utils/managers/CustomInteractionManager'
+import BlurManager from '../../utils/managers/BlurManager'
+import HighlightManager from '../../utils/managers/HighlightManager'
 
 interface Size {
     width: number
@@ -33,6 +35,8 @@ class Scene extends TScene {
     loadingManager: CustomLoadingManager
     cameraAnimationManager: CameraAnimationManager
     interactionManager: CustomInteractionManager
+    blurManager: BlurManager
+    highlightManager: HighlightManager
     animationMixer?: AnimationMixer
     camera: Camera
     controls: Controls
@@ -53,7 +57,7 @@ class Scene extends TScene {
         this.canvas = canvas
 
         this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
-        this.renderer = new Renderer({ canvas: this.canvas }, this.size.width, this.size.height)
+        this.renderer = new Renderer({ canvas: this.canvas, antialias: true }, this.size.width, this.size.height)
         this.renderer.render(this, this.camera)
 
         this.controls = new Controls(this.camera, this.canvas)
@@ -71,6 +75,9 @@ class Scene extends TScene {
         this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded.bind(this))
 
         this.interactionManager = CustomInteractionManager.getInstance(this.renderer, this.camera)
+
+        this.blurManager = new BlurManager(this)
+        this.highlightManager = HighlightManager.getInstance(this.renderer, this, this.camera)
 
         this.cameraAnimationManager = CameraAnimationManager.getInstance(this.camera, this.controls)
         
@@ -93,7 +100,6 @@ class Scene extends TScene {
             this.systems.push(system)
 
             this.cameraAnimationManager.launchBigBangAnimation(system)
-
             this.add(system)
         }
 
@@ -121,6 +127,7 @@ class Scene extends TScene {
                 this.selectedSystem = selectedSystem
                 this.triggerSystems(false, true)
                 this.cameraAnimationManager.discoverSystem(selectedSystem)
+                this.cameraAnimationManager.hideBlur(this.blurManager)
             }
         })
 
@@ -141,7 +148,7 @@ class Scene extends TScene {
             this.triggerPlanets(false, true)
             this.controls.enableRotate = false
             if (this.selectedPlanet) {
-                this.cameraAnimationManager.showSceneryAnimation(this.selectedPlanet)
+                this.cameraAnimationManager.showScenery(this.selectedPlanet)
             }
         })
 
@@ -174,11 +181,17 @@ class Scene extends TScene {
                 this.selectedPlanet.complete()
                 this.selectedPlanet = undefined
                 this.selectedSystem.triggerSun(true)
+                EventBus.emit(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, false)
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
+                EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, false)
+                EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
                 this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {
+                this.blurManager.isEnabled = true
+                this.cameraAnimationManager.showBlur(this.blurManager)
                 this.triggerSystems(true, true)
                 this.triggerPlanets(false)
+                EventBus.emit(AnimationEvents.BACK_ON_SYSTEM_CHOICE)
                 this.cameraAnimationManager.backOnSystemsChoiceView(this.selectedSystem)
             }
         })
@@ -240,7 +253,7 @@ class Scene extends TScene {
 
         // Geometry
         const particlesGeometry = new BufferGeometry()
-        const count = 500
+        const count = 1200
 
         const positions = new Float32Array(count * 3) // Multiply by 3 because each position is composed of 3 values (x, y, z)
 
@@ -264,9 +277,9 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
-        // console.log('gltf name', gltf.userData.name);
+        console.log('gltf name', gltf.userData.name);
         this.loadingManager.loadedModels += 1
-        const progress = 100 / 16 * this.loadingManager.loadedModels
+        const progress = 100 / 17 * this.loadingManager.loadedModels
 
         EventBus.emit(UIEvents.UPDATE_LOADER, {
             progress: progress

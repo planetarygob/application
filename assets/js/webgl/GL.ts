@@ -5,8 +5,6 @@ import {
 import Stats from '../utils/dev/Stats'
 import EventBus from '../utils/EventBus'
 import { GLEvents } from '../utils/Events'
-import { initGUI } from '../utils/dev/GUIFolders'
-import Tracker from '../utils/dev/Tracker'
 
 interface Size {
     width: number
@@ -20,9 +18,11 @@ class GL {
     clock: Clock
     size: Size
     canvas: HTMLCanvasElement
-    isAnimationMixerRequired: boolean
+    isHighlightManagerRequired: boolean
+    isInteractionManagerRequired: boolean
 
     constructor() {
+
         Stats.showPanel(0)
         document.body.appendChild(Stats.dom)
 
@@ -38,9 +38,11 @@ class GL {
 
         this.clock = new Clock()
 
-        this.isAnimationMixerRequired = false
+        this.isHighlightManagerRequired = false
+        this.isInteractionManagerRequired = false
 
         this.listenEvents()
+
         this.animate()
     }
 
@@ -56,9 +58,14 @@ class GL {
 
     listenEvents() {
         window.addEventListener('resize', this.resize.bind(this))
-        EventBus.on<boolean>(GLEvents.ANIMATION_MIXER_REQUIRED, (required) => {
+        EventBus.on<boolean>(GLEvents.HIGHLIGHT_MANAGER_REQUIRED, (required) => {
             if (required !== undefined) {
-                this.isAnimationMixerRequired = required
+                this.isHighlightManagerRequired = required
+            }
+        })
+        EventBus.on<boolean>(GLEvents.INTERACTION_MANAGER_REQUIRED, (required) => {
+            if (required !== undefined) {
+                this.isInteractionManagerRequired = required
             }
         })
     }  
@@ -70,7 +77,9 @@ class GL {
         this.scene.camera.aspect = this.size.width / this.size.height
         this.scene.camera.updateProjectionMatrix()
 
-        this.scene.renderer.setSize(this.size.width, this.size.height)
+        this.scene.renderer.setSize( this.size.width, this.size.height )
+
+        EventBus.emit(GLEvents.RESIZE)
     }
 
     // ---------------- LIFECYCLE
@@ -86,17 +95,23 @@ class GL {
     }
 
     render() {
-        if (this.clock) {
-            EventBus.emit(GLEvents.UPDATE, {
-                elapsedTime: this.clock.getElapsedTime() 
-            })
-        }
-
-        if (this.isAnimationMixerRequired) {
-            EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
-        }
-
         this.scene.renderer.render(this.scene, this.scene.camera)
+
+        if (this.clock) {
+            EventBus.emit(GLEvents.UPDATE, this.clock.getElapsedTime())
+            EventBus.emit(GLEvents.UPDATE_TOOL_SCALE, this.clock.getElapsedTime())
+        }
+
+        // TODO: deltaTime instead 1/60
+        EventBus.emit(GLEvents.UPDATE_ANIMATION_MIXER, 1/60)
+
+        if (this.isHighlightManagerRequired) {
+            EventBus.emit(GLEvents.UPDATE_HIGHLIGHT_MANAGER)
+        }
+
+        if (this.isInteractionManagerRequired) {
+            EventBus.emit(GLEvents.UPDATE_INTERACTION_MANAGER)
+        }
     }
 }
 

@@ -10,6 +10,7 @@ class Renderer extends TRenderer {
         super(canvas)
 
         this.setSize(width, height)
+        this.gammaFactor = 2.2
         this.setPixelRatio(Math.min(window.devicePixelRatio, 2))
         this.toneMapping = ACESFilmicToneMapping
         this.toneMappingExposure = 1
