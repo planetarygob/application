@@ -15,7 +15,7 @@
                     DECOUVRIR
                 </button>
             </div>
-            <div 
+            <div
                 class="absolute left-0 ml-6 cursor-pointer"
                 style="top: 50%"
                 @click="previousSystem">
@@ -41,12 +41,11 @@
             class="absolute left-0 ml-20 flex flex-row cursor-pointer"
             @click="backOnPreviousView">
             <svg-icon
-                svg-name="arrow_left"
-                :width="22"
-                :height="22"
+                svg-name="back"
+                :width="49"
+                :height="49"
                 color="#FFFFFF"
                 style="margin-top: 5px" />
-            <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
         <loader />
         <template v-if="selectedPlanetInfos">
