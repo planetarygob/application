@@ -146,8 +146,6 @@ export default {
                 this.discoveringSystem = false
             })
             EventBus.on(UIEvents.SHOW_INFORMATIONS_DIALOG, ({visible, content}) => {
-                console.log('visible', visible);
-                console.log('content', content);
                 this.informationsDialog.isDisplayed = visible
                 this.informationsDialog.content = content
             })
