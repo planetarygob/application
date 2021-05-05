@@ -7,7 +7,8 @@ import PlanetObject from './PlanetObject'
 import Bubble from "./Bubble";
 
 class Planet extends Group {
-    system: string
+    name: string
+    systemName: string
     bubble: Bubble
     object: PlanetObject|undefined
     scenery: PlanetScenery|undefined
@@ -18,7 +19,8 @@ class Planet extends Group {
 
     constructor(
         scene: Scene,
-        system: string,
+        name: string,
+        systemName: string,
         object: PlanetObject|undefined,
         scenery: PlanetScenery|undefined,
         infos: any
@@ -26,7 +28,8 @@ class Planet extends Group {
         super()
 
         this.scene = scene
-        this.system = system
+        this.name = name
+        this.systemName = systemName
         this.object = object
         this.scenery = scenery
         this.infos = infos
@@ -68,7 +71,7 @@ class Planet extends Group {
             this.scenery = undefined
         }
         // NOTE : We update the ProgressBar component with needed parameters
-        EventBus.emit(UIEvents.UPDATE_PROGRESS_BAR, { name : this.system, index : this.infos.index })
+        EventBus.emit(UIEvents.UPDATE_PROGRESS_BAR, { name : this.systemName, index : this.infos.index })
         // this.removeEvents()
     }
 

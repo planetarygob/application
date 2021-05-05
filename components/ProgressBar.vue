@@ -5,11 +5,14 @@
             <div class="ProgressBar_container">
                 <!-- BEGINNING OF REPEATABLE ELEMENT, CREATE NEW ONE FOR EACH SYSTEM IN EXPERIENCE -->
                 <!-- NOTE : Maybe we could use a isAvailable property in system so we don't create a tracker in the ProgressBar for unavailable sytem -->
-                <div class="ProgressBar_system ProgressBar_system--mode">
+                <div
+                    v-for="(system, index) in systemsFiltered"
+                    :key="'system' + index"
+                    :class="`ProgressBar_system ProgressBar_system--${system.name}`">
                     <!-- USE SYSTEM NAME FOR TEXT -->
-                    <p class="ProgressBar_name">Mode</p>
+                    <p class="ProgressBar_name">{{ system.teasing.title }}</p>
                     <!-- USE SYSTEM NAME FOR MODIFIER CLASS -->
-                    <div class="ProgressBar_progress ProgressBar_progress--mode">
+                    <div :class="`ProgressBar_progress ProgressBar_progress--${system.name}`">
                         <!-- CREATE A NODE + SEPARATOR FOR EACH ITEM IN SYSTEM.PLANETS -->
                         <!-- WARNING : Avoid creating a seperator for last item -->
                         <div class="ProgressBar_node" />
@@ -19,22 +22,12 @@
                         <div class="ProgressBar_node" />
                     </div>
                 </div>
-                <!-- END -->
-
-                <div class="ProgressBar_system ProgressBar_system--sexuality">
-                    <p class="ProgressBar_name">Sexualité</p>
-                    <div class="ProgressBar_progress ProgressBar_progress--sexuality">
-                        <div class="ProgressBar_node"></div>
-                        <div class="ProgressBar_separator"></div>
-                        <div class="ProgressBar_node"></div>
-                        <div class="ProgressBar_separator"></div>
-                        <div class="ProgressBar_node"></div>
-                    </div>
-                </div>
             </div>
             
             <div class="ProgressBar_quiz">
-                <img class="ProgressBar_img" src="https://florianblandin.fr/assets/images/quiz.png"></img>
+                <img 
+                    class="ProgressBar_img" 
+                    src="https://florianblandin.fr/assets/images/quiz.png" />
             </div>
         </div>
     </div>
@@ -44,12 +37,25 @@
 import gsap from 'gsap/all'
 import EventBus from '~/assets/js/utils/EventBus'
 import { UIEvents } from '~/assets/js/utils/Events'
+import JSONSystems from '../assets/datas/themes.json'
 
 export default {
     props: {
         content: {
             type: Object,
             default: () => {}
+        }
+    },
+
+    data: () => ({
+        quiz: document.querySelector('.ProgressBar_quiz'),
+        systems: document.querySelectorAll('.ProgressBar_system'),
+        JSONSystems,
+    }),
+
+    computed: {
+        systemsFiltered () {
+            return this.JSONSystems.filter(system => system.teasing.title !== 'LA STATION SPATIALE')
         }
     },
 
@@ -62,11 +68,6 @@ export default {
 
         EventBus.on(UIEvents.UPDATE_PROGRESS_BAR, (e: any) => this.update(e.name, e.index))
     },
-
-    data: () => ({
-        quiz: document.querySelector('.ProgressBar_quiz'),
-        systems: document.querySelectorAll('.ProgressBar_system')
-    }),
 
     methods: {
         update(system: string, index: number) {
@@ -125,7 +126,7 @@ export default {
         },
 
         // NOTE : Use this method when we go back to macro view
-        showAllSystems() {
+        showAllSystems () {
             for (let i = 0; i < this.systems.length; i++) {
                 if (this.systems[i].classList.contains(`hidden`) && this.quiz) {
                     this.systems[i].classList.remove('hidden')
@@ -216,5 +217,6 @@ export default {
     .ProgressBar_img { 
         margin: auto;
         opacity: 0.05;
+        margin-top: 20px;
     }
 </style>
