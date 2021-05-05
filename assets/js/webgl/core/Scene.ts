@@ -49,12 +49,17 @@ class Scene extends TScene {
     systems: Array<System>
     selectedSystem?: System
     selectedPlanet?: Planet
+    isFirstSystemDiscovering: boolean
 
     constructor(canvas: HTMLCanvasElement, size: Size) {
         super()
 
         this.size = size
         this.canvas = canvas
+
+        this.canvas.addEventListener('click', () => {
+            EventBus.emit(GLEvents.SCENE_CLICKED)
+        })
 
         this.camera = new Camera(75, this.size.width / this.size.height, 0.1, 1000)
         this.renderer = new Renderer({ canvas: this.canvas, antialias: true }, this.size.width, this.size.height)
@@ -63,11 +68,6 @@ class Scene extends TScene {
         this.controls = new Controls(this.camera, this.canvas)
         this.draggableObjects = []
         this.dragControls = new DragControls(this.draggableObjects, this.camera, this.renderer.domElement)
-
-        // TODO: Fire only on world change
-        // this.controls.addEventListener('change', () => {
-        //     EventBus.emit(GLEvents.UPDATE_CUBE_CAMERA)
-        // })
 
         this.systems = []
 
@@ -82,6 +82,7 @@ class Scene extends TScene {
         this.cameraAnimationManager = CameraAnimationManager.getInstance(this.camera, this.controls)
         
         this.isFirstZoomLaunched = false
+        this.isFirstSystemDiscovering = false
 
         this.handleBackground()
 
@@ -136,6 +137,7 @@ class Scene extends TScene {
             if (isFirstZoom) {
                 EventBus.emit(UIEvents.SHOW_SYSTEM_TEXTS, true)
             } else if (this.selectedSystem) {
+                this.showOnboardingModal()
                 this.triggerPlanets(true)
                 this.controls.enableRotate = true
             }
@@ -266,6 +268,22 @@ class Scene extends TScene {
 
         const particles = new Points(particlesGeometry, particlesMaterial)
         this.add(particles)
+    }
+
+    showOnboardingModal () {
+        if (!this.isFirstSystemDiscovering) {
+            this.isFirstSystemDiscovering = true
+            EventBus.emit(UIEvents.SHOW_INFORMATIONS_DIALOG, {
+                visible: true,
+                content: {
+                    name: "slide",
+                    image: {
+                        name: "slide"
+                    },
+                    text: "Pour touner autour du système,<br> <strong>maintiens le clic et déplace la souris.</strong>"
+                }
+            })
+        }
     }
 
     onError (error: ErrorEvent) {
