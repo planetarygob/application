@@ -22,6 +22,7 @@
     },
     "planets": [
       {
+        "index": "0",
         "name": "mode_planet_skirt",
         "type": "planet",
         "orbitRange": 10,
@@ -107,6 +108,7 @@
         }
       },
       {
+        "index": "1",
         "name": "mode_planet_hippie",
         "type": "planet",
         "orbitRange": 14,
@@ -192,6 +194,7 @@
         }
       },
       {
+        "index": "2",
         "name": "mode_planet_rock",
         "type": "planet",
         "orbitRange": 18,

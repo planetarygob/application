@@ -28,7 +28,8 @@ export const UIEvents = {
     UPDATE_LOADER: 'ui:update_loader',
     TOGGLE_LOADER: 'ui:toggle_loader',
     RESET_PLANET_DIALOG: 'ui:reset_planet_dialog',
-    SHOW_SCENERY_INTERACTION_INSTRUCTION: 'ui:show_scenery_interaction_instruction'
+    SHOW_SCENERY_INTERACTION_INSTRUCTION: 'ui:show_scenery_interaction_instruction',
+    UPDATE_PROGRESS_BAR: 'ui:update_progress_bar',
 }
 
 export const AnimationEvents = {

@@ -49,6 +49,7 @@
             <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
         <loader />
+        <progress-bar />
         <template v-if="selectedPlanetInfos">
             <planet-modal
             v-if="selectedPlanetInfos.modalContent"
@@ -163,14 +164,4 @@ export default {
     button:disabled {
         opacity: 0.5;
     }
-
-    /* .filter {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 20%;
-        background: rgba(255, 0, 0, 0.048);
-        backdrop-filter: blur(10px);
-    } */
 </style>
