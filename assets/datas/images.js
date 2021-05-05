@@ -10,4 +10,11 @@ svgImages.arrow_right = {
   viewBox: [0, 0, 28, 28]
 }
 
+svgImages.back = {
+  svg: `<svg width="49" height="49" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="24.5" cy="24.5" r="24.5" fill="white"/>
+  <path d="M26 30L20.1974 24.1974L26 18.3947" stroke="#120C23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`
+}
+
 export { svgImages }

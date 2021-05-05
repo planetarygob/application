@@ -3,10 +3,10 @@
         <div class="filter"></div>
         <template v-if="selectedSystem && showSystemTexts">
             <div
-                class="container flex flex-col justify-center p-8 w-3/12 absolute text-white mx-auto"
-                style="left: 52.5%; top: 35%">
-                <h1 class="font-extrabold text-3xl">{{ selectedSystem.title }}</h1>
-                <span class="text-gray-400 text-sm mt-3">{{ selectedSystem.description }}</span>
+                class="container flex flex-col justify-center p-8 absolute text-white mx-auto"
+                style="left: 52.5%; top: 33%; width: 28%">
+                <h1 class="font-extrabold text-4xl">{{ selectedSystem.title }}</h1>
+                <span class="text-gray-400 text-md mt-3">{{ selectedSystem.description }}</span>
                 <button
                     class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border font-bold py-2 px-4 rounded-full"
                     :class="selectedSystem.name !== 'quiz' ? 'hover:bg-white hover:text-purple-500' : ''"
@@ -15,7 +15,7 @@
                     DECOUVRIR
                 </button>
             </div>
-            <div 
+            <div
                 class="absolute left-0 ml-6 cursor-pointer"
                 style="top: 50%"
                 @click="previousSystem">
@@ -41,26 +41,29 @@
             class="absolute left-0 ml-20 flex flex-row cursor-pointer"
             @click="backOnPreviousView">
             <svg-icon
-                svg-name="arrow_left"
-                :width="22"
-                :height="22"
+                svg-name="back"
+                :width="49"
+                :height="49"
                 color="#FFFFFF"
                 style="margin-top: 5px" />
-            <span class="ml-3 text-white font-bold">RETOUR</span>
         </div>
         <loader />
+        <informations-dialog 
+            v-if="informationsDialog.isDisplayed"
+            :content="informationsDialog.content"
+            :is-displayed.sync="informationsDialog.isDisplayed" />
         <progress-bar />
         <template v-if="selectedPlanetInfos">
             <planet-modal
-            v-if="selectedPlanetInfos.modalContent"
-            :is-displayed.sync="displayModal"
-            :content="selectedPlanetInfos.modalContent" />
+                v-if="selectedPlanetInfos.modalContent"
+                :is-displayed.sync="isPlanetModalDisplayed"
+                :content="selectedPlanetInfos.modalContent" />
             <planet-dialog
                 v-if="selectedPlanetInfos.dialogContent"
-                :is-displayed.sync="displayDialog"
+                :is-displayed.sync="isPlanetDialogDisplayed"
                 :content="selectedPlanetInfos.dialogContent" />
             <scenery-interaction-instruction
-                v-if="displayInstruction && selectedPlanetInfos.scenery && selectedPlanetInfos.scenery.interaction"
+                v-if="isSceneryInstructionDisplayed && selectedPlanetInfos.scenery && selectedPlanetInfos.scenery.interaction"
                 :instruction="selectedPlanetInfos.scenery.interaction.instruction" />
         </template>
         <web-gl />
@@ -79,6 +82,7 @@ import PlanetDialog from '../components/planet/PlanetDialog.vue'
 import SceneryInteractionInstruction from '../components/scenery/InteractionInstruction.vue'
 import Tracker from '../components/Tracker.vue'
 import Loader from '~/components/Loader.vue'
+import InformationsDialog from '~/components/InformationsDialog.vue'
 
 export default {
     components: {
@@ -96,9 +100,13 @@ export default {
         selectedPlanetInfos: null,
         discoveringSystem: false,
         showSystemTexts: false,
-        displayModal: false,
-        displayDialog: false,
-        displayInstruction: false
+        isPlanetModalDisplayed: false,
+        isPlanetDialogDisplayed: false,
+        isSceneryInstructionDisplayed: false,
+        informationsDialog: {
+            isDisplayed: false,
+            content: {}
+        }
     }),
 
     mounted() {
@@ -122,18 +130,25 @@ export default {
             })
             EventBus.on<boolean>(UIEvents.SHOW_PLANET_DIALOG, (newValue) => {
                 if (newValue !== undefined) {
-                    this.displayDialog = newValue
+                    this.isPlanetDialogDisplayed = newValue
                 }
             })
             EventBus.on<boolean>(UIEvents.SHOW_PLANET_MODAL, (newValue) => {
                 if (newValue !== undefined) {
-                    this.displayModal = newValue
+                    this.isPlanetModalDisplayed = newValue
                 }
             })
             EventBus.on<boolean>(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, (newValue) => {
                 if (newValue !== undefined) {
-                    this.displayInstruction = newValue
+                    this.isSceneryInstructionDisplayed = newValue
                 }
+            })
+            EventBus.on(AnimationEvents.BACK_ON_SYSTEM_CHOICE, () => {
+                this.discoveringSystem = false
+            })
+            EventBus.on(UIEvents.SHOW_INFORMATIONS_DIALOG, ({visible, content}) => {
+                this.informationsDialog.isDisplayed = visible
+                this.informationsDialog.content = content
             })
         },
 

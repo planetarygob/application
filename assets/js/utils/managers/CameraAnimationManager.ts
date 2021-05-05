@@ -124,14 +124,14 @@ class CameraAnimationManager {
     }
 
     showBlur (blurManager: BlurManager) {
-        gsap.timeline().fromTo(blurManager.postprocessing.bokeh.uniforms.maxblur, {value: 0}, {value: 0.007, duration: 5});
+        gsap.timeline().fromTo(blurManager.postprocessing.bokeh.uniforms.maxblur, {value: 0}, {value: 0.01, duration: 5});
     }
 
     hideBlur (blurManager: BlurManager) {
         const blurTimeline = gsap.timeline({onComplete: () => {
             blurManager.isEnabled = false
         }})
-        blurTimeline.fromTo(blurManager.postprocessing.bokeh.uniforms.maxblur, {value: 0.007}, {value: 0, duration: 5});
+        blurTimeline.fromTo(blurManager.postprocessing.bokeh.uniforms.maxblur, {value: 0.01}, {value: 0, duration: 5});
     }
 
     discoverPlanet (planet: Planet) {

@@ -159,16 +159,16 @@
           "parts": [
             {
               "paragraphs": [
-                "Bonjour Mathieu !<br>Bienvenue dans mon univers Hippie.",
-                "Je me présente, je suis Mary Quant couturière. <br>Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
-                "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
-                "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+                "Salut Mathieu! <br> Bienvenue dans mon jardin de paradis !",
+                "Je m'appelle David, hippie dans l'âme. J'aime bien me retrouver ici, plus près de la nature et loin de la nouvelle société de consommation.",
+                "Avec mes amis, on essaye de faire changer les choses. Notre mode de vie est complètement différent mais c'est comme ça, qu'on se fait entendre.",
+                "On veut notamment montrer que la non violence est une meilleure réponse. Aide nous à faire passer le message. </br></br>Remplaçons les balles par une fleur pour envoyer de l'amour."
               ],
               "action": "C'est parti"
             },
             {
               "paragraphs": [
-                "Whoa Mathieu, c’est mini j’adore ! Merci. <br>Regarde, avec cette nouvelle jupe, les femmes vont enfin pouvoir être libre !"
+                "Flower power ! Merci de ton aide, le message va être diffusé massivement grâce à ton action.  Peace Mathieu et fais l'amour pas la guerre."
               ],
               "action": "Découvrir"
             }
@@ -187,7 +187,7 @@
           "model": null,
           "yPosition": -3.5,
           "interaction": {
-            "instruction": "Glisse la fleur dans le pistolet",
+            "instruction": "Recharge le pistolet de David",
             "tool": "flowerbandana",
             "target": "brasgauche"
           }
@@ -245,16 +245,16 @@
           "parts": [
             {
               "paragraphs": [
-                "Bonjour Mathieu !<br>Bienvenue dans mon univers rock.",
-                "Je me présente, je suis Mary Quant couturière. <br>Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
-                "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
-                "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+                "Hey Mathieu, moi c'est Fred !</br> Bienvenue au Rock Coffee.",
+                "Ici, on écoute de la musique rock, on se rassemble entre jeunes après les cours.",
+                "Samedi soir, c'est le bal. On se prépare en répétant quelques pas de rock. J'ai également la tenue pour y aller mais je dois encore finir un détail.",
+                "Tu veux bien m'aider ? J'aimerais coudre le logo des Rollings Stones, mon groupe préféré, au dos de mon blouson mais je peux pas tout seul. </br></br>Tiens j'ai amené le kit de couture, il n'y a plus qu'à se lancer"
               ],
               "action": "C'est parti"
             },
             {
               "paragraphs": [
-                "Whoa Mathieu, c’est mini j’adore ! Merci. <br>Regarde, avec cette nouvelle jupe, les femmes vont enfin pouvoir être libre !"
+                "Whoa super Mathieu ! Ca rend trop bien, c'est bon je suis prêt pour aller danser !"
               ],
               "action": "Découvrir"
             }
@@ -273,7 +273,7 @@
           "model": null,
           "yPosition": 7.5,
           "interaction": {
-            "instruction": "...",
+            "instruction": "Coud le logo des Rolling Stones sur le blouson de Fred",
             "tool": "",
             "target": ""
           }
@@ -351,15 +351,37 @@
     ]
   },
   {
+    "name": "sex",
+    "type": "system",
+    "teasing": {
+      "title": "SEXUALITÉ",
+      "description": "Le droit au plaisir ! c'est ce que revendiquent les jeunes de l'époque qui formulent alors leur propres revendications et médiatisent les luttes pour la sexualité. Découvre à travers 3 planètes comment cette révolution sexuelle a-t-elle fait avancer la société."
+    },
+    "navPosition": 2,
+    "initialPosition":{
+      "x": -30,
+      "y": 0,
+      "z": 75
+    },
+    "sun": {
+      "name":"sex_sun",
+      "type": "sun",
+      "url": "sun_sex.glb",
+      "model":null,
+      "light":null,
+      "floatFactor": 1.4
+    }
+  },
+  {
     "name": "quiz",
     "type": "system",
     "teasing": {
       "title": "LA STATION SPATIALE",
-      "description": "Après à ton exploration, rejoins la station spatiale pour faire le compte rendu de ta mission à tout l’équipage. Un quiz te sera donné afin de récolter les données que tu as découvert au sein des systèmes. L’équipage et toi, pourrez échanger sur vos découvertes."
+      "description": "Après ton exploration, rejoins la station spatiale pour faire le compte rendu de ta mission à tout l’équipage. Un quiz te sera donné afin de récolter les données que tu as découvert au sein des systèmes. L’équipage et toi, pourrez échanger sur vos découvertes."
     },
-    "navPosition": 2,
+    "navPosition": 3,
     "initialPosition":{
-      "x": 0,
+      "x": 30,
       "y": 0,
       "z": 75
     },
@@ -378,7 +400,7 @@
       "title": "TECHNOLOGIE",
       "description": "La période des années 60 à 80 a apporté d'énormes bouleversements technologiques. De l'électroménager à l'astronomie en passant par l'informatique, découvre à travers 5 planètes les innovations qui ont fait évoluer nos modes de vie."
     },
-    "navPosition": 3,
+    "navPosition": 4,
     "initialPosition":{
       "x": 60,
       "y": 8,
