@@ -13,7 +13,7 @@ import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import Camera from './Camera'
 import Controls from './Controls'
-import { UIEvents, GLEvents, AnimationEvents } from '../../utils/Events'
+import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents } from '../../utils/Events'
 import Planet from '../custom/Planet'
 import Renderer from './Renderer'
 import Sky from '../custom/Sky'
@@ -140,6 +140,7 @@ class Scene extends TScene {
                 this.showOnboardingModal()
                 this.triggerPlanets(true)
                 this.controls.enableRotate = true
+                EventBus.emit(ProgressBarEvents.SHOW_SELECTED_SYSTEM, this.selectedSystem.name)
             }
         })
         EventBus.on(AnimationEvents.PLANET_ZOOM_FINISHED, () => {
@@ -194,6 +195,7 @@ class Scene extends TScene {
                 this.triggerSystems(true, true)
                 this.triggerPlanets(false)
                 EventBus.emit(AnimationEvents.BACK_ON_SYSTEM_CHOICE)
+                EventBus.emit(ProgressBarEvents.SHOW_ALL_SYSTEMS)
                 this.cameraAnimationManager.backOnSystemsChoiceView(this.selectedSystem)
             }
         })

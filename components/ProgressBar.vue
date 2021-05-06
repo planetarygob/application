@@ -36,7 +36,7 @@
 <script lang="ts">
 import gsap from 'gsap/all'
 import EventBus from '~/assets/js/utils/EventBus'
-import { UIEvents } from '~/assets/js/utils/Events'
+import { ProgressBarEvents } from '~/assets/js/utils/Events'
 import JSONSystems from '../assets/datas/themes.json'
 
 export default {
@@ -48,8 +48,8 @@ export default {
     },
 
     data: () => ({
-        quiz: document.querySelector('.ProgressBar_quiz'),
-        systems: document.querySelectorAll('.ProgressBar_system'),
+        quiz: null,
+        systems: [],
         JSONSystems,
     }),
 
@@ -66,7 +66,21 @@ export default {
             duration: .5
         })
 
-        EventBus.on(UIEvents.UPDATE_PROGRESS_BAR, (e: any) => this.update(e.name, e.index))
+        EventBus.on(ProgressBarEvents.UPDATE_PROGRESS_BAR, (e: any) => this.update(e.name, e.index))
+
+        EventBus.on<string>(ProgressBarEvents.SHOW_SELECTED_SYSTEM, (name) => {
+            // We have to instanciate them after, because on mounted they are empty
+            this.systems = document.querySelectorAll('.ProgressBar_system')
+            this.quiz = document.querySelector('.ProgressBar_quiz')
+
+            if (name) {
+                this.showSelectedSystem(name)
+            }
+        })
+        
+        EventBus.on(ProgressBarEvents.SHOW_ALL_SYSTEMS, () => {
+            this.showAllSystems()
+        })
     },
 
     methods: {
