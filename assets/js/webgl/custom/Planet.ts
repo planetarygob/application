@@ -51,6 +51,9 @@ class Planet extends Group {
 
         if (scenery) {
             this.add(scenery.model.scene)
+            if (scenery.character) {
+                this.add(scenery.character.model.scene)
+            }
         }
 
         this.visible = false
@@ -90,6 +93,9 @@ class Planet extends Group {
         if (this.object && this.scenery) {
             this.object.model.scene.visible = visible
             this.scenery.model.scene.visible = !visible
+            if (this.scenery.character) {
+                this.scenery.character.model.scene.visible = !visible
+            }
             this.object.model.scene.scale.set(0.015, 0.015, 0.015)
             this.listenEvents()
         }
@@ -100,6 +106,10 @@ class Planet extends Group {
             this.object.model.scene.visible = !visible
             this.scenery.model.scene.visible = visible
             this.scenery.model.scene.scale.set(0.04, 0.04, 0.04)
+            if (this.scenery.character) {
+                this.scenery.character.model.scene.visible = visible
+                this.scenery.character.launchAnimation()
+            }
             this.removeBubble()
             this.removeEvents()
             EventBus.on(GLEvents.SETUP_SCENERY_INTERACTION, () => {
