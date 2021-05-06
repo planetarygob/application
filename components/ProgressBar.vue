@@ -12,7 +12,7 @@
                     :key="'system' + index"
                     :class="`ProgressBar_system ProgressBar_system--${system.name}`">
                     <!-- USE SYSTEM NAME FOR TEXT -->
-                    <p class="ProgressBar_name">{{ system.teasing.title === 'TECHNOLOGIE' ? 'TECHNO' : system.teasing.title }}</p>
+                    <p class="ProgressBar_name">{{ system.progressBarTitle }}</p>
                     <!-- USE SYSTEM NAME FOR MODIFIER CLASS -->
                     <div :class="`ProgressBar_progress ProgressBar_progress--${system.name}`">
                         <!-- CREATE A NODE + SEPARATOR FOR EACH ITEM IN SYSTEM.PLANETS -->
@@ -26,7 +26,9 @@
                 </div>
             </div>
             
-            <div class="ProgressBar_quiz">
+            <div
+                @click="goQuiz"
+                class="ProgressBar_quiz">
                 <img 
                     class="ProgressBar_img" 
                     src="https://florianblandin.fr/assets/images/quiz.png" />
@@ -38,7 +40,7 @@
 <script lang="ts">
 import gsap from 'gsap/all'
 import EventBus from '~/assets/js/utils/EventBus'
-import { ProgressBarEvents, UIEvents } from '~/assets/js/utils/Events'
+import { ProgressBarEvents, UIEvents, GLEvents } from '~/assets/js/utils/Events'
 import JSONSystems from '../assets/datas/themes.json'
 
 export default {
@@ -168,6 +170,25 @@ export default {
                     this.quiz.classList.remove('hidden')
                 }
             }
+        },
+
+        goQuiz () {
+            EventBus.emit(UIEvents.SHOW_INFORMATIONS_DIALOG, {
+                visible: true,
+                content: {
+                    name: "locker",
+                    image: {
+                        name: "locker",
+                        size: {
+                            width: "32px",
+                            height: "32px"
+                        }
+                    },
+                    title: "ACCÈS BLOQUÉ",
+                    text: "Pour débloquer l’accès à la station spatiale, tu dois parcourir toutes les planètes pour les remettre en orbite: ramène le plus d’informations possible!",
+                    action: "Continuer"
+                }
+            })
         }
     }
 }

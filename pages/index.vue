@@ -10,7 +10,7 @@
                 <button
                     class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border font-bold py-2 px-4 rounded-full"
                     :class="selectedSystem.name !== 'quiz' ? 'hover:bg-white hover:text-purple-500' : ''"
-                    :disabled="selectedSystem.name === 'quiz'"
+                    :style="selectedSystem.name === 'quiz' ? 'opacity: 0.5' : ''"
                     @click="discoverSystem()">
                     DECOUVRIR
                 </button>
@@ -163,6 +163,23 @@ export default {
                 this.showSystemTexts = false
                 this.discoveringSystem = true
                 EventBus.emit(AnimationEvents.DISCOVER_SYSTEM, this.selectedSystem)
+            } else if (this.selectedSystem.name === 'quiz') {
+                EventBus.emit(UIEvents.SHOW_INFORMATIONS_DIALOG, {
+                    visible: true,
+                    content: {
+                        name: "locker",
+                        image: {
+                            name: "locker",
+                            size: {
+                                width: "32px",
+                                height: "32px"
+                            }
+                        },
+                        title: "ACCÈS BLOQUÉ",
+                        text: "Pour débloquer l’accès à la station spatiale, tu dois parcourir toutes les planètes pour les remettre en orbite: ramène le plus d’informations possible!",
+                        action: "Continuer"
+                    }
+                })
             }
         },
 
@@ -180,9 +197,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-    button:disabled {
-        opacity: 0.5;
-    }
-</style>
