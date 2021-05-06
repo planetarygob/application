@@ -1,6 +1,6 @@
 import { Group } from "three";
 import EventBus from "../../utils/EventBus";
-import { GLEvents, UIEvents } from "../../utils/Events";
+import { GLEvents, UIEvents, ProgressBarEvents } from "../../utils/Events";
 import Scene from "../core/Scene";
 import PlanetScenery from './PlanetScenery'
 import PlanetObject from './PlanetObject'
@@ -8,6 +8,7 @@ import Bubble from "./Bubble";
 
 class Planet extends Group {
     name: string
+    systemName: string
     bubble: Bubble
     object: PlanetObject|undefined
     scenery: PlanetScenery|undefined
@@ -19,14 +20,16 @@ class Planet extends Group {
     constructor(
         scene: Scene,
         name: string,
+        systemName: string,
         object: PlanetObject|undefined,
         scenery: PlanetScenery|undefined,
         infos: any
     ) {
         super()
 
-        this.name = name
         this.scene = scene
+        this.name = name
+        this.systemName = systemName
         this.object = object
         this.scenery = scenery
         this.infos = infos
@@ -67,6 +70,8 @@ class Planet extends Group {
             this.remove(this.scenery.model.scene)
             this.scenery = undefined
         }
+        // NOTE : We update the ProgressBar component with needed parameters
+        EventBus.emit(ProgressBarEvents.UPDATE_PROGRESS_BAR, { name : this.systemName, index : this.infos.index })
         // this.removeEvents()
     }
 

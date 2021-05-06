@@ -13,7 +13,7 @@ import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import Camera from './Camera'
 import Controls from './Controls'
-import { UIEvents, GLEvents, AnimationEvents } from '../../utils/Events'
+import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents } from '../../utils/Events'
 import Planet from '../custom/Planet'
 import Renderer from './Renderer'
 import Sky from '../custom/Sky'
@@ -104,6 +104,7 @@ class Scene extends TScene {
             this.add(system)
         }
 
+        EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, true)
         this.listenEvents()
     }
 
@@ -140,6 +141,7 @@ class Scene extends TScene {
                 this.showOnboardingModal()
                 this.triggerPlanets(true)
                 this.controls.enableRotate = true
+                EventBus.emit(ProgressBarEvents.SHOW_SELECTED_SYSTEM, this.selectedSystem.name)
             }
         })
         EventBus.on(AnimationEvents.PLANET_ZOOM_FINISHED, () => {
@@ -161,6 +163,7 @@ class Scene extends TScene {
                 this.cameraAnimationManager.discoverPlanet(selectedPlanet)
                 this.selectedPlanet = selectedPlanet
                 const selectedPlanetInfos = this.loadingManager.getGLTFInfos(this.selectedPlanet.name)
+                EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, false)
                 EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
             }
         })
@@ -187,6 +190,7 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
                 EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, false)
                 EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
+                EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, true)
                 this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {
                 this.blurManager.isEnabled = true
@@ -194,6 +198,7 @@ class Scene extends TScene {
                 this.triggerSystems(true, true)
                 this.triggerPlanets(false)
                 EventBus.emit(AnimationEvents.BACK_ON_SYSTEM_CHOICE)
+                EventBus.emit(ProgressBarEvents.SHOW_ALL_SYSTEMS)
                 this.cameraAnimationManager.backOnSystemsChoiceView(this.selectedSystem)
             }
         })
@@ -278,7 +283,11 @@ class Scene extends TScene {
                 content: {
                     name: "slide",
                     image: {
-                        name: "slide"
+                        name: "slide",
+                        size: {
+                            width: "90px",
+                            height: "90px"
+                        }
                     },
                     text: "Pour touner autour du système,<br> <strong>maintiens le clic et déplace la souris.</strong>"
                 }

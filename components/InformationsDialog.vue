@@ -7,28 +7,30 @@
         <img 
             v-if="content.image"
             :src="`/images/${content.image.name}.png`"
-            width="90px"
-            height="90px">
+            :width="content.image.size.width"
+            :height="content.image.size.height">
         <h2
             v-if="content.title"
-            class="mt-4">
+            class="mt-4 font-black text-xl">
             {{ content.title }}
         </h2>
         <span 
             v-if="content.text"
-            class="mt-4 text-center"
+            class="mt-4 text-center text-sm text-center"
             v-html="content.text" />
         <button
             v-if="content.action"
-            @click="$emit('update:is-displayed', false)"
-            class="mt-8 w-32 bg-#201838 text-white font-bold hover:text-black hover:bg-white hover:border-black py-2 px-4 rounded-full">
-            <span>{{ content.action }}</span>
-            <svg-icon
-                svg-name="back"
-                :width="32"
-                :height="32"
-                color="#FFFFFF"
-                style="margin-top: 5px" />
+            class="mt-8 text-white font-bold hover:text-#201838 hover:bg-white py-2 rounded-full"
+            style="background-color: #201838; padding-left: 1rem; padding-right: 0.5rem;"
+            @click="back">
+            <div class="flex flex-row">
+                <span>{{ content.action }}</span>
+                <img 
+                    src="/images/button.png"
+                    width="28px"
+                    height="28px"
+                    class="ml-6" />
+            </div>
         </button>
     </div>
 </template>
@@ -37,7 +39,7 @@
 
 import SvgIcon from './SvgIcon.vue'
 import EventBus from '../assets/js/utils/EventBus'
-import { GLEvents } from '../assets/js/utils/Events'
+import { GLEvents, AnimationEvents } from '../assets/js/utils/Events'
 
 export default {
     components: {
@@ -59,6 +61,13 @@ export default {
         EventBus.on(GLEvents.SCENE_CLICKED, () => {
             this.$emit('update:is-displayed', false)
         })
+    },
+
+    methods: {
+        back () {
+            this.$emit('update:is-displayed', false)
+            EventBus.emit(AnimationEvents.BACK)
+        }
     }
 }
 </script>

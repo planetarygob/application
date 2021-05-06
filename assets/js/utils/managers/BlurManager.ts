@@ -22,8 +22,8 @@ class BlurManager {
         this.postprocessing = {}
         this.effectController = {
             focus: 20,
-            aperture: 10,
-            maxblur: 0.01
+            aperture: 14,
+            maxblur: 0.007
         }
 
         this.init()
