@@ -38,7 +38,7 @@
         </template>
         <div 
             v-if="discoveringSystem"
-            class="absolute left-0 ml-20 flex flex-row cursor-pointer"
+            class="absolute left-0 ml-6 mt-4 flex flex-row cursor-pointer"
             @click="backOnPreviousView">
             <svg-icon
                 svg-name="back"
