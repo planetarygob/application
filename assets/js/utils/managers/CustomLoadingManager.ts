@@ -81,7 +81,7 @@ export class CustomLoadingManager {
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
                 // TODO: get the right number
-                if (this.modelsLoaded.size === 19) {
+                if (this.modelsLoaded.size === 20) {
                     onAllLoaded()
                 }
             },

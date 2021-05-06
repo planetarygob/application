@@ -22,17 +22,12 @@ class BlurManager {
         this.postprocessing = {}
         this.effectController = {
             focus: 20,
-            aperture: 30,
+            aperture: 14,
             maxblur: 0.007
         }
 
         this.init()
         this.matChanger()
-
-        // TODO : Remove once it's ok
-        GUI.add( this.effectController, "focus", 0, 100, 0.01 ).onChange( this.matChanger.bind(this) )
-        GUI.add( this.effectController, "aperture", 0, 100, 0.01 ).onChange( this.matChanger.bind(this) )
-        GUI.add( this.effectController, "maxblur", 0.0, 0.01, 0.001 ).onChange( this.matChanger.bind(this) )
 
         EventBus.on(GLEvents.UPDATE, this.update.bind(this))
         EventBus.on(GLEvents.RESIZE, this.resize.bind(this))
