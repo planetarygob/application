@@ -1,5 +1,5 @@
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader"
-import { AnimationAction, AnimationMixer, AnimationClip, Vector3 } from "three"
+import { AnimationAction, AnimationMixer, AnimationClip, Vector3, Object3D } from "three"
 import AnimationObject from "./AnimationObject"
 import EventBus from "../../utils/EventBus"
 import { GLEvents, UIEvents } from "../../utils/Events"
@@ -83,7 +83,7 @@ class GLTFAnimation {
         }   
     }
 
-    onDragEnd (scene: Scene) {
+    onDragEnd (scene: Scene, hiddenObjects: Array<Object3D>) {
         if (this.animationTarget.model && this.animationTool.model) {
             scene.highlightManager.empty()
             scene.highlightManager.add(this.animationTool.model)
@@ -94,6 +94,10 @@ class GLTFAnimation {
                 this.launchAnimation(scene)
                 this.animationTarget.model.removeEventListener('mouseover', () => {})
                 this.animationTarget.model.removeEventListener('mouseout', () => {})
+
+                for (let object of hiddenObjects) {
+                    object.visible = true
+                }
             }
         }
     }

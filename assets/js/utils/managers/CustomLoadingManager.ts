@@ -16,7 +16,7 @@ export class CustomLoadingManager {
             .detectSupport(renderer);
 
         this.loadedModels = 0
-        this.loader = new GLTFLoader().setPath('https://florianblandin.fr/assets/');
+        this.loader = new GLTFLoader()
         this.loader.setKTX2Loader(ktx2Loader);
         this.loader.setMeshoptDecoder(MeshoptDecoder);
     }
@@ -46,6 +46,10 @@ export class CustomLoadingManager {
                     // wtf ts wants to have planet['scenery'] instead planet.scenery ??
                     if (planet.hasOwnProperty('scenery') && planet['scenery']) {
                         this.loadModel(planet['scenery'], onError, onLoading, onAllLoaded, onModelLoaded)
+
+                        if (planet['scenery'].hasOwnProperty('character')) {
+                            this.loadModel(planet['scenery'].character, onError, onLoading, onAllLoaded, onModelLoaded)
+                        }
                     }
                 }
             }
@@ -63,6 +67,12 @@ export class CustomLoadingManager {
         onAllLoaded: () => void,
         onModelLoaded: (gltf: GLTF) => void
     ) {
+        if (modelToLoad.type !== 'character') {
+            this.loader.setPath('https://florianblandin.fr/assets/')
+        } else {
+            this.loader.setPath('')
+        }
+
         this.loader.load(
             modelToLoad.url,
 
@@ -71,7 +81,7 @@ export class CustomLoadingManager {
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
                 // TODO: get the right number
-                if (this.modelsLoaded.size === 17) {
+                if (this.modelsLoaded.size === 20) {
                     onAllLoaded()
                 }
             },
