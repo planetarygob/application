@@ -23,8 +23,8 @@ class GL {
 
     constructor() {
 
-        Stats.showPanel(0)
-        document.body.appendChild(Stats.dom)
+        // Stats.showPanel(0)
+        // document.body.appendChild(Stats.dom)
 
         this.canvas = document.querySelector('.webgl') as HTMLCanvasElement
 
