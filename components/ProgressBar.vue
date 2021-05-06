@@ -12,7 +12,7 @@
                     :key="'system' + index"
                     :class="`ProgressBar_system ProgressBar_system--${system.name}`">
                     <!-- USE SYSTEM NAME FOR TEXT -->
-                    <p class="ProgressBar_name">{{ system.teasing.title }}</p>
+                    <p class="ProgressBar_name">{{ system.teasing.title === 'TECHNOLOGIE' ? 'TECHNO' : system.teasing.title }}</p>
                     <!-- USE SYSTEM NAME FOR MODIFIER CLASS -->
                     <div :class="`ProgressBar_progress ProgressBar_progress--${system.name}`">
                         <!-- CREATE A NODE + SEPARATOR FOR EACH ITEM IN SYSTEM.PLANETS -->
@@ -38,7 +38,7 @@
 <script lang="ts">
 import gsap from 'gsap/all'
 import EventBus from '~/assets/js/utils/EventBus'
-import { ProgressBarEvents } from '~/assets/js/utils/Events'
+import { ProgressBarEvents, UIEvents } from '~/assets/js/utils/Events'
 import JSONSystems from '../assets/datas/themes.json'
 
 export default {
@@ -67,16 +67,10 @@ export default {
 
     // TODO : Maybe nitiate it only when bigbang animation is done
     mounted() {
-        console.log('(mounted', );
         gsap.to(document.querySelector('.ProgressBar'), {
             opacity: 1,
             duration: .5
         })
-
-        // EventBus.on(ProgressBarEvents.SHOW_PROGRESS_BAR, (visible) => {            
-        //     // We have to instanciate them after, because on mounted they are empty
-            
-        // })
 
         EventBus.on(ProgressBarEvents.UPDATE_PROGRESS_BAR, (e: any) => this.update(e.name, e.index))
 
@@ -123,9 +117,22 @@ export default {
 
                 // NOTE : We check if we juste completed the last node of the concerned system
                 if (systemNodesCompleted.length === systemNodes.length) {
-                    // NOTE : If yes, we trigger system completion modal
-                    // TODO : Link with trigger of completion modal
-                    console.log("SYSTEM COMPLETION MODAL")
+                    EventBus.emit(UIEvents.SHOW_INFORMATIONS_DIALOG, {
+                        visible: true,
+                        content: {
+                            name: "congrats",
+                            image: {
+                                name: "congrats",
+                                size: {
+                                    width: "64px",
+                                    height: "64px"
+                                }
+                            },
+                            title: "BRAVO !",
+                            text: "Tu as réussi à remettre les 3 planètes en orbite. Merci pour ton aide, tu peux dès à présent découvrir un autre système.",
+                            action: "Continuer"
+                        }
+                    })
                 }
             }
 

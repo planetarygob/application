@@ -283,7 +283,11 @@ class Scene extends TScene {
                 content: {
                     name: "slide",
                     image: {
-                        name: "slide"
+                        name: "slide",
+                        size: {
+                            width: "90px",
+                            height: "90px"
+                        }
                     },
                     text: "Pour touner autour du système,<br> <strong>maintiens le clic et déplace la souris.</strong>"
                 }
