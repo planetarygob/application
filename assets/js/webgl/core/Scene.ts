@@ -104,6 +104,7 @@ class Scene extends TScene {
             this.add(system)
         }
 
+        EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, true)
         this.listenEvents()
     }
 
@@ -162,6 +163,7 @@ class Scene extends TScene {
                 this.cameraAnimationManager.discoverPlanet(selectedPlanet)
                 this.selectedPlanet = selectedPlanet
                 const selectedPlanetInfos = this.loadingManager.getGLTFInfos(this.selectedPlanet.name)
+                EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, false)
                 EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
             }
         })
@@ -188,6 +190,7 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.RESET_PLANET_DIALOG)
                 EventBus.emit(UIEvents.SHOW_PLANET_DIALOG, false)
                 EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
+                EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, true)
                 this.cameraAnimationManager.backOnSystemDiscoveredView(this.selectedSystem)
             } else if (this.selectedSystem) {
                 this.blurManager.isEnabled = true

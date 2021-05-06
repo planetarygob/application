@@ -46,5 +46,6 @@ export const AnimationEvents = {
 export const ProgressBarEvents = {
     SHOW_SELECTED_SYSTEM: 'progress_bar:show_selected_system',
     SHOW_ALL_SYSTEMS: 'progress_bar:show_all_systems',
-    UPDATE_PROGRESS_BAR: 'progress_bar:update_progress_bar'
+    UPDATE_PROGRESS_BAR: 'progress_bar:update_progress_bar',
+    SHOW_PROGRESS_BAR: 'progress_bar:show_progress_bar'
 }

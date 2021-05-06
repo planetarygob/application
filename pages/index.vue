@@ -52,7 +52,7 @@
             v-if="informationsDialog.isDisplayed"
             :content="informationsDialog.content"
             :is-displayed.sync="informationsDialog.isDisplayed" />
-        <progress-bar />
+        <progress-bar :is-displayed.sync="isProgressBarDisplayed" />
         <template v-if="selectedPlanetInfos">
             <planet-modal
                 v-if="selectedPlanetInfos.modalContent"
@@ -75,7 +75,7 @@
 import WebGl from '../components/WebGL.vue'
 import SvgIcon from '../components/SvgIcon.vue'
 import EventBus from '../assets/js/utils/EventBus'
-import { UIEvents, GLEvents, AnimationEvents } from '../assets/js/utils/Events'
+import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents } from '../assets/js/utils/Events'
 import System from '../assets/js/webgl/custom/System'
 import PlanetModal from '../components/planet/PlanetModal.vue'
 import PlanetDialog from '../components/planet/PlanetDialog.vue'
@@ -103,6 +103,7 @@ export default {
         isPlanetModalDisplayed: false,
         isPlanetDialogDisplayed: false,
         isSceneryInstructionDisplayed: false,
+        isProgressBarDisplayed: false,
         informationsDialog: {
             isDisplayed: false,
             content: {}
@@ -149,6 +150,11 @@ export default {
             EventBus.on(UIEvents.SHOW_INFORMATIONS_DIALOG, ({visible, content}) => {
                 this.informationsDialog.isDisplayed = visible
                 this.informationsDialog.content = content
+            })
+            EventBus.on<boolean>(ProgressBarEvents.SHOW_PROGRESS_BAR, (visible) => {
+                if (visible !== undefined) {
+                    this.isProgressBarDisplayed = visible
+                }
             })
         },
 

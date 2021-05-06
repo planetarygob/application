@@ -1,5 +1,7 @@
 <template>
-    <div class="ProgressBar">
+    <div
+        v-show="isDisplayed"
+        class="ProgressBar">
         <div class="ProgressBar_wrapper">
 
             <div class="ProgressBar_container">
@@ -44,6 +46,10 @@ export default {
         content: {
             type: Object,
             default: () => {}
+        },
+        isDisplayed: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -61,19 +67,27 @@ export default {
 
     // TODO : Maybe nitiate it only when bigbang animation is done
     mounted() {
+        console.log('(mounted', );
         gsap.to(document.querySelector('.ProgressBar'), {
             opacity: 1,
             duration: .5
         })
 
+        // EventBus.on(ProgressBarEvents.SHOW_PROGRESS_BAR, (visible) => {            
+        //     // We have to instanciate them after, because on mounted they are empty
+            
+        // })
+
         EventBus.on(ProgressBarEvents.UPDATE_PROGRESS_BAR, (e: any) => this.update(e.name, e.index))
 
         EventBus.on<string>(ProgressBarEvents.SHOW_SELECTED_SYSTEM, (name) => {
-            // We have to instanciate them after, because on mounted they are empty
-            this.systems = document.querySelectorAll('.ProgressBar_system')
-            this.quiz = document.querySelector('.ProgressBar_quiz')
 
-            if (name) {
+            if (!this.systems.length && !this.quiz) {
+                this.systems = document.querySelectorAll('.ProgressBar_system')
+                this.quiz = document.querySelector('.ProgressBar_quiz')
+            }
+            
+            if (name !== undefined) {
                 this.showSelectedSystem(name)
             }
         })
