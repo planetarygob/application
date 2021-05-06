@@ -2,6 +2,7 @@
   {
     "name": "mode",
     "type": "system",
+    "progressBarTitle": "MODE",
     "teasing": {
       "title": "MODE",
       "description": "Principe d'affirmation, appartenance à un groupe social, reflet des valeurs et idées... Découvre à travers 3 planètes comment la mode a le pouvoir de déplacer les normes et les idéologies dans la société des années 60 à 80."
@@ -22,6 +23,7 @@
     },
     "planets": [
       {
+        "index": "0",
         "name": "mode_planet_skirt",
         "type": "planet",
         "orbitRange": 10,
@@ -107,6 +109,7 @@
         }
       },
       {
+        "index": "1",
         "name": "mode_planet_hippie",
         "type": "planet",
         "orbitRange": 14,
@@ -192,6 +195,7 @@
         }
       },
       {
+        "index": "2",
         "name": "mode_planet_rock",
         "type": "planet",
         "orbitRange": 18,
@@ -281,6 +285,7 @@
   {
     "name": "hobbies",
     "type": "system",
+    "progressBarTitle": "LOISIR",
     "teasing": {
       "title": "LOISIR",
       "description": "Partir en vacances, faire du sport, regarder la télé... Tous ces loisirs n'existaient pas avant les années 60 ! A travers 4 planètes, découvre comment les loisirs se sont développés et ce qui a profondément changé dans la société de l'époque."
@@ -350,8 +355,9 @@
   {
     "name": "sex",
     "type": "system",
+    "progressBarTitle": "SEXUALITÉ",
     "teasing": {
-      "title": "SEXUALITÉ",
+      "title": "CORPS ET LIBERTÉ",
       "description": "Le droit au plaisir ! c'est ce que revendiquent les jeunes de l'époque qui formulent alors leur propres revendications et médiatisent les luttes pour la sexualité. Découvre à travers 3 planètes comment cette révolution sexuelle a-t-elle fait avancer la société."
     },
     "navPosition": 2,
@@ -393,6 +399,7 @@
   {
     "name": "techno",
     "type": "system",
+    "progressBarTitle": "TECHNO",
     "teasing": {
       "title": "TECHNOLOGIE",
       "description": "La période des années 60 à 80 a apporté d'énormes bouleversements technologiques. De l'électroménager à l'astronomie en passant par l'informatique, découvre à travers 5 planètes les innovations qui ont fait évoluer nos modes de vie."

@@ -16,7 +16,8 @@ export const GLEvents = {
     MOUSE_OUT_PLANET: 'gl:mouse_out_planet',
     TOGGLE_ORBIT_CONTROLS: 'gl:toggle_orbit_controls',
     TOGGLE_BLUR : 'gl:toggle_blur',
-    SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction'
+    SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction',
+    SCENE_CLICKED: 'gl:scene_clicked'
 }
 
 export const UIEvents = {
@@ -28,7 +29,8 @@ export const UIEvents = {
     UPDATE_LOADER: 'ui:update_loader',
     TOGGLE_LOADER: 'ui:toggle_loader',
     RESET_PLANET_DIALOG: 'ui:reset_planet_dialog',
-    SHOW_SCENERY_INTERACTION_INSTRUCTION: 'ui:show_scenery_interaction_instruction'
+    SHOW_SCENERY_INTERACTION_INSTRUCTION: 'ui:show_scenery_interaction_instruction',
+    SHOW_INFORMATIONS_DIALOG: 'ui:show_informations_dialog',
 }
 
 export const AnimationEvents = {
@@ -38,5 +40,12 @@ export const AnimationEvents = {
     SYSTEM_ZOOM_FINISHED: 'animation:system_zoom_finished',
     PLANET_ZOOM_FINISHED: 'animation:planet_zoom_finished',
     BACK: 'animation:back',
-    BACK_ON_SYSTEM_CHOICE: 'animation:back_on_system_choice',
+    BACK_ON_SYSTEM_CHOICE: 'animation:back_on_system_choice'
+}
+
+export const ProgressBarEvents = {
+    SHOW_SELECTED_SYSTEM: 'progress_bar:show_selected_system',
+    SHOW_ALL_SYSTEMS: 'progress_bar:show_all_systems',
+    UPDATE_PROGRESS_BAR: 'progress_bar:update_progress_bar',
+    SHOW_PROGRESS_BAR: 'progress_bar:show_progress_bar'
 }

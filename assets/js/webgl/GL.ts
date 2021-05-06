@@ -99,6 +99,7 @@ class GL {
 
         if (this.clock) {
             EventBus.emit(GLEvents.UPDATE, this.clock.getElapsedTime())
+            // TODO : Maybe it's not needed to create a custom event for the scenery tool, should just listen to UPDATE event since it gives the same parameter
             EventBus.emit(GLEvents.UPDATE_TOOL_SCALE, this.clock.getElapsedTime())
         }
 
