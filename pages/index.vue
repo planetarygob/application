@@ -8,7 +8,7 @@
             autoplay="true"
             muted="muted"
             style="object-fit: cover;">
-            <source src="/videos/test.mov" />
+            <source src="/videos/introduction.mov" />
         </video>
         <template v-if="selectedSystem && showSystemTexts">
             <div
