@@ -2,14 +2,22 @@
     <div class="relative">
         <div class="filter"></div>
         <video 
-            id="myvideo"
+            id="my_video"
             controls 
             class="absolute"
             autoplay="true"
             muted="muted"
             style="object-fit: cover;">
-            <source src="/videos/introduction.mov" />
+            <source src="/videos/Intro_planetary.mp4" />
         </video>
+        <audio 
+            id="my_audio" 
+            controls 
+            preload="none">
+            <source 
+                src="sound/ambiance_galaxie.mp3" 
+                type="audio/mpeg">
+        </audio>
         <template v-if="selectedSystem && showSystemTexts">
             <div
                 class="container flex flex-col justify-center p-8 absolute text-white mx-auto"
@@ -120,9 +128,13 @@ export default {
     }),
 
     mounted() {
-        const video: HTMLMediaElement = document.getElementById('myvideo');   
+        const audio = document.querySelector('#my_audio')
+        const video: HTMLMediaElement = document.querySelector('#my_video');   
         if (video) {
             video.onended = function (e) {
+                if (audio) {
+                    audio.play()
+                }
                 video.style.display = 'none'
                 EventBus.emit(GLEvents.LAUNCH_EXPERIENCE)
             }
@@ -215,11 +227,16 @@ export default {
 </script>
 
 <style>
+
 video {
     right: 0; bottom: 0;
     min-width: 100%; min-height: 100%;
     width: auto; height: auto; z-index: 100;
     background-size: cover;
+}
+
+audio {
+    display: none;
 }
 </style>
 
