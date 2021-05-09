@@ -10,6 +10,7 @@ import SceneryInteraction from "./SceneryInteraction"
 import AnimationObject from "./AnimationObject"
 import GLTFAnimation from "./GLTFAnimation"
 import SceneryCharacter from "./SceneryCharacter"
+import SceneryLogo from "./SceneryLogo"
 
 class System extends Group {
     name: string
@@ -47,8 +48,6 @@ class System extends Group {
 
         this.createSun(systemInfos)
         this.createPlanets(systemInfos, gl)
-
-        console.log('system', this);
     }
 
     createSun (systemInfos: any) {
@@ -82,6 +81,7 @@ class System extends Group {
                 
                 let animation: GLTFAnimation|null = null
                 let character: SceneryCharacter|null = null
+                let logo: SceneryLogo|null = null
 
                 if (sceneryModel.animations.length) {
                     animation = new GLTFAnimation(null, sceneryModel.animations[0], null, null, animationTool, animationTarget)
@@ -99,8 +99,21 @@ class System extends Group {
                         )
                     )
                 }
+
+                if (planetInfos.scenery.hasOwnProperty('logo')) {
+                    const logoModel = this.loadingManager.getGLTFByName(planetInfos.scenery.logo.name)
+                    logo = new SceneryLogo(
+                        planetInfos.scenery.logo.name, 
+                        logoModel, 
+                        new Vector3(
+                            planetInfos.scenery.logo.initialPosition.x, 
+                            planetInfos.scenery.logo.initialPosition.y, 
+                            planetInfos.scenery.logo.initialPosition.z
+                        )
+                    )
+                }
                 
-                scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, animation, character)
+                scenery = new PlanetScenery(planetInfos.scenery.name, sceneryModel, planetInfos.scenery.yPosition, animation, character, logo)
             }
 
             const planet = new Planet(gl.scene, planetInfos.name, this.name, object, scenery, planetInfos)

@@ -51,7 +51,7 @@ class GLTFAnimation {
 
             scene.highlightManager.empty()
 
-            if (scene.animationMixer) {
+            if (scene.animationMixer && this.animationTool.name !== 'aiguille') {
                 scene.animationMixer.addEventListener('finished', () => {
                     EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
                     scene.cameraAnimationManager.sceneryInteractionDezoom()
@@ -83,7 +83,7 @@ class GLTFAnimation {
         }   
     }
 
-    onDragEnd (scene: Scene, hiddenObjects: Array<Object3D>) {
+    onDragEnd (scene: Scene, hiddenObjects: Array<Object3D>|null) {
         if (this.animationTarget.model && this.animationTool.model) {
             scene.highlightManager.empty()
             scene.highlightManager.add(this.animationTool.model)
@@ -91,12 +91,17 @@ class GLTFAnimation {
             if (this.isAboveTarget && this.animationTool.model) {
                 EventBus.emit(GLEvents.INTERACTION_MANAGER_REQUIRED, false)
                 this.animationTool.model.visible = false
+                EventBus.emit(GLEvents.LETS_GO)
                 this.launchAnimation(scene)
                 this.animationTarget.model.removeEventListener('mouseover', () => {})
                 this.animationTarget.model.removeEventListener('mouseout', () => {})
 
-                for (let object of hiddenObjects) {
-                    object.visible = true
+                if (hiddenObjects) {
+                    for (let object of hiddenObjects) {
+                        if (object.name !== 'flowerbandana') {
+                            object.visible = true
+                        }
+                    }
                 }
             }
         }
