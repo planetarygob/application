@@ -38,7 +38,7 @@ class System extends Group {
 
         this.isSelected = false 
 
-        this.position.set(0, 0, 0)
+        this.position.set(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z)
         this.scale.set(1, 1, 1)
 
         const gl = GL.getInstance()

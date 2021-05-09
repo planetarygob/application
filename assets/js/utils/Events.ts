@@ -18,7 +18,8 @@ export const GLEvents = {
     TOGGLE_BLUR : 'gl:toggle_blur',
     SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction',
     SCENE_CLICKED: 'gl:scene_clicked',
-    LETS_GO: 'gl:lets_go'
+    LETS_GO: 'gl:lets_go',
+    LAUNCH_EXPERIENCE: 'gl:LAUNCH_EXPERIENCE'
 }
 
 export const UIEvents = {

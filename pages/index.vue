@@ -1,6 +1,15 @@
 <template>
     <div class="relative">
         <div class="filter"></div>
+        <video 
+            id="myvideo"
+            controls 
+            class="absolute"
+            autoplay="true"
+            muted="muted"
+            style="object-fit: cover;">
+            <source src="/videos/test.mov" />
+        </video>
         <template v-if="selectedSystem && showSystemTexts">
             <div
                 class="container flex flex-col justify-center p-8 absolute text-white mx-auto"
@@ -111,6 +120,13 @@ export default {
     }),
 
     mounted() {
+        const video: HTMLMediaElement = document.getElementById('myvideo');   
+        if (video) {
+            video.onended = function (e) {
+                video.style.display = 'none'
+                EventBus.emit(GLEvents.LAUNCH_EXPERIENCE)
+            }
+        }
         this.listenEvents()
     },
 
@@ -197,3 +213,13 @@ export default {
     }
 }
 </script>
+
+<style>
+video {
+    right: 0; bottom: 0;
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto; z-index: 100;
+    background-size: cover;
+}
+</style>
+
