@@ -25,7 +25,18 @@ class SceneryCharacter {
 
         this.model.scene.visible = false
 
-        this.model.scene.scale.set(4, 4, 4)
+        switch (this.name) {
+            case 'mode_scenery_skirt_character':
+                this.model.scene.scale.set(5, 5, 5)
+                break
+            case 'mode_scenery_hippie_character':
+                this.model.scene.scale.set(3.8, 3.8, 3.8)
+                break
+            default:
+                this.model.scene.scale.set(4, 4, 4)
+                break
+        }
+        
         this.model.scene.position.set(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z)
 
         this.isAnimated = true

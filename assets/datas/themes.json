@@ -212,7 +212,7 @@
           "interaction": {
             "instruction": "Recharge le pistolet de David avec la fleur",
             "tool": "Flower",
-            "target": "gun"
+            "target": "mixamorig_LeftArm"
           }
         }
       },
