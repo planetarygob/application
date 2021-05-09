@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="content"
-        class="flex flex-col absolute bg-white w-1/5 rounded-xl justify-center items-center p-8"
+        class="container flex flex-col absolute bg-white w-1/5 rounded-xl justify-center items-center px-16 py-12"
         style="top: 50%; left: 50%; transform: translate(-50%, -50%);"
         @click="$emit('update:is-displayed', false)">
         <img 
@@ -14,15 +14,17 @@
             class="mt-4 font-black text-xl">
             {{ content.title }}
         </h2>
-        <span 
+        <p 
             v-if="content.text"
             class="mt-4 text-center text-sm text-center"
             v-html="content.text" />
         <button
             v-if="content.action"
-            class="mt-8 text-white font-bold hover:text-#201838 hover:bg-white py-2 rounded-full"
+            class="Button mt-12 text-white font-bold hover:text-#201838 hover:bg-white py-2 rounded-full"
             style="background-color: #201838; padding-left: 1rem; padding-right: 0.5rem;"
-            @click="back">
+            @click="back"
+            @mouseenter="hoverButton()"
+            @mouseleave="hoverButton()">
             <div class="flex flex-row">
                 <span>{{ content.action }}</span>
                 <img 
@@ -66,12 +68,32 @@ export default {
     methods: {
         back () {
             this.$emit('update:is-displayed', false)
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
             EventBus.emit(AnimationEvents.BACK)
+        },
+        hoverButton() {
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
 
+    h2 {
+        font-family: 'Soulmaze', sans-serif;
+        letter-spacing: 2.25px;
+    }
+    
+    .container {
+        min-width: 500px;
+    }
+
+    button {
+        cursor: none;
+    }
+
+    p {
+        font-size: 18px;
+    }
 </style>

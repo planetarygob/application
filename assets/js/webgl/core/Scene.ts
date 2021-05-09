@@ -170,16 +170,18 @@ class Scene extends TScene {
                 EventBus.emit(UIEvents.SELECTED_PLANET_INFOS, selectedPlanetInfos)
             }
         })
-        // EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
-        //     if (selectedPlanet) {
-        //         this.animationManager.hoverPlanet(selectedPlanet)
-        //     }
-        // })
-        // EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
-        //     if (selectedPlanet) {
-        //         this.animationManager.outPlanet(selectedPlanet)
-        //     }
-        // })
+        EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
+            if (selectedPlanet) {
+                console.log("over")
+                // this.animationManager.hoverPlanet(selectedPlanet)
+            }
+        })
+        EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
+            if (selectedPlanet) {
+                console.log("out")
+                // this.animationManager.outPlanet(selectedPlanet)
+            }
+        })
 
         // BACK EVENTS
         EventBus.on(AnimationEvents.BACK, () => {

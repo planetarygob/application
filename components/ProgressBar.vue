@@ -26,13 +26,13 @@
                 </div>
             </div>
             
-            <div
+            <button
                 @click="goQuiz"
-                class="ProgressBar_quiz">
+                class="Button ProgressBar_quiz">
                 <img 
                     class="ProgressBar_img" 
                     src="https://florianblandin.fr/assets/images/quiz.png" />
-            </div>
+            </button>
         </div>
     </div>
 </template>
@@ -173,6 +173,7 @@ export default {
         },
 
         goQuiz () {
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
             EventBus.emit(UIEvents.SHOW_INFORMATIONS_DIALOG, {
                 visible: true,
                 content: {
@@ -189,6 +190,9 @@ export default {
                     action: "Continuer"
                 }
             })
+        },
+        hoverButton() {
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
         }
     }
 }
@@ -264,6 +268,7 @@ export default {
     }
 
     .ProgressBar_quiz {
+        cursor: none;
         width: 72px;
         height: 72px;
         border: 1px solid rgba(255, 255, 255, 0.3);

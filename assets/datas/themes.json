@@ -50,6 +50,10 @@
             "alt": "wfef",
             "url": "https://florianblandin.fr/assets/images/skirt/img-bg.jpg"
           },
+          "videoImage": {
+            "name": "wefwg",
+            "url": "https://florianblandin.fr/assets/images/skirt/img-video.jpg"
+          },
           "pannelImage": {
             "alt": "wfef",
             "url": "https://florianblandin.fr/assets/images/skirt/img-pannel.jpg"
@@ -67,17 +71,17 @@
         },
         "dialogContent": {
           "position": {
-            "top": "5px",
+            "top": "10%",
             "left": "60%"
           },
           "isFinished": false,
           "parts": [
             {
               "paragraphs": [
-                "Bonjour Mathieu !<br>Bienvenue dans mon atelier de couture.",
-                "Je me présente, je suis Mary Quant couturière. <br>Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
+                "Bonjour Mathieu ! <br> Bienvenue dans mon atelier de couture.",
+                "Je me présente, je suis Mary Quant couturière. </br></br> Ma friperie “Bazaar” a bien marché mais je cherche des nouvelles idées, des nouveaux modèles de vêtements innovants.",
                 "En m’inspirant de Lucien David Langman, une de mes connaissances tailleur, j’ai eu l’idée de couper cette jupe encore plus courte que mes précédents essais.",
-                "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. </br></br>Coupons la afin de créer ce nouveau modèle de jupe."
+                "Sa longueur doit permettre aux femmes de se déplacer librement, qu’elle soit pratique. Coupons la afin de créer ce nouveau modèle de jupe."
               ],
               "action": "C'est parti"
             },
@@ -147,6 +151,10 @@
             "alt": "wfef",
             "url": "https://florianblandin.fr/assets/images/hippie/img-bg.jpg"
           },
+          "videoImage": {
+            "name": "wefwg",
+            "url": "https://florianblandin.fr/assets/images/hippie/img-video.jpg"
+          },
           "pannelImage": {
             "alt": "wfef",
             "url": "https://florianblandin.fr/assets/images/hippie/img-pannel.jpg"
@@ -171,10 +179,10 @@
           "parts": [
             {
               "paragraphs": [
-                "Salut Mathieu! <br> Bienvenue dans mon jardin de paradis !",
+                "Salut Mathieu ! <br> Bienvenue dans mon jardin de paradis !",
                 "Je m'appelle David, hippie dans l'âme. J'aime bien me retrouver ici, plus près de la nature et loin de la nouvelle société de consommation.",
                 "Avec mes amis, on essaye de faire changer les choses. Notre mode de vie est complètement différent mais c'est comme ça, qu'on se fait entendre.",
-                "On veut notamment montrer que la non violence est une meilleure réponse. Aide nous à faire passer le message. </br></br>Remplaçons les balles par une fleur pour envoyer de l'amour."
+                "On veut notamment montrer que la non violence est une meilleure réponse. Aide nous à faire passer le message. Remplaçons les balles par une fleur pour envoyer de l'amour."
               ],
               "action": "C'est parti"
             },
@@ -244,6 +252,10 @@
             "alt": "wfef",
             "url": "https://florianblandin.fr/assets/images/rock/img-bg.jpg"
           },
+          "videoImage": {
+            "name": "wefwg",
+            "url": "https://florianblandin.fr/assets/images/rock/img-video.jpg"
+          },
           "pannelImage": {
             "alt": "wfef",
             "url": "https://florianblandin.fr/assets/images/rock/img-pannel.jpg"
@@ -268,10 +280,10 @@
           "parts": [
             {
               "paragraphs": [
-                "Hey Mathieu, moi c'est Fred !</br> Bienvenue au Rock Coffee.",
+                "Hey Mathieu, moi c'est Fred ! </br> Bienvenue au Rock Coffee.",
                 "Ici, on écoute de la musique rock, on se rassemble entre jeunes après les cours.",
-                "Samedi soir, c'est le bal. On se prépare en répétant quelques pas de rock. J'ai également la tenue pour y aller mais je dois encore finir un détail.",
-                "Tu veux bien m'aider ? J'aimerais coudre le logo des Rollings Stones, mon groupe préféré, au dos de mon blouson mais je peux pas tout seul. </br></br>Tiens j'ai amené le kit de couture, il n'y a plus qu'à se lancer"
+                "Samedi soir, c'est le bal. On se prépare en répétant quelques pas de rock. </br></br> J'ai également la tenue pour y aller mais je dois encore finir un détail.",
+                "Tu veux bien m'aider ? J'aimerais coudre le logo des Rollings Stones, mon groupe préféré, au dos de mon blouson mais je peux pas tout seul. </br></br> Tiens j'ai amené le kit de couture, il n'y a plus qu'à se lancer"
               ],
               "action": "C'est parti"
             },
@@ -307,7 +319,7 @@
             }
           },
           "interaction": {
-            "instruction": "Coud le logo des Rolling Stones sur le blouson de Fred",
+            "instruction": "Couds le logo des Rolling Stones sur le blouson de Fred",
             "tool": "",
             "target": ""
           }

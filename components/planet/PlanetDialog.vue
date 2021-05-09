@@ -8,7 +8,9 @@
             v-html="content.parts[currentStep].paragraphs[currentParagraphStep]" />
         <button
             @click="updateCurrentParagraphStep()"
-            class="mt-5 w-32 bg-#26272b text-white font-bold hover:text-black hover:bg-white hover:border-black py-2 px-4 border border-white rounded-full">
+            @mouseenter="hoverButton()"
+            @mouseleave="hoverButton()"
+            class="Button">
             {{ !isLastParagraphStep ? 'SUITE' : 'C\'EST PARTI' }}
         </button>
     </article>
@@ -63,12 +65,14 @@ export default {
             if (this.currentParagraphStep + 1 > this.maxParagraphStep) {
                 if (this.currentStep + 1 > this.maxStep) {
                     this.content.isFinished = true
+                    EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
                     EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
                     this.$emit('update:is-displayed', false)
                     return
                 }
                 this.currentStep++
                 this.currentParagraphStep = 0
+                EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
                 EventBus.emit(GLEvents.SETUP_SCENERY_INTERACTION)
                 EventBus.emit(UIEvents.RELAUNCH_ROCK_ANIMATION)
                 this.$emit('update:is-displayed', false)
@@ -76,6 +80,9 @@ export default {
             }
 
             this.currentParagraphStep++
+        },
+        hoverButton() {
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
         }
     }
 
@@ -88,23 +95,55 @@ export default {
         position: absolute;
         bottom: 0;
         left: 0;
-        background-color: #26272b;
-        color: white;
-        font-size: .8em;
-        line-height: 1.75;
+        width: 500px;
+        height: fit-content;
         padding: 2rem 2rem;
-        margin-bottom: 75px;
-        cursor: default;
-        border-left: 5px solid #7956b2;
-        max-height: 210px;
+        background-color: white;
+        color: black;
+        font-size: 16px;
+        text-align: center;
+        line-height: 1.75;
     }
-    
-    p:before {
-        content: "“";
-        font-family: Georgia;
-        font-size: 40px;
-        line-height: 0;
-        display: inline-block;
-        display: -webkit-inline-box;
+
+    article:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 3rem;
+        width: 0;
+        height: 0;
+        border: 20px solid transparent;
+        border-top-color: white;
+        border-bottom: 0;
+        border-left: 0;
+        margin-left: -10px;
+        margin-bottom: -20px;
+    }
+
+    button {
+        cursor: none;
+    }
+
+    button:focus {
+        outline: none;
+    }
+
+    .Button {
+        @apply py-5 px-10 rounded-full;
+        width: fit-content;
+        font-family: 'Soulmaze', sans-serif;
+        letter-spacing: 2.25px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2.25px;
+        margin-top: 2rem;
+        border: 1px solid black;
+        transition: all .33s ease-in-out;
+    }
+
+    .Button:hover {
+        color: white;
+        background-color: black;
+        box-shadow: 0px 2px 15px 5px rgba(0,0,0,0.5);
     }
 </style>

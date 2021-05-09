@@ -3,50 +3,51 @@
         <div class="filter"></div>
         <template v-if="selectedSystem && showSystemTexts">
             <div
-                class="container flex flex-col justify-center p-8 absolute text-white mx-auto"
-                style="left: 52.5%; top: 33%; width: 28%">
-                <h1 class="font-extrabold text-4xl">{{ selectedSystem.title }}</h1>
-                <span class="text-gray-400 text-md mt-3">{{ selectedSystem.description }}</span>
+                class="Macro_text container flex flex-col justify-center p-8 text-white mx-auto">
+                <h1 class="text-4xl">{{ selectedSystem.title }}</h1>
+                <p class="text-md mt-3">{{ selectedSystem.description }}</p>
                 <button
-                    class="mt-10 w-40 bg-white bg-opacity-25 text-white border-white border font-bold py-2 px-4 rounded-full"
-                    :class="selectedSystem.name !== 'quiz' ? 'hover:bg-white hover:text-purple-500' : ''"
+                    class="Button"
+                    :class="selectedSystem.name !== 'quiz' ? 'hover:bg-white hover:text-black' : ''"
                     :style="selectedSystem.name === 'quiz' ? 'opacity: 0.5' : ''"
-                    @click="discoverSystem()">
-                    DECOUVRIR
+                    @click="discoverSystem()"
+                    @mouseenter="hoverButton()"
+                    @mouseleave="hoverButton()">
+                    Découvrir
                 </button>
             </div>
             <div
-                class="absolute left-0 ml-6 cursor-pointer"
+                class="NavButton NavButton--prev"
                 style="top: 50%"
-                @click="previousSystem">
-                <svg-icon
-                    svg-name="arrow_left"
-                    :width="24"
-                    :height="24"
-                    color="#FFFFFF" />
+                @click="previousSystem"
+                @mouseenter="hoverButton()"
+                @mouseleave="hoverButton()">
+                <svg width="29" height="16" viewBox="0 0 29 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M28 8L0.999992 8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 1L1 8L8 15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
             </div>
             <div 
-                class="absolute right-0 mr-6 cursor-pointer"
+                class="NavButton NavButton--next"
                 style="top: 50%"
-                @click="nextSystem">
-                <svg-icon 
-                    svg-name="arrow_right"
-                    :width="24"
-                    :height="24"
-                    color="#FFFFFF" />
+                @click="nextSystem"
+                @mouseenter="hoverButton()"
+                @mouseleave="hoverButton()">
+                <svg width="29" height="16" viewBox="0 0 29 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 8L28 8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21 1L28 8L21 15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
             </div>
         </template>
-        <div 
+        <button 
             v-if="discoveringSystem"
-            class="absolute left-0 ml-6 mt-4 flex flex-row cursor-pointer"
-            @click="backOnPreviousView">
-            <svg-icon
-                svg-name="back"
-                :width="49"
-                :height="49"
-                color="#FFFFFF"
-                style="margin-top: 5px" />
-        </div>
+            class="Button Button--back"
+            @click="backOnPreviousView"
+            @mouseenter="hoverButton()"
+            @mouseleave="hoverButton()">
+        </button>
         <loader />
         <informations-dialog 
             v-if="informationsDialog.isDisplayed"
@@ -67,6 +68,7 @@
                 :instruction="selectedPlanetInfos.scenery.interaction.instruction" />
         </template>
         <web-gl />
+        <custom-cursor />
     </div>
 </template>
 
@@ -83,6 +85,7 @@ import SceneryInteractionInstruction from '../components/scenery/InteractionInst
 import Tracker from '../components/Tracker.vue'
 import Loader from '~/components/Loader.vue'
 import InformationsDialog from '~/components/InformationsDialog.vue'
+import CustomCursor from '~/components/CustomCursor.vue'
 
 export default {
     components: {
@@ -92,7 +95,8 @@ export default {
         PlanetModal,
         PlanetDialog,
         Loader,
-        SceneryInteractionInstruction
+        SceneryInteractionInstruction,
+        CustomCursor
     },
     
     data: () => ({
@@ -162,8 +166,10 @@ export default {
             if (this.selectedSystem.name === 'mode') {
                 this.showSystemTexts = false
                 this.discoveringSystem = true
+                EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
                 EventBus.emit(AnimationEvents.DISCOVER_SYSTEM, this.selectedSystem)
             } else if (this.selectedSystem.name === 'quiz') {
+                EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
                 EventBus.emit(UIEvents.SHOW_INFORMATIONS_DIALOG, {
                     visible: true,
                     content: {
@@ -192,8 +198,161 @@ export default {
         },
 
         backOnPreviousView () {
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
             EventBus.emit(AnimationEvents.BACK)
         },
+        hoverButton() {
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
+        }
     }
 }
 </script>
+
+<style scoped>
+    * { cursor: none !important; }
+    *:focus { outline: none; }
+
+    .Macro_text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateY(-50%)
+    }
+
+    h1 {
+        font-family: 'Soulmaze', sans-serif;
+        font-weight: bold;
+        letter-spacing: 2.25px;
+    }
+
+    p {
+        margin-top: 1rem;
+        max-width: 445px;
+        color: #C0ACD6;
+    }
+
+    .NavButton {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%)
+    }
+
+    .NavButton::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 144px;
+        height: 144px;
+        border: 1px solid white;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1);
+        transition: all .3s ease-in-out;
+    }
+
+    .NavButton:hover::before {
+        color: black;
+        fill: black;
+        background-color: white;
+        box-shadow: 0px 2px 15px 5px rgba(255,255,255,0.5);
+    }
+
+    .NavButton--prev {
+        left: 1.5rem;
+    }
+
+    .NavButton--next {
+        right: 1.5rem; 
+    }
+
+    .NavButton--prev::before {
+        transform: translateX(-75%) translateY(-50%);
+    }
+    .NavButton--next::before {
+        transform: translateX(-5%) translateY(-50%);
+    }
+
+    .NavButton > svg {
+        position: relative;
+        z-index: 1;
+        transition: all .3s ease-in-out;
+    }
+
+    .NavButton--prev > svg {
+        transform: translateX(-8px);
+    }
+
+    .NavButton--next > svg {
+        transform: translateX(8px);
+    }
+
+    .NavButton--prev:hover > svg {
+        transform: translateX(-16px);
+    }
+
+    .NavButton--next:hover > svg {
+        transform: translateX(16px);
+    }
+    
+    .NavButton:hover > svg > path {
+        stroke: black;
+    }
+
+    .Button {
+        @apply py-5 px-10 rounded-full;
+        width: fit-content;
+        font-family: 'Soulmaze', sans-serif;
+        font-weight: bold;
+        letter-spacing: 2.25px;
+        text-transform: uppercase;
+        background-color: rgba(255, 255, 255, 0.1);
+        margin-top: 2rem;
+        border: 1px solid white;
+        transition: all .33s ease-in-out;
+    }
+
+    .Button:hover {
+        background-color: white;
+        box-shadow: 0px 2px 15px 5px rgba(255,255,255,0.5);
+    }
+
+    .Button--back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin-top: 3.5rem;
+        margin-left: 4rem;
+        padding: 0;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .Button--back::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: white;
+        width: 9px;
+        height: 2px;
+        transform: rotate(-45deg) translate(-1px, -6px);
+    }
+
+    .Button--back::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: white;
+        width: 9px;
+        height: 2px;
+        transform: rotate(45deg) translate(-2px, 5px);
+    }
+
+    .Button--back:hover::before, 
+    .Button--back:hover::after
+    {
+        background-color: black;
+    }
+
+</style>
