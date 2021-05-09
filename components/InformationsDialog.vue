@@ -41,7 +41,7 @@
 
 import SvgIcon from './SvgIcon.vue'
 import EventBus from '../assets/js/utils/EventBus'
-import { GLEvents, AnimationEvents } from '../assets/js/utils/Events'
+import { GLEvents, AnimationEvents, UIEvents } from '../assets/js/utils/Events'
 
 export default {
     components: {

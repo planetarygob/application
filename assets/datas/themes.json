@@ -104,7 +104,7 @@
           "type": "scenery",
           "url": "scenery_planet_skirt_V2.glb",
           "model": null,
-          "yPosition": -2.5,
+          "yPosition": 1.5,
           "character": {
             "name": "mode_scenery_skirt_character",
             "type": "character",
@@ -205,7 +205,7 @@
           "type": "scenery",
           "url": "scenery_planet_hippie_V2.glb",
           "model": null,
-          "yPosition": -3.5,
+          "yPosition": -1.5,
           "character": {
             "name": "mode_scenery_hippie_character",
             "type": "character",
