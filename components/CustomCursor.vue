@@ -1,13 +1,14 @@
 <template>
-    <div class="CustomCursor" v-bind:class="{ 'CustomCursor--button': isHoveringButton, 'CustomCursor--discover': isHoveringPlanet, 'CustomCursor--open': isHoveringTool, 'CustomCursor--grab': isMovingTool }">
-        <div class="CustomCursor_main">
-            <p>Découvrir</p>
-            <img class="CustomCursor_openicon" src="https://florianblandin.fr/assets/images/icon-open-hand.svg" alt="grab icon">
-            <img class="CustomCursor_grabicon" src="https://florianblandin.fr/assets/images/icon-grab-hand.svg" alt="grabbing icon">
+    <div>
+        <div class="CustomCursor" v-bind:class="{ 'CustomCursor--button': isHoveringButton, 'CustomCursor--discover': isHoveringPlanet, 'CustomCursor--open': isHoveringTool, 'CustomCursor--grab': isMovingTool }">
+            <div class="CustomCursor_main">
+                <p>Découvrir</p>
+                <img class="CustomCursor_openicon" src="https://florianblandin.fr/assets/images/icon-open-hand.svg" alt="grab icon">
+                <img class="CustomCursor_grabicon" src="https://florianblandin.fr/assets/images/icon-grab-hand.svg" alt="grabbing icon">
+            </div>
+            
         </div>
-        <div class="CustomCursor_follower">
-
-        </div>
+        <div class="CustomCursor_follower"></div>
     </div>
 </template>
 
@@ -15,13 +16,17 @@
 import gsap from 'gsap/all'
 import EventBus from '~/assets/js/utils/EventBus'
 import { UIEvents } from '~/assets/js/utils/Events'
+import { lerp } from '~/assets/js/utils/Math'
 
 export default {
     mounted() {
 
         const cursor = document.querySelector('.CustomCursor')
+        const follower = document.querySelector('.CustomCursor_follower')
         let clientX = -100
         let clientY = -100
+        let lastX = 0
+        let lastY = 0
 
         document.addEventListener('pointermove', e => {
             clientX = e.clientX
@@ -29,9 +34,17 @@ export default {
         })
 
         const render = () => {
+            lastX = lerp(lastX, clientX, 0.2)
+            lastY = lerp(lastY, clientY, 0.2)
+
             gsap.set(cursor, {
               x: clientX,
               y: clientY
+            })
+
+            gsap.set(follower, {
+              x: lastX,
+              y: lastY
             })
             requestAnimationFrame(render)
         }
@@ -152,20 +165,21 @@ export default {
 
     .CustomCursor_follower {
         position: absolute;
-        top: 50%;
-        left: 50%;
+        pointer-events: none;
+        top: 0;
+        left: 0;
         width: 7px;
         height: 7px;
         border-radius: 50%;
         background-color: #A69FEE;
-        transition: all .5s ease-in-out;
-        transform: translate(-50%, -50%);
+        opacity: 1;
+        transition: opacity .3s ease-in-out;
     }
 
-    .CustomCursor--button > .CustomCursor_follower,
-    .CustomCursor--discover > .CustomCursor_follower,
-    .CustomCursor--open > .CustomCursor_follower,
-    .CustomCursor--grab > .CustomCursor_follower
+    .CustomCursor--button + .CustomCursor_follower,
+    .CustomCursor--discover + .CustomCursor_follower,
+    .CustomCursor--open + .CustomCursor_follower,
+    .CustomCursor--grab + .CustomCursor_follower
     {
         opacity: 0;
     }

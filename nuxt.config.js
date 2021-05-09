@@ -7,7 +7,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Planetary',
+    title: 'Planetary - Big Boom Theory',
     htmlAttrs: {
       lang: 'en'
     },

@@ -3,3 +3,7 @@ export const getRandomIntInclusive = (min, max) => {
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min +1)) + min
 }
+
+export const lerp = (a, b, n) => {
+    return (1 - n) * a + n * b;
+}
