@@ -77,6 +77,8 @@ class PlanetScenery extends Group {
             this.character!.model.scene.traverse((child: any) => {
                 if (child.name === this.animation!.animationTool.name) {
                     this.animation!.animationTool.model = child
+                    this.animation!.animationTool.model!.scale.set(1.4, 1.4, 1.4)
+                    this.animation!.animationTool.model!.position.y = this.animation!.animationTool.model!.position.y - 0.08
                 }
                 if (child.name === this.animation!.animationTarget.name) {
                     this.animation!.animationTarget.model = child
