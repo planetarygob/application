@@ -162,7 +162,6 @@ class Scene extends TScene {
 
         // GL PLANET EVENTS
         EventBus.on<Planet>(GLEvents.CLICK_PLANET, (selectedPlanet) => {
-            console.log('CLICK_PLANET', );
             if (selectedPlanet) {
                 this.cameraAnimationManager.discoverPlanet(selectedPlanet)
                 this.selectedPlanet = selectedPlanet
@@ -308,7 +307,6 @@ class Scene extends TScene {
     }
     
     onModelLoaded (gltf: GLTF) {
-        console.log('gltf name', gltf.userData.name);
         this.loadingManager.loadedModels += 1
         const progress = 100 / 21 * this.loadingManager.loadedModels
 

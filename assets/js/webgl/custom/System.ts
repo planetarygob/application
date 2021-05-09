@@ -48,8 +48,6 @@ class System extends Group {
 
         this.createSun(systemInfos)
         this.createPlanets(systemInfos, gl)
-
-        // console.log('system', this);
     }
 
     createSun (systemInfos: any) {

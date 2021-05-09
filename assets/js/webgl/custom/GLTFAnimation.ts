@@ -46,7 +46,6 @@ class GLTFAnimation {
 
     launchAnimation (scene: Scene) {
         if (this.action) {
-            console.log('play1', );
             this.action.play()
             this.action.clampWhenFinished = true
 
@@ -55,7 +54,6 @@ class GLTFAnimation {
             if (scene.animationMixer && this.animationTool.name !== 'aiguille') {
                 scene.animationMixer.addEventListener('finished', () => {
                     EventBus.emit(UIEvents.SHOW_SCENERY_INTERACTION_INSTRUCTION, false)
-                    console.log('sceneryInteractionDezoom 2', );
                     scene.cameraAnimationManager.sceneryInteractionDezoom()
                     // EventBus.emit(UIEvents.SHOW_PLANET_MODAL, true)
                     scene.dragControls.deactivate()

@@ -38,9 +38,7 @@ class SceneryLogo {
     }
 
     launchAnimation () {
-        console.log('launchAnimation logo', );
         if (this.model.animations.length && this.isAnimated) {
-            console.log('this.model.animations[0]', this.model.animations[0]);
             const animationMixer = new AnimationMixer(this.model.scene)
             const action = animationMixer.clipAction(this.model.animations[0])
             action.play()

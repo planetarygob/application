@@ -54,7 +54,6 @@ class PlanetScenery extends Group {
             if (this.animation) {
                 if (child.name === this.animation!.animationTool.name) {
                     this.animation!.animationTool.model = child
-                    console.log('this.animation!.animationTool', this.animation!.animationTool);
                 }
                 if (child.name === this.animation!.animationTarget.name) {
                     this.animation!.animationTarget.model = child
@@ -72,7 +71,6 @@ class PlanetScenery extends Group {
                     this.animation!.animationTarget.model = child
                 }
             })
-            console.log('this.animation!.animationTarget', this.animation!.animationTarget);
         }
 
         if (this.name === 'mode_scenery_hippie' && this.animation) {
@@ -117,12 +115,6 @@ class PlanetScenery extends Group {
                     this.animation!.updateToolScaleAnimation(elapsedTime, initialScale)
                 }
             })
-
-            // if (this.name === 'mode_scenery_rock' && this.animation) {
-            //     this.animation!.animationTarget.model = this.character!.model.scene
-            //     this.animation?.launchAnimation(scene)
-            //     console.log('this.animation!.animationTarget', this.animation!.animationTarget);
-            // }
 
             scene.dragControls.activate()
 
