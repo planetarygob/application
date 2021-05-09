@@ -30,9 +30,9 @@
         "orbitSpeed": 1,
         "floatFactor": 0.6125,
         "initialPosition": {
-          "x": 12,
-          "y": -2,
-          "z": -4
+          "x": 10,
+          "y": 2,
+          "z": -2
         },
         "modalContent": {
           "titles": [
@@ -132,8 +132,8 @@
         "floatFactor": 0.5,
         "initialPosition":{
           "x": -8,
-          "y": -5,
-          "z": -6
+          "y": -3,
+          "z": -4
         },
         "modalContent": {
           "titles": [
@@ -234,7 +234,7 @@
         "initialPosition":{
           "x": -9,
           "y": 8,
-          "z": 8
+          "z": 5
         },
         "modalContent": {
           "titles": [
