@@ -1,4 +1,4 @@
-import { Group } from "three";
+import { Group, BoxGeometry, MeshBasicMaterial, Mesh } from "three";
 import EventBus from "../../utils/EventBus";
 import { GLEvents, UIEvents, ProgressBarEvents } from "../../utils/Events";
 import Scene from "../core/Scene";
@@ -54,6 +54,11 @@ class Planet extends Group {
             if (scenery.character) {
                 this.add(scenery.character.model.scene)
             }
+            if (scenery.logo) {
+                scenery.logo.model.scene.position.set(0.08, -0.72, -0.18)
+                scenery.logo.model.scene.scale.set(0.05, 0.05, 0.05)
+                this.add(scenery.logo.model.scene)
+            }
         }
 
         this.visible = false
@@ -96,6 +101,9 @@ class Planet extends Group {
             if (this.scenery.character) {
                 this.scenery.character.model.scene.visible = !visible
             }
+            // if (this.scenery.logo) {
+            //     this.scenery.logo.model.scene.visible = !visible
+            // }
             this.object.model.scene.scale.set(0.015, 0.015, 0.015)
             this.listenEvents()
         }
@@ -108,7 +116,11 @@ class Planet extends Group {
             this.scenery.model.scene.scale.set(0.04, 0.04, 0.04)
             if (this.scenery.character) {
                 this.scenery.character.model.scene.visible = visible
-                this.scenery.character.launchAnimation()
+                this.scenery.character.launchAnimation(this.scene)
+            }
+            if (this.scenery.logo) {
+                // this.scenery.logo.model.scene.visible = visible
+                // this.scenery.logo.launchAnimation()
             }
             this.removeBubble()
             this.removeEvents()

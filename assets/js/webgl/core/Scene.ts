@@ -9,7 +9,8 @@ import {
     AnimationMixer,
     PointLight,
     Mesh,
-    MeshBasicMaterial
+    MeshBasicMaterial,
+    BoxGeometry
 } from 'three'
 import EventBus from '../../utils/EventBus'
 import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
@@ -309,7 +310,7 @@ class Scene extends TScene {
     onModelLoaded (gltf: GLTF) {
         console.log('gltf name', gltf.userData.name);
         this.loadingManager.loadedModels += 1
-        const progress = 100 / 20 * this.loadingManager.loadedModels
+        const progress = 100 / 21 * this.loadingManager.loadedModels
 
         EventBus.emit(UIEvents.UPDATE_LOADER, {
             progress: progress

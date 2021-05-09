@@ -17,7 +17,8 @@ export const GLEvents = {
     TOGGLE_ORBIT_CONTROLS: 'gl:toggle_orbit_controls',
     TOGGLE_BLUR : 'gl:toggle_blur',
     SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction',
-    SCENE_CLICKED: 'gl:scene_clicked'
+    SCENE_CLICKED: 'gl:scene_clicked',
+    LETS_GO: 'gl:lets_go'
 }
 
 export const UIEvents = {
@@ -32,7 +33,8 @@ export const UIEvents = {
     SHOW_SCENERY_INTERACTION_INSTRUCTION: 'ui:show_scenery_interaction_instruction',
     RELAUNCH_ROCK_ANIMATION: 'ui:relaunch_rock_animation',
     SHOW_INFORMATIONS_DIALOG: 'ui:show_informations_dialog',
-    ROCK_ANIMATION_IS_ENDED: 'ui:rock_animation_is_ended'
+    ROCK_ANIMATION_IS_ENDED: 'ui:rock_animation_is_ended',
+    SHOW_LOGO_RS: 'ui:show_logo_rs'
 }
 
 export const AnimationEvents = {
@@ -42,7 +44,10 @@ export const AnimationEvents = {
     SYSTEM_ZOOM_FINISHED: 'animation:system_zoom_finished',
     PLANET_ZOOM_FINISHED: 'animation:planet_zoom_finished',
     BACK: 'animation:back',
-    BACK_ON_SYSTEM_CHOICE: 'animation:back_on_system_choice'
+    BACK_ON_SYSTEM_CHOICE: 'animation:back_on_system_choice',
+    LAUNCH_LOGO_ANIMATION: 'animation:launch_logo_animation',
+    ENDED_LOGO_ANIMATION: 'animation:ended_logo_animation',
+    SCENERY_INTERACTION_DEZOOM: 'animation:scenery_interaction_dezoom'
 }
 
 export const ProgressBarEvents = {

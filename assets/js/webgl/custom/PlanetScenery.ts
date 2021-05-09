@@ -2,9 +2,10 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader"
 import GLTFAnimation from './GLTFAnimation'
 import Scene from "../core/Scene"
 import EventBus from "../../utils/EventBus"
-import { GLEvents } from "../../utils/Events"
-import { AnimationMixer, LoopOnce, Vector3, Object3D, Group, DirectionalLight, AmbientLight, Mesh, MeshBasicMaterial } from "three"
+import { GLEvents, UIEvents } from "../../utils/Events"
+import { AnimationMixer, LoopOnce, Vector3, Object3D, Group, DirectionalLight, AmbientLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, MeshLambertMaterial } from "three"
 import SceneryCharacter from "./SceneryCharacter"
+import SceneryLogo from "./SceneryLogo"
 
 class PlanetScenery extends Group {
     name: string
@@ -12,6 +13,7 @@ class PlanetScenery extends Group {
     yPosition: number
     animation: GLTFAnimation|null
     character: SceneryCharacter|null
+    logo: SceneryLogo|null
     hiddenObjects: Array<Object3D>
 
     constructor (
@@ -19,7 +21,8 @@ class PlanetScenery extends Group {
         model: GLTF,
         yPosition: number,
         animation: GLTFAnimation|null,
-        character: SceneryCharacter|null
+        character: SceneryCharacter|null,
+        logo: SceneryLogo|null
     ) {
         super()
 
@@ -28,6 +31,7 @@ class PlanetScenery extends Group {
         this.yPosition = yPosition
         this.animation = animation
         this.character = character
+        this.logo = logo
 
         this.model.scene.visible = false
         this.model.scene.scale.set(0.005, 0.005, 0.005)
@@ -43,19 +47,44 @@ class PlanetScenery extends Group {
                 child.material = newMaterial
             }
 
+            if (child.name === 'Logo_RS') {
+                child.visible = false
+            }
+
             if (this.animation) {
+                if (child.name === this.animation!.animationTool.name) {
+                    this.animation!.animationTool.model = child
+                    console.log('this.animation!.animationTool', this.animation!.animationTool);
+                }
+                if (child.name === this.animation!.animationTarget.name) {
+                    this.animation!.animationTarget.model = child
+                }
+
+                if (child.name === 'explosion_fleurs' || child.name === 'flowergun' || child.name === 'flowerbandana') {
+                    this.hiddenObjects.push(child)
+                }
+            }
+        })
+
+        if (this.name === 'mode_scenery_rock' && this.animation) {
+            this.character!.model.scene.traverse((child: any) => {
+                if (child.name === this.animation!.animationTarget.name) {
+                    this.animation!.animationTarget.model = child
+                }
+            })
+            console.log('this.animation!.animationTarget', this.animation!.animationTarget);
+        }
+
+        if (this.name === 'mode_scenery_hippie' && this.animation) {
+            this.character!.model.scene.traverse((child: any) => {
                 if (child.name === this.animation!.animationTool.name) {
                     this.animation!.animationTool.model = child
                 }
                 if (child.name === this.animation!.animationTarget.name) {
                     this.animation!.animationTarget.model = child
                 }
-
-                if (child.name === 'explosion_fleurs' || child.name === 'flowergun') {
-                    this.hiddenObjects.push(child)
-                }
-            }
-        })
+            })
+        }
 
         for (let object of this.hiddenObjects) {
             object.visible = false
@@ -88,6 +117,12 @@ class PlanetScenery extends Group {
                     this.animation!.updateToolScaleAnimation(elapsedTime, initialScale)
                 }
             })
+
+            // if (this.name === 'mode_scenery_rock' && this.animation) {
+            //     this.animation!.animationTarget.model = this.character!.model.scene
+            //     this.animation?.launchAnimation(scene)
+            //     console.log('this.animation!.animationTarget', this.animation!.animationTarget);
+            // }
 
             scene.dragControls.activate()
 
