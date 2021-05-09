@@ -25,6 +25,8 @@ class SceneryLogo {
         // this.model.scene.add(themeLight)
 
         this.model.scene.visible = false
+        this.model.scene.position.set(0.08, -0.72, -0.18)
+        this.model.scene.scale.set(0.05, 0.05, 0.05)
 
         EventBus.on(UIEvents.SHOW_LOGO_RS, () => {
             this.model.scene.visible = true
