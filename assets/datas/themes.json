@@ -210,7 +210,7 @@
             }
           },
           "interaction": {
-            "instruction": "Recharge le pistolet de David",
+            "instruction": "Recharge le pistolet de David avec la fleur",
             "tool": "Flower",
             "target": "gun"
           }
