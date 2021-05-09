@@ -50,6 +50,10 @@ export class CustomLoadingManager {
                         if (planet['scenery'].hasOwnProperty('character')) {
                             this.loadModel(planet['scenery'].character, onError, onLoading, onAllLoaded, onModelLoaded)
                         }
+
+                        if (planet['scenery'].hasOwnProperty('logo')) {
+                            this.loadModel(planet['scenery'].logo, onError, onLoading, onAllLoaded, onModelLoaded)
+                        }
                     }
                 }
             }
@@ -81,7 +85,7 @@ export class CustomLoadingManager {
                 this.modelsLoaded.set(modelToLoad.name, gltf)
                 onModelLoaded(gltf)
                 // TODO: get the right number
-                if (this.modelsLoaded.size === 20) {
+                if (this.modelsLoaded.size === 21) {
                     onAllLoaded()
                 }
             },

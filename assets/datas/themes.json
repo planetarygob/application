@@ -209,18 +209,18 @@
           "character": {
             "name": "mode_scenery_hippie_character",
             "type": "character",
-            "url": "/models/skirt/character.gltf",
+            "url": "/models/hippie/character.gltf",
             "model": null,
             "initialPosition": {
               "x": 0.5,
-              "y": -0.7,
+              "y": 0.1,
               "z": 0.8
             }
           },
           "interaction": {
-            "instruction": "Recharge le pistolet de David",
-            "tool": "flowerbandana",
-            "target": "brasgauche"
+            "instruction": "Recharge le pistolet de David avec la fleur",
+            "tool": "Flower",
+            "target": "gun"
           }
         }
       },
@@ -302,7 +302,7 @@
           "model": null
         },
         "scenery": {
-          "name":"mode_scenery_planet_rock",
+          "name":"mode_scenery_rock",
           "type": "scenery",
           "url": "scenery_planet_rock_V2.glb",
           "model": null,
@@ -313,6 +313,17 @@
             "url": "/models/rock/character.gltf",
             "model": null,
             "initialPosition": {
+              "x": -0.2,
+              "y": 2,
+              "z": 0.5
+            }
+          },
+          "logo": {
+            "name": "mode_scenery_rock_logo_rs",
+            "type": "logo",
+            "url": "logo_rs.glb",
+            "model": null,
+            "initialPosition": {
               "x": 0,
               "y": 0,
               "z": 0
@@ -320,8 +331,8 @@
           },
           "interaction": {
             "instruction": "Couds le logo des Rolling Stones sur le blouson de Fred",
-            "tool": "",
-            "target": ""
+            "tool": "aiguille",
+            "target": "Rocker_3"
           }
         }
       }

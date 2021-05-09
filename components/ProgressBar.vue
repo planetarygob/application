@@ -94,9 +94,7 @@ export default {
     },
 
     methods: {
-        update(system: string, index: number) {
-            console.log("update progressbar", " name: ", system, " index: ", index)
-            
+        update(system: string, index: number) {            
             // NOTE : We select DOM element of concerned system
             const parent = document.querySelector(`.ProgressBar_progress--${ system }`)
             let systemNodes: any[] = []
