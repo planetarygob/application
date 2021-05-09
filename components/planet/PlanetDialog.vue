@@ -2,7 +2,7 @@
     <article 
         v-if="isDisplayed && !content.isFinished"
         class="rounded-lg flex flex-col items-center max-w-sm"
-        :style="'top:' + content.position.top + '; left: ' + content.position.left">
+        :style="'bottom:' + content.position.bottom + '; left: ' + content.position.left">
         <p 
             v-if="content.parts[currentStep].paragraphs"
             v-html="content.parts[currentStep].paragraphs[currentParagraphStep]" />

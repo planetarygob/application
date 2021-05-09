@@ -71,7 +71,7 @@
         },
         "dialogContent": {
           "position": {
-            "top": "10%",
+            "bottom": "70%",
             "left": "60%"
           },
           "isFinished": false,
@@ -172,8 +172,8 @@
         },
         "dialogContent": {
           "position": {
-            "top": "5px",
-            "left": "60%"
+            "bottom": "65%",
+            "left": "55%"
           },
           "isFinished": false,
           "parts": [
@@ -273,8 +273,8 @@
         },
         "dialogContent": {
           "position": {
-            "top": "5px",
-            "left": "60%"
+            "bottom": "65%",
+            "left": "50%"
           },
           "isFinished": false,
           "parts": [
