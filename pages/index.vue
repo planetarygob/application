@@ -212,8 +212,13 @@ export default {
     * { cursor: none !important; }
     *:focus { outline: none; }
 
+    body {
+        overflow: hidden;
+    }
+
     .Macro_text {
         position: absolute;
+        width: fit-content;
         top: 50%;
         left: 50%;
         transform: translateY(-50%)
