@@ -276,6 +276,5 @@ export default {
     .ProgressBar_img { 
         margin: auto;
         opacity: 0.05;
-        margin-top: 20px;
     }
 </style>

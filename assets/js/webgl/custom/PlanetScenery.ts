@@ -120,19 +120,14 @@ class PlanetScenery extends Group {
 
             // TODO: custom cursor
             scene.dragControls.addEventListener('hoveron', (e) => {
-                setTimeout(() => {
-                    scene.renderer.domElement.style.cursor = 'grab'
-                }, 1)
+                EventBus.emit(UIEvents.TOGGLE_OPEN_CURSOR)
             })
 
             scene.dragControls.addEventListener('hoveroff', (e) => {
-                scene.renderer.domElement.style.cursor = 'default'
+                EventBus.emit(UIEvents.TOGGLE_OPEN_CURSOR)
             })
 
             scene.dragControls.addEventListener('dragstart', (e) => {
-                setTimeout(() => {
-                    scene.renderer.domElement.style.cursor = 'grabbing'
-                }, 1)
                 this.animation!.onDragStart(scene)
             })
 
@@ -143,6 +138,7 @@ class PlanetScenery extends Group {
             scene.highlightManager.add(this.animation.animationTool.model)
             scene.interactionManager.add(this.animation.animationTarget.model)
             scene.interactionManager.add(this.animation.animationTool.model)
+
         } else {
             console.error("Tool or Target undefined")
         }

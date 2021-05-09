@@ -129,7 +129,7 @@ export default {
     }
 
     .Button {
-        @apply py-5 px-10 rounded-full;
+        @apply py-3 px-10 rounded-full;
         width: fit-content;
         font-family: 'Soulmaze', sans-serif;
         letter-spacing: 2.25px;

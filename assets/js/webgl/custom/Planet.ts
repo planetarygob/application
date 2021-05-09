@@ -127,7 +127,6 @@ class Planet extends Group {
 
     listenEvents () {
         this.scene.interactionManager.add(this)
-        console.log(this)
 
         this.addEventListener('click', () => {
             if (this.canClick) {

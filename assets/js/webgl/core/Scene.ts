@@ -172,13 +172,11 @@ class Scene extends TScene {
         })
         EventBus.on<Planet>(GLEvents.MOUSE_OVER_PLANET, (selectedPlanet) => {
             if (selectedPlanet) {
-                console.log("over")
                 // this.animationManager.hoverPlanet(selectedPlanet)
             }
         })
         EventBus.on<Planet>(GLEvents.MOUSE_OUT_PLANET, (selectedPlanet) => {
             if (selectedPlanet) {
-                console.log("out")
                 // this.animationManager.outPlanet(selectedPlanet)
             }
         })

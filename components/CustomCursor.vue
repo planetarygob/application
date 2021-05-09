@@ -23,11 +23,11 @@ export default {
         let clientX = -100
         let clientY = -100
 
-        document.addEventListener('mousemove', e => {
+        document.addEventListener('pointermove', e => {
             clientX = e.clientX
             clientY = e.clientY
         })
-        
+
         const render = () => {
             gsap.set(cursor, {
               x: clientX,
@@ -76,7 +76,7 @@ export default {
         left: 0;
         pointer-events: none;
     }
-    
+
     .CustomCursor_main {
         display: flex;
         width: 23px;
@@ -164,8 +164,8 @@ export default {
 
     .CustomCursor--button > .CustomCursor_follower,
     .CustomCursor--discover > .CustomCursor_follower,
-    .CustomCursor--grab > .CustomCursor_follower,
-    .CustomCursor--grabbing > .CustomCursor_follower
+    .CustomCursor--open > .CustomCursor_follower,
+    .CustomCursor--grab > .CustomCursor_follower
     {
         opacity: 0;
     }
