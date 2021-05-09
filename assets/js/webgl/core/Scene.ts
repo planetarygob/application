@@ -76,6 +76,7 @@ class Scene extends TScene {
         this.systems = []
 
         this.loadingManager = CustomLoadingManager.getInstance(this.renderer)
+
         this.loadingManager.loadAllModels(this.onError, this.onLoading, this.onAllModelsLoaded.bind(this), this.onModelLoaded.bind(this))
 
         this.interactionManager = CustomInteractionManager.getInstance(this.renderer, this.camera)
@@ -98,18 +99,20 @@ class Scene extends TScene {
     }
 
     onAllModelsLoaded () {
-        EventBus.emit(UIEvents.TOGGLE_LOADER)
-        for (let systemInfos of JSONSystems) {
-            const system = new System(systemInfos.name, new Vector3(systemInfos.initialPosition.x, systemInfos.initialPosition.y, systemInfos.initialPosition.z), systemInfos.teasing.title, systemInfos.teasing.description, systemInfos.navPosition)
+        EventBus.on(GLEvents.LAUNCH_EXPERIENCE, () => {
+            EventBus.emit(UIEvents.TOGGLE_LOADER)
+            for (let systemInfos of JSONSystems) {
+                const system = new System(systemInfos.name, new Vector3(systemInfos.initialPosition.x, systemInfos.initialPosition.y, systemInfos.initialPosition.z), systemInfos.teasing.title, systemInfos.teasing.description, systemInfos.navPosition)
 
-            this.systems.push(system)
+                this.systems.push(system)
 
-            this.cameraAnimationManager.launchBigBangAnimation(system)
-            this.add(system)
-        }
+                this.cameraAnimationManager.launchBigBangAnimation(system)
+                this.add(system)
+            }
 
-        EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, true)
-        this.listenEvents()
+            EventBus.emit(ProgressBarEvents.SHOW_PROGRESS_BAR, true)
+            this.listenEvents()
+        })
     }
 
     listenEvents () {

@@ -45,15 +45,6 @@ class CameraAnimationManager {
         bingBangTimeline.set(sun, {
             visible: true,
             delay: 0.5
-        }).to(system.position, {
-            delay: 1,
-            duration: 2,
-            x: system.initialPosition.x,
-            y: system.initialPosition.y,
-            z: system.initialPosition.z,
-            onUpdate: function () {
-                self.camera.updateProjectionMatrix();
-            }
         })
     }
 
