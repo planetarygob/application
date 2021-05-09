@@ -11,7 +11,8 @@
             @mouseenter="hoverButton()"
             @mouseleave="hoverButton()"
             class="Button">
-            {{ !isLastParagraphStep ? 'SUITE' : 'C\'EST PARTI' }}
+            <span v-if="currentStep === 0">{{ !isLastParagraphStep ? 'SUITE' : 'C\'EST PARTI' }}</span>
+            <span v-else>{{ !isLastParagraphStep ? 'SUITE' : 'DÉCOUVRIR' }}</span>
         </button>
     </article>
 </template>
