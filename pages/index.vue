@@ -1,23 +1,59 @@
 <template>
     <div class="relative">
         <div class="filter"></div>
-        <video 
+        <video
             id="my_video"
-            controls 
             class="absolute"
-            autoplay="true"
-            muted="muted"
-            style="object-fit: cover;">
+            style="object-fit: cover;"
+            @click="playVideo()">
             <source src="/videos/Intro_planetary.mp4" />
         </video>
         <audio 
-            id="my_audio" 
-            controls 
+            id="main_audio" 
             preload="none">
             <source 
-                src="sound/ambiance_galaxie.mp3" 
+                src="sound/ambiance_galaxie.mp3"
                 type="audio/mpeg">
         </audio>
+        <audio 
+            id="mode_planet_skirt_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/music_minijupe.mp3"
+                type="audio/mpeg">
+        </audio>
+        <audio 
+            id="mode_planet_rock_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/music_rock.mp3"
+                type="audio/mpeg">
+        </audio>
+        <audio 
+            id="mode_planet_hippie_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/music_hippie.mp3"
+                type="audio/mpeg">
+        </audio>
+        <audio 
+            id="nav_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/woosh_vue_macro.mp3"
+                type="audio/mpeg">
+        </audio>
+        <div 
+            id="sound"
+            class="absolute bottom-0 right-0 mr-8 mb-8"
+            @click="enableSound = !enableSound">
+            <img
+                v-if="enableSound"
+                src="/images/sound_on.png" />
+            <img
+                v-else
+                src="/images/sound_off.png" />
+        </div>
         <template v-if="selectedSystem && showSystemTexts">
             <div
                 class="Macro_text container flex flex-col justify-center p-8 text-white mx-auto">
@@ -94,7 +130,7 @@
 import WebGl from '../components/WebGL.vue'
 import SvgIcon from '../components/SvgIcon.vue'
 import EventBus from '../assets/js/utils/EventBus'
-import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents } from '../assets/js/utils/Events'
+import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents, SoundEvents } from '../assets/js/utils/Events'
 import System from '../assets/js/webgl/custom/System'
 import PlanetModal from '../components/planet/PlanetModal.vue'
 import PlanetDialog from '../components/planet/PlanetDialog.vue'
@@ -128,16 +164,38 @@ export default {
         informationsDialog: {
             isDisplayed: false,
             content: {}
-        }
+        },
+        sceneryAudio: HTMLMediaElement,
+        enableSound: true,
+        mainAudio: HTMLAudioElement
     }),
 
+    watch: {
+        enableSound (val) {
+            if (this.mainAudio) {
+                if (val) {
+                    this.mainAudio.play()
+                } else {
+                    this.mainAudio.pause();
+                }
+            }
+            
+        }
+    },
+
     mounted() {
-        const audio: HTMLAudioElement|null = document.querySelector('#my_audio')
-        const video: HTMLMediaElement|null = document.querySelector('#my_video');   
+        this.mainAudio = document.querySelector('#main_audio')
+        // const audio: HTMLAudioElement|null = document.querySelector('#main_audio')
+        const video: HTMLMediaElement|null = document.querySelector('#my_video')
         if (video) {
+            video.volume = 0.8
+            const self = this
+
             video.onended = function (e) {
-                if (audio) {
-                    audio.play()
+                if (self.mainAudio) {
+                    self.mainAudio.loop = true
+                    self.mainAudio.volume = 0.1
+                    self.mainAudio.play()
                 }
                 video.style.display = 'none'
                 EventBus.emit(GLEvents.LAUNCH_EXPERIENCE)
@@ -188,6 +246,21 @@ export default {
                     this.isProgressBarDisplayed = visible
                 }
             })
+            EventBus.on<string>(SoundEvents.LAUNCH_SOUND_SCENERY, (planetName) => {
+                if (planetName !== undefined) {
+                    this.sceneryAudio = document.querySelector(`#${planetName}_audio`)
+                    if (this.sceneryAudio) {
+                        this.sceneryAudio.volume = 0.1
+                        this.sceneryAudio.play()
+                    }
+                }
+            })
+            EventBus.on<string>(SoundEvents.STOP_SOUND_SCENERY, () => {
+                if (this.sceneryAudio) {
+                    this.sceneryAudio.currentTime = 0;
+                    this.sceneryAudio.pause();
+                }
+            })
         },
 
         discoverSystem () {
@@ -218,10 +291,20 @@ export default {
         },
 
         previousSystem () {
+            const audio: HTMLAudioElement|null = document.querySelector('#nav_audio')
+            if (audio) {
+                audio.volume = 0.8
+                audio.play()
+            }
             EventBus.emit(AnimationEvents.PREVIOUS_SYSTEM)
         },
 
         nextSystem () {
+            const audio: HTMLAudioElement|null = document.querySelector('#nav_audio')
+            if (audio) {
+                audio.volume = 0.1
+                audio.play()
+            }
             EventBus.emit(AnimationEvents.NEXT_SYSTEM)
         },
 
@@ -229,8 +312,17 @@ export default {
             EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
             EventBus.emit(AnimationEvents.BACK)
         },
+
         hoverButton() {
             EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
+        },
+
+        playVideo() {
+            const video: HTMLMediaElement|null = document.querySelector('#my_video')
+            if (video) {
+                video.play()
+                video.playbackRate = 0.93;
+            }
         }
     }
 }
@@ -245,9 +337,14 @@ export default {
     }
 
     video {
-        right: 0; bottom: 0;
-        min-width: 100%; min-height: 100%;
-        width: auto; height: auto; z-index: 100;
+        position: absolute;
+        z-index: 1001;
+        right: 0; 
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+        width: auto; 
+        height: auto;
         background-size: cover;
     }
 

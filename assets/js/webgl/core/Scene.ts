@@ -17,7 +17,7 @@ import { CustomLoadingManager } from '../../utils/managers/CustomLoadingManager'
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Camera from './Camera'
 import Controls from './Controls'
-import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents } from '../../utils/Events'
+import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents, SoundEvents } from '../../utils/Events'
 import Planet from '../custom/Planet'
 import Renderer from './Renderer'
 import Sky from '../custom/Sky'
@@ -160,6 +160,9 @@ class Scene extends TScene {
             this.controls.enableRotate = false
             if (this.selectedPlanet) {
                 this.cameraAnimationManager.showScenery(this.selectedPlanet)
+                if (this.selectedPlanet.name) {
+                    EventBus.emit(SoundEvents.LAUNCH_SOUND_SCENERY, this.selectedPlanet.name)
+                }
             }
         })
 

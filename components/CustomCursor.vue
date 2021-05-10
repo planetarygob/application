@@ -6,7 +6,13 @@
                 <img class="CustomCursor_openicon" src="https://florianblandin.fr/assets/images/icon-open-hand.svg" alt="grab icon">
                 <img class="CustomCursor_grabicon" src="https://florianblandin.fr/assets/images/icon-grab-hand.svg" alt="grabbing icon">
             </div>
-            
+            <audio 
+                id="hover_audio" 
+                preload="none">
+                <source 
+                    src="https://florianblandin.fr/assets/sons/button_hover.mp3"
+                    type="audio/mpeg">
+            </audio>
         </div>
         <div class="CustomCursor_follower"></div>
     </div>
@@ -23,6 +29,7 @@ export default {
 
         const cursor = document.querySelector('.CustomCursor')
         const follower = document.querySelector('.CustomCursor_follower')
+        const audio: HTMLAudioElement|null = document.querySelector('#hover_audio')
         let clientX = -100
         let clientY = -100
         let lastX = 0
@@ -52,6 +59,11 @@ export default {
 
         EventBus.on(UIEvents.TOGGLE_BUTTON_CURSOR, () => {
             this.isHoveringButton = !this.isHoveringButton
+
+            if (audio && this.isHoveringButton) {
+                audio.volume = 0.1
+                audio.play()
+            }
         })
 
         EventBus.on(UIEvents.TOGGLE_DISCOVER_CURSOR, () => {
@@ -166,6 +178,7 @@ export default {
     .CustomCursor_follower {
         position: absolute;
         pointer-events: none;
+        z-index: 1000;
         top: 0;
         left: 0;
         width: 7px;

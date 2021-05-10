@@ -16,7 +16,7 @@
         </h2>
         <p 
             v-if="content.text"
-            class="mt-4 text-center text-sm text-center"
+            class="mt-4 text-center text-sm"
             v-html="content.text" />
         <button
             v-if="content.action"
