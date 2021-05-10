@@ -71,7 +71,7 @@
 
 <script lang="ts">
 import EventBus from '../../assets/js/utils/EventBus'
-import { AnimationEvents, UIEvents } from '../../assets/js/utils/Events'
+import { AnimationEvents, UIEvents, SoundEvents } from '../../assets/js/utils/Events'
 
 export default {
     props: {
@@ -88,6 +88,7 @@ export default {
     methods: {
         close() {
             this.$emit('update:is-displayed', false)
+            EventBus.emit(SoundEvents.STOP_SOUND_SCENERY)
             EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
             EventBus.emit(AnimationEvents.BACK)
         },

@@ -61,3 +61,8 @@ export const ProgressBarEvents = {
     UPDATE_PROGRESS_BAR: 'progress_bar:update_progress_bar',
     SHOW_PROGRESS_BAR: 'progress_bar:show_progress_bar'
 }
+
+export const SoundEvents = {
+    LAUNCH_SOUND_SCENERY: 'sound:launch_sound_scenery',
+    STOP_SOUND_SCENERY: 'sound:stop_sound_scenery'
+}
