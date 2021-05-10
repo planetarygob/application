@@ -132,8 +132,8 @@ export default {
     }),
 
     mounted() {
-        const audio = document.querySelector('#my_audio')
-        const video: HTMLMediaElement = document.querySelector('#my_video');   
+        const audio: HTMLAudioElement|null = document.querySelector('#my_audio')
+        const video: HTMLMediaElement|null = document.querySelector('#my_video');   
         if (video) {
             video.onended = function (e) {
                 if (audio) {
