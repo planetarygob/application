@@ -3,17 +3,38 @@
         <div class="filter"></div>
         <video
             id="my_video"
+            controls
             class="absolute"
             style="object-fit: cover;"
             @click="playVideo()">
             <source src="/videos/Intro_planetary.mp4" />
         </video>
         <audio 
-            id="my_audio" 
-            controls 
+            id="main_audio" 
             preload="none">
             <source 
                 src="sound/ambiance_galaxie.mp3"
+                type="audio/mpeg">
+        </audio>
+        <audio 
+            id="mode_planet_skirt_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/music_minijupe.mp3"
+                type="audio/mpeg">
+        </audio>
+        <audio 
+            id="mode_planet_rock_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/music_rock.mp3"
+                type="audio/mpeg">
+        </audio>
+        <audio 
+            id="mode_planet_hippie_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/music_hippie.mp3"
                 type="audio/mpeg">
         </audio>
         <template v-if="selectedSystem && showSystemTexts">
@@ -92,7 +113,7 @@
 import WebGl from '../components/WebGL.vue'
 import SvgIcon from '../components/SvgIcon.vue'
 import EventBus from '../assets/js/utils/EventBus'
-import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents } from '../assets/js/utils/Events'
+import { UIEvents, GLEvents, AnimationEvents, ProgressBarEvents, SoundEvents } from '../assets/js/utils/Events'
 import System from '../assets/js/webgl/custom/System'
 import PlanetModal from '../components/planet/PlanetModal.vue'
 import PlanetDialog from '../components/planet/PlanetDialog.vue'
@@ -126,16 +147,18 @@ export default {
         informationsDialog: {
             isDisplayed: false,
             content: {}
-        }
+        },
+        sceneryAudio: HTMLMediaElement
     }),
 
     mounted() {
-        const audio: HTMLAudioElement|null = document.querySelector('#my_audio')
+        const audio: HTMLAudioElement|null = document.querySelector('#main_audio')
         const video: HTMLMediaElement|null = document.querySelector('#my_video')
         if (video) {
             video.volume = 0.8
             video.onended = function (e) {
                 if (audio) {
+                    audio.volume = 0.1
                     audio.play()
                 }
                 video.style.display = 'none'
@@ -185,6 +208,21 @@ export default {
             EventBus.on<boolean>(ProgressBarEvents.SHOW_PROGRESS_BAR, (visible) => {
                 if (visible !== undefined) {
                     this.isProgressBarDisplayed = visible
+                }
+            })
+            EventBus.on<string>(SoundEvents.LAUNCH_SOUND_SCENERY, (planetName) => {
+                if (planetName !== undefined) {
+                    this.sceneryAudio = document.querySelector(`#${planetName}_audio`)
+                    if (this.sceneryAudio) {
+                        this.sceneryAudio.volume = 0.15
+                        this.sceneryAudio.play()
+                    }
+                }
+            })
+            EventBus.on<string>(SoundEvents.STOP_SOUND_SCENERY, () => {
+                if (this.sceneryAudio) {
+                    this.sceneryAudio.currentTime = 0;
+                    this.sceneryAudio.pause();
                 }
             })
         },
