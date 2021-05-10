@@ -1,13 +1,11 @@
 <template>
     <div class="relative">
         <div class="filter"></div>
-        <video 
+        <video
             id="my_video"
-            controls 
             class="absolute"
-            autoplay="true"
-            muted="muted"
-            style="object-fit: cover;">
+            style="object-fit: cover;"
+            @click="playVideo()">
             <source src="/videos/Intro_planetary.mp4" />
         </video>
         <audio 
@@ -15,7 +13,7 @@
             controls 
             preload="none">
             <source 
-                src="sound/ambiance_galaxie.mp3" 
+                src="sound/ambiance_galaxie.mp3"
                 type="audio/mpeg">
         </audio>
         <template v-if="selectedSystem && showSystemTexts">
@@ -133,8 +131,9 @@ export default {
 
     mounted() {
         const audio: HTMLAudioElement|null = document.querySelector('#my_audio')
-        const video: HTMLMediaElement|null = document.querySelector('#my_video') 
+        const video: HTMLMediaElement|null = document.querySelector('#my_video')
         if (video) {
+            video.volume = 0.8
             video.onended = function (e) {
                 if (audio) {
                     audio.play()
@@ -229,8 +228,17 @@ export default {
             EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
             EventBus.emit(AnimationEvents.BACK)
         },
+
         hoverButton() {
             EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
+        },
+
+        playVideo() {
+            const video: HTMLMediaElement|null = document.querySelector('#my_video')
+            if (video) {
+                video.play()
+                video.playbackRate = 0.93;
+            }
         }
     }
 }
