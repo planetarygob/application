@@ -19,7 +19,7 @@ class SceneryCharacter {
         this.model = model
         this.initialPosition = initialPosition
 
-        const themeLight = new DirectionalLight('#ffffff', 1)
+        const themeLight = new DirectionalLight('#FFD597', 0.7)
         themeLight.position.set(0, 70, 100)
         this.model.scene.add(themeLight)
 

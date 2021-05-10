@@ -3,7 +3,6 @@
         <div class="filter"></div>
         <video
             id="my_video"
-            controls
             class="absolute"
             style="object-fit: cover;"
             @click="playVideo()">
@@ -44,6 +43,17 @@
                 src="https://florianblandin.fr/assets/sons/woosh_vue_macro.mp3"
                 type="audio/mpeg">
         </audio>
+        <div 
+            id="sound"
+            class="absolute bottom-0 right-0 mr-8 mb-8"
+            @click="enableSound = !enableSound">
+            <img
+                v-if="enableSound"
+                src="/images/sound_on.png" />
+            <img
+                v-else
+                src="/images/sound_off.png" />
+        </div>
         <template v-if="selectedSystem && showSystemTexts">
             <div
                 class="Macro_text container flex flex-col justify-center p-8 text-white mx-auto">
@@ -155,19 +165,37 @@ export default {
             isDisplayed: false,
             content: {}
         },
-        sceneryAudio: HTMLMediaElement
+        sceneryAudio: HTMLMediaElement,
+        enableSound: true,
+        mainAudio: HTMLAudioElement
     }),
 
+    watch: {
+        enableSound (val) {
+            if (this.mainAudio) {
+                if (val) {
+                    this.mainAudio.play()
+                } else {
+                    this.mainAudio.pause();
+                }
+            }
+            
+        }
+    },
+
     mounted() {
-        const audio: HTMLAudioElement|null = document.querySelector('#main_audio')
+        this.mainAudio = document.querySelector('#main_audio')
+        // const audio: HTMLAudioElement|null = document.querySelector('#main_audio')
         const video: HTMLMediaElement|null = document.querySelector('#my_video')
         if (video) {
             video.volume = 0.8
+            const self = this
+
             video.onended = function (e) {
-                if (audio) {
-                    audio.loop = true
-                    audio.volume = 0.1
-                    audio.play()
+                if (self.mainAudio) {
+                    self.mainAudio.loop = true
+                    self.mainAudio.volume = 0.1
+                    self.mainAudio.play()
                 }
                 video.style.display = 'none'
                 EventBus.emit(GLEvents.LAUNCH_EXPERIENCE)
