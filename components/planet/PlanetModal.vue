@@ -22,13 +22,14 @@
             </div>
 
             <div class="container container--large">
-                <iframe
+                <img class="video" :src="content.videoImage.url" alt="">
+                <!-- <iframe
                     v-if="content.video" class="video" 
                     :src="content.video.url + 'controls=0'" 
                     title="YouTube video player" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>
+                    allowfullscreen></iframe> -->
                 <div class="text-content ml-32 my-auto">
                     <h2 v-if="content.titles">{{ content.titles[1] }}</h2>
                     <p 
@@ -57,7 +58,12 @@
                 </div>
             </div>
 
-            <button @click="close()">Terminer la lecture</button>
+            <button class="Button"
+                @click="close()"
+                @mouseenter="hoverButton()"
+                @mouseleave="hoverButton()">
+                Terminer la lecture
+            </button>
         </div>
         <div class="ui-gradient ui-gradient--bot"></div>
     </section>
@@ -65,7 +71,7 @@
 
 <script lang="ts">
 import EventBus from '../../assets/js/utils/EventBus'
-import { AnimationEvents } from '../../assets/js/utils/Events'
+import { AnimationEvents, UIEvents } from '../../assets/js/utils/Events'
 
 export default {
     props: {
@@ -82,7 +88,11 @@ export default {
     methods: {
         close() {
             this.$emit('update:is-displayed', false)
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
             EventBus.emit(AnimationEvents.BACK)
+        },
+        hoverButton() {
+            EventBus.emit(UIEvents.TOGGLE_BUTTON_CURSOR)
         }
     }
 }
@@ -152,6 +162,8 @@ export default {
         position: relative;
         z-index: 1;
         font-weight: bold;
+        font-family: 'Soulmaze', sans-serif;
+        letter-spacing: 2.25px;
         text-transform: uppercase;
         font-size: 36px;
         margin-bottom: 3rem;
@@ -187,20 +199,31 @@ export default {
 
     .video {
         width: 650px;
-        height: 485px;
-        border-radius: 1rem;
+        border-radius: 24px;
     }
 
     button {
-        position: relative;
-        z-index: 1;
-        text-transform: uppercase;
-        font-weight: bold;
-        padding: .5rem 2rem;
-        border: 1px solid white;
-        border-radius: 2rem;
-        margin: auto;
-        width: fit-content;
-        display: block;
+        cursor: none;
     }
+
+    .Button {
+        @apply py-5 px-10 rounded-full;
+        display: block;
+        width: fit-content;
+        font-family: 'Soulmaze', sans-serif;
+        letter-spacing: 2.25px;
+        font-weight: bold;
+        text-transform: uppercase;
+        background-color: rgba(255, 255, 255, 0.1);
+        margin: auto;
+        border: 1px solid white;
+        transition: all .33s ease-in-out;
+    }
+
+    .Button:hover {
+        color: black;
+        background-color: white;
+        box-shadow: 0px 2px 15px 5px rgba(255,255,255,0.5);
+    }
+
 </style>

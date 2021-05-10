@@ -20,5 +20,8 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
+    canvas {
+        /* pointer-events: none; */
+    }
 </style>

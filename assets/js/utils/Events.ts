@@ -18,7 +18,8 @@ export const GLEvents = {
     TOGGLE_BLUR : 'gl:toggle_blur',
     SETUP_SCENERY_INTERACTION: 'gl:setup_scenery_interaction',
     SCENE_CLICKED: 'gl:scene_clicked',
-    LETS_GO: 'gl:lets_go'
+    LETS_GO: 'gl:lets_go',
+    LAUNCH_EXPERIENCE: 'gl:LAUNCH_EXPERIENCE'
 }
 
 export const UIEvents = {
@@ -34,6 +35,10 @@ export const UIEvents = {
     RELAUNCH_ROCK_ANIMATION: 'ui:relaunch_rock_animation',
     SHOW_INFORMATIONS_DIALOG: 'ui:show_informations_dialog',
     ROCK_ANIMATION_IS_ENDED: 'ui:rock_animation_is_ended',
+    TOGGLE_DISCOVER_CURSOR: 'ui:toggle_discover_cursor',
+    TOGGLE_BUTTON_CURSOR: 'ui:toggle_button_cursor',
+    TOGGLE_OPEN_CURSOR: 'ui:toggle_open_cursor',
+    TOGGLE_GRAB_CURSOR: 'ui:toggle_grab_cursor',
     SHOW_LOGO_RS: 'ui:show_logo_rs'
 }
 

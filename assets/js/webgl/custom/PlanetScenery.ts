@@ -77,6 +77,8 @@ class PlanetScenery extends Group {
             this.character!.model.scene.traverse((child: any) => {
                 if (child.name === this.animation!.animationTool.name) {
                     this.animation!.animationTool.model = child
+                    this.animation!.animationTool.model!.scale.set(1.4, 1.4, 1.4)
+                    this.animation!.animationTool.model!.position.y = this.animation!.animationTool.model!.position.y - 0.08
                 }
                 if (child.name === this.animation!.animationTarget.name) {
                     this.animation!.animationTarget.model = child
@@ -120,19 +122,14 @@ class PlanetScenery extends Group {
 
             // TODO: custom cursor
             scene.dragControls.addEventListener('hoveron', (e) => {
-                setTimeout(() => {
-                    scene.renderer.domElement.style.cursor = 'grab'
-                }, 1)
+                EventBus.emit(UIEvents.TOGGLE_OPEN_CURSOR)
             })
 
             scene.dragControls.addEventListener('hoveroff', (e) => {
-                scene.renderer.domElement.style.cursor = 'default'
+                EventBus.emit(UIEvents.TOGGLE_OPEN_CURSOR)
             })
 
             scene.dragControls.addEventListener('dragstart', (e) => {
-                setTimeout(() => {
-                    scene.renderer.domElement.style.cursor = 'grabbing'
-                }, 1)
                 this.animation!.onDragStart(scene)
             })
 
@@ -143,6 +140,7 @@ class PlanetScenery extends Group {
             scene.highlightManager.add(this.animation.animationTool.model)
             scene.interactionManager.add(this.animation.animationTarget.model)
             scene.interactionManager.add(this.animation.animationTool.model)
+
         } else {
             console.error("Tool or Target undefined")
         }

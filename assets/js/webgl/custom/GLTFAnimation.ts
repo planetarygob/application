@@ -36,11 +36,19 @@ class GLTFAnimation {
 
     updateToolScaleAnimation (elapsedTime: number, initialScale: Vector3) {
         if (this.animationTool.model && this.toolShouldScale) {
-            this.animationTool.model.scale.set(
-                initialScale.x + Math.sin(elapsedTime * 2) / 8,
-                initialScale.y + Math.sin(elapsedTime * 2) / 8,
-                initialScale.z + Math.sin(elapsedTime * 2) / 8
-            )
+            if (this.animationTool.name !== 'Flower') {
+                this.animationTool.model.scale.set(
+                    initialScale.x + Math.sin(elapsedTime * 2) / 8,
+                    initialScale.y + Math.sin(elapsedTime * 2) / 8,
+                    initialScale.z + Math.sin(elapsedTime * 2) / 8
+                )
+            } else {
+                this.animationTool.model.scale.set(
+                    initialScale.x + Math.sin(elapsedTime * 2) / 20,
+                    initialScale.y + Math.sin(elapsedTime * 2) / 20,
+                    initialScale.z + Math.sin(elapsedTime * 2) / 20
+                )
+            }
         }
     }
 

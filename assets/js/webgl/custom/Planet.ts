@@ -78,7 +78,7 @@ class Planet extends Group {
         }
         // NOTE : We update the ProgressBar component with needed parameters
         EventBus.emit(ProgressBarEvents.UPDATE_PROGRESS_BAR, { name : this.systemName, index : this.infos.index })
-        // this.removeEvents()
+        this.removeEvents()
     }
 
     removeBubble () {

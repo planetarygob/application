@@ -13,6 +13,7 @@ class PlanetObject {
 
         this.model.scene.scale.set(0.015, 0.015, 0.015)
         this.model.scene.position.y = -0.5
+        
     }
 }
 

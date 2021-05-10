@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Soulmaze';
+    src: url('~/assets/fonts/Soulmaze.otf') format('truetype');
+}
+
+body {
+    -webkit-font-smoothing : antialiased;
+    overflow: hidden;
+}
