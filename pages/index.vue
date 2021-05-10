@@ -240,6 +240,10 @@ export default {
     * { cursor: none !important; }
     *:focus { outline: none; }
 
+    body {
+        overflow: hidden;
+    }
+
     video {
         right: 0; bottom: 0;
         min-width: 100%; min-height: 100%;
@@ -253,6 +257,7 @@ export default {
 
     .Macro_text {
         position: absolute;
+        width: fit-content;
         top: 50%;
         left: 50%;
         transform: translateY(-50%)
