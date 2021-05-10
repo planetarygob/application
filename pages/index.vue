@@ -37,6 +37,13 @@
                 src="https://florianblandin.fr/assets/sons/music_hippie.mp3"
                 type="audio/mpeg">
         </audio>
+        <audio 
+            id="nav_audio" 
+            preload="none">
+            <source 
+                src="https://florianblandin.fr/assets/sons/woosh_vue_macro.mp3"
+                type="audio/mpeg">
+        </audio>
         <template v-if="selectedSystem && showSystemTexts">
             <div
                 class="Macro_text container flex flex-col justify-center p-8 text-white mx-auto">
@@ -255,10 +262,20 @@ export default {
         },
 
         previousSystem () {
+            const audio: HTMLAudioElement|null = document.querySelector('#nav_audio')
+            if (audio) {
+                audio.volume = 0.8
+                audio.play()
+            }
             EventBus.emit(AnimationEvents.PREVIOUS_SYSTEM)
         },
 
         nextSystem () {
+            const audio: HTMLAudioElement|null = document.querySelector('#nav_audio')
+            if (audio) {
+                audio.volume = 0.1
+                audio.play()
+            }
             EventBus.emit(AnimationEvents.NEXT_SYSTEM)
         },
 
