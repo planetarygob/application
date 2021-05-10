@@ -158,6 +158,7 @@ export default {
             video.volume = 0.8
             video.onended = function (e) {
                 if (audio) {
+                    audio.loop = true
                     audio.volume = 0.1
                     audio.play()
                 }
@@ -214,7 +215,7 @@ export default {
                 if (planetName !== undefined) {
                     this.sceneryAudio = document.querySelector(`#${planetName}_audio`)
                     if (this.sceneryAudio) {
-                        this.sceneryAudio.volume = 0.15
+                        this.sceneryAudio.volume = 0.1
                         this.sceneryAudio.play()
                     }
                 }
